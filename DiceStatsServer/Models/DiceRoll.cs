@@ -7,7 +7,7 @@ namespace DiceStatsServer.Models
     public class DiceRoll
     {
         [Key]
-        public int RollId { get; set; }
+        public int DiceRollId { get; set; }
 
         [Required]
         public int CharacterId { get; set; }

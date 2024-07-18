@@ -25,7 +25,7 @@ namespace DiceStatsServer.Models
         }
 
         // Constructor with required fields
-        public Session(int userId, DateTime date, TimeSpan time)
+        public Session(int userId, DateTime date)
         {
             UserId = userId;
             Date = date;

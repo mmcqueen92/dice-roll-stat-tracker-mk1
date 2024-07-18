@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DiceStatsServer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+07196ffd0de8da1f0f73dd3a1161659c5201bce8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1def89253a1d6ec8886464a2c353c3b393d842ae")]
 [assembly: System.Reflection.AssemblyProductAttribute("DiceStatsServer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DiceStatsServer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
