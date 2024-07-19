@@ -1,6 +1,6 @@
 @DiceStatsServer_HostAddress = http://localhost:5050
 
-GET {{DiceStatsServer_HostAddress}}/weatherforecast/
+GET {{DiceStatsServer_HostAddress}}
 Accept: application/json
 
 ###

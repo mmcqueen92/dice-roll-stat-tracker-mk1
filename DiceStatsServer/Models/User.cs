@@ -20,18 +20,9 @@ namespace DiceStatsServer.Models
         public string HashedPassword { get; set; }
 
         // Parameterless constructor for EF Core - Private to prevent accidentally creating default instances
-        private User() {
-            Username = String.Empty;
-            Email = String.Empty;
-            HashedPassword = String.Empty;
-        }
-
-        // Constructor with required fields
-        public User(string username, string email, string hashedPassword)
+        public User()
         {
-            Username = username;
-            Email = email;
-            HashedPassword = hashedPassword;
+            
         }
     }
 }

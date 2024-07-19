@@ -1,0 +1,43 @@
+# Build Folders
+bin/
+obj/
+DiceStatsServer/bin/*
+DiceStatsServer/obj/*
+
+# Rider
+.idea/
+.idea_modules/
+
+# VS Code
+.vscode/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Mac & Windows Folders
+.DS_Store
+Thumbs.db
+
+# DotNet
+*.dotnet-tools
+
+# Resharper
+_ReSharper.Caches/
+.ReSharper
+
+# SQL Server files
+*.mdf
+*.ldf
+
+# Entity Framework
+Migrations/
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/

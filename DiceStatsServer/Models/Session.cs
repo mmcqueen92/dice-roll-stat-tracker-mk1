@@ -19,16 +19,9 @@ namespace DiceStatsServer.Models
         public DateTime Date { get; set; }
 
         // Parameterless constructor for EF Core
-        private Session() {
-            UserId = 0;
-            Date = new DateTime();
-        }
-
-        // Constructor with required fields
-        public Session(int userId, DateTime date)
+        public Session()
         {
-            UserId = userId;
-            Date = date;
+
         }
     }
 }

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using DiceStatsServer.Models;
+using DiceStatsServer.DTOs;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
@@ -38,14 +39,44 @@ namespace DiceStatsServer.Controllers
             return user;
         }
 
-        // POST: api/User
-        [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        // POST: api/User/Create
+        [HttpPost("Create")]
+        public async Task<ActionResult<User>> CreateUser(CreateUserDto createUserDto)
         {
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(createUserDto.Password);
+            var user = new User
+            {
+                Username = createUserDto.Username,
+                Email = createUserDto.Email,
+                HashedPassword = hashedPassword
+            };
+
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetUser), new { id = user.UserId }, user);
+        }
+
+        // POST: api/User/Login
+        [HttpPost("Login")]
+        public async Task<ActionResult> LoginUser(LoginUserDto loginUserDto)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == loginUserDto.Username);
+
+            if (user == null)
+            {
+                return Unauthorized(new { message = "Invalid username or password." });
+            }
+
+            var isPasswordValid = BCrypt.Net.BCrypt.Verify(loginUserDto.Password, user.HashedPassword);
+
+            if (!isPasswordValid)
+            {
+                return Unauthorized(new { message = "Invalid username or password." });
+            }
+
+            // Generate a token or session
+            return Ok(new { message = "Login successful." });
         }
 
         // PUT: api/User/5

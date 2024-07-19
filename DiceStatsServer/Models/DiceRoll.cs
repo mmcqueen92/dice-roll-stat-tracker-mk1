@@ -37,25 +37,9 @@ namespace DiceStatsServer.Models
         public bool? Success { get; set; } // Nullable
 
         // Parameterless constructor for EF Core
-        private DiceRoll() {
-            CharacterId = 0;
-            SessionId = 0;
-            DiceSize = 0;
-            RollValue = 0;
-            Timestamp = new DateTime();
-        }
-
-        // Constructor with required fields
-        public DiceRoll(int characterId, int sessionId, int diceSize, int rollValue, DateTime timestamp, string? rollType, string? skillType, bool? success = null)
+        public DiceRoll()
         {
-            CharacterId = characterId;
-            SessionId = sessionId;
-            DiceSize = diceSize;
-            RollValue = rollValue;
-            Timestamp = timestamp;
-            RollType = rollType;
-            SkillType = skillType;
-            Success = success;
+            
         }
     }
 }

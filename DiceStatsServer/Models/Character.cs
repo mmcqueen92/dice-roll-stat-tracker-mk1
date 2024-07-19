@@ -23,19 +23,9 @@ namespace DiceStatsServer.Models
         public string Class { get; set; }
 
         // Parameterless constructor for EF Core
-        private Character()
+        public Character()
         {
-            UserId = 0;
-            Name = String.Empty;
-            Class = String.Empty;
-        }
-
-        // Constructor with required fields
-        public Character(int userId, string name, string characterClass)
-        {
-            UserId = userId;
-            Name = name;
-            Class = characterClass;
+            
         }
     }
 }
