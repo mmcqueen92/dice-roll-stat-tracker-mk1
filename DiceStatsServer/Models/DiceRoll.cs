@@ -16,12 +16,6 @@ namespace DiceStatsServer.Models
         public Character? Character { get; set; }
 
         [Required]
-        public int SessionId { get; set; }
-
-        [ForeignKey("SessionId")]
-        public Session? Session { get; set; }
-
-        [Required]
         public int DiceSize { get; set; }
 
         public string? RollType { get; set; } // Nullable
@@ -32,7 +26,7 @@ namespace DiceStatsServer.Models
         public int RollValue { get; set; }
 
         [Required]
-        public DateTime Timestamp { get; set; }
+        public DateTime Timestamp { get; set; } = DateTime.UtcNow;
 
         public bool? Success { get; set; } // Nullable
 

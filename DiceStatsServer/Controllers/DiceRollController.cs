@@ -39,9 +39,9 @@ namespace DiceStatsServer.Controllers
             return diceRoll;
         }
 
-        // POST: api/DiceRoll
-        [HttpPost]
-        public async Task<ActionResult<DiceRoll>> PostDiceRoll(DiceRoll diceRoll)
+        // POST: api/DiceRoll/Create
+        [HttpPost("Create")]
+        public async Task<ActionResult<DiceRoll>> CreateDiceRoll(DiceRoll diceRoll)
         {
             _context.DiceRolls.Add(diceRoll);
             await _context.SaveChangesAsync();

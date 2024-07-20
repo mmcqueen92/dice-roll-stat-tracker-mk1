@@ -11,7 +11,6 @@ namespace DiceStatsServer.Models
 
         public DbSet<User> Users { get; set; }
         public DbSet<Character> Characters { get; set; }
-        public DbSet<Session> Sessions { get; set; }
         public DbSet<DiceRoll> DiceRolls { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -30,22 +29,16 @@ namespace DiceStatsServer.Models
                 new Character { CharacterId = 3, UserId = 3, Name = "Character3", Class = "Rogue" }
             );
 
-            modelBuilder.Entity<Session>().HasData(
-                new Session { SessionId = 1, UserId = 1, Date = DateTime.Now.AddDays(-3) },
-                new Session { SessionId = 2, UserId = 2, Date = DateTime.Now.AddDays(-2) },
-                new Session { SessionId = 3, UserId = 3, Date = DateTime.Now.AddDays(-1) }
-            );
-
             modelBuilder.Entity<DiceRoll>().HasData(
-                new DiceRoll { DiceRollId = 1, CharacterId = 1, SessionId = 1, DiceSize = 20, RollType = "attack", SkillType = null, RollValue = 15, Timestamp = DateTime.Now.AddDays(-3), Success = true },
-                new DiceRoll { DiceRollId = 2, CharacterId = 1, SessionId = 1, DiceSize = 20, RollType = "skill", SkillType = "athletics", RollValue = 10, Timestamp = DateTime.Now.AddDays(-3), Success = false },
-                new DiceRoll { DiceRollId = 3, CharacterId = 1, SessionId = 1, DiceSize = 20, RollType = "saving", SkillType = null, RollValue = 18, Timestamp = DateTime.Now.AddDays(-3), Success = true },
-                new DiceRoll { DiceRollId = 4, CharacterId = 2, SessionId = 2, DiceSize = 20, RollType = "attack", SkillType = null, RollValue = 12, Timestamp = DateTime.Now.AddDays(-2), Success = false },
-                new DiceRoll { DiceRollId = 5, CharacterId = 2, SessionId = 2, DiceSize = 20, RollType = "skill", SkillType = "arcana", RollValue = 20, Timestamp = DateTime.Now.AddDays(-2), Success = true },
-                new DiceRoll { DiceRollId = 6, CharacterId = 2, SessionId = 2, DiceSize = 20, RollType = "saving", SkillType = null, RollValue = 14, Timestamp = DateTime.Now.AddDays(-2), Success = true },
-                new DiceRoll { DiceRollId = 7, CharacterId = 3, SessionId = 3, DiceSize = 20, RollType = "attack", SkillType = null, RollValue = 9, Timestamp = DateTime.Now.AddDays(-1), Success = false },
-                new DiceRoll { DiceRollId = 8, CharacterId = 3, SessionId = 3, DiceSize = 20, RollType = "skill", SkillType = "stealth", RollValue = 17, Timestamp = DateTime.Now.AddDays(-1), Success = true },
-                new DiceRoll { DiceRollId = 9, CharacterId = 3, SessionId = 3, DiceSize = 20, RollType = "saving", SkillType = null, RollValue = 11, Timestamp = DateTime.Now.AddDays(-1), Success = false }
+                new DiceRoll { DiceRollId = 1, CharacterId = 1, DiceSize = 20, RollType = "attack", SkillType = null, RollValue = 15, Timestamp = DateTime.Now.AddDays(-3), Success = true },
+                new DiceRoll { DiceRollId = 2, CharacterId = 1, DiceSize = 20, RollType = "skill", SkillType = "athletics", RollValue = 10, Timestamp = DateTime.Now.AddDays(-3), Success = false },
+                new DiceRoll { DiceRollId = 3, CharacterId = 1, DiceSize = 20, RollType = "saving", SkillType = null, RollValue = 18, Timestamp = DateTime.Now.AddDays(-3), Success = true },
+                new DiceRoll { DiceRollId = 4, CharacterId = 2, DiceSize = 20, RollType = "attack", SkillType = null, RollValue = 12, Timestamp = DateTime.Now.AddDays(-2), Success = false },
+                new DiceRoll { DiceRollId = 5, CharacterId = 2, DiceSize = 20, RollType = "skill", SkillType = "arcana", RollValue = 20, Timestamp = DateTime.Now.AddDays(-2), Success = true },
+                new DiceRoll { DiceRollId = 6, CharacterId = 2, DiceSize = 20, RollType = "saving", SkillType = null, RollValue = 14, Timestamp = DateTime.Now.AddDays(-2), Success = true },
+                new DiceRoll { DiceRollId = 7, CharacterId = 3, DiceSize = 20, RollType = "attack", SkillType = null, RollValue = 9, Timestamp = DateTime.Now.AddDays(-1), Success = false },
+                new DiceRoll { DiceRollId = 8, CharacterId = 3, DiceSize = 20, RollType = "skill", SkillType = "stealth", RollValue = 17, Timestamp = DateTime.Now.AddDays(-1), Success = true },
+                new DiceRoll { DiceRollId = 9, CharacterId = 3, DiceSize = 20, RollType = "saving", SkillType = null, RollValue = 11, Timestamp = DateTime.Now.AddDays(-1), Success = false }
             );
 
         }
