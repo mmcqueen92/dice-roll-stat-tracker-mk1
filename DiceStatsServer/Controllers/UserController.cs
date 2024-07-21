@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using DiceStatsServer.Models;
+using DiceStatsServer.Services;
 using DiceStatsServer.DTOs;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -12,10 +13,11 @@ namespace DiceStatsServer.Controllers
     public class UserController : ControllerBase
     {
         private readonly DiceStatsContext _context;
-
-        public UserController(DiceStatsContext context)
+        private readonly AuthService _authService;
+        public UserController(DiceStatsContext context, AuthService authService)
         {
             _context = context;
+            _authService = authService;
         }
 
         // GET: api/User
@@ -39,33 +41,35 @@ namespace DiceStatsServer.Controllers
             return user;
         }
 
-        // POST: api/User/Create
-        [HttpPost("Create")]
-        public async Task<ActionResult<User>> CreateUser(CreateUserDto createUserDto)
+        // POST: api/User/Register
+        [HttpPost("Register")]
+        public async Task<ActionResult<User>> RegisterUser(RegisterUserDto registerUserDto)
         {
-            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(createUserDto.Password);
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerUserDto.Password);
             var user = new User
             {
-                Username = createUserDto.Username,
-                Email = createUserDto.Email,
+                Username = registerUserDto.Username,
+                Email = registerUserDto.Email,
                 HashedPassword = hashedPassword
             };
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetUser), new { id = user.UserId }, user);
+            var token = _authService.GenerateJwtToken(user.Email, user.Username);
+
+            return CreatedAtAction(nameof(GetUser), new { id = user.UserId }, new { user, token });
         }
 
         // POST: api/User/Login
         [HttpPost("Login")]
         public async Task<ActionResult> LoginUser(LoginUserDto loginUserDto)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == loginUserDto.Username);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == loginUserDto.Email);
 
             if (user == null)
             {
-                return Unauthorized(new { message = "Invalid username or password." });
+                return Unauthorized(new { message = "Invalid email or password." });
             }
 
             var isPasswordValid = BCrypt.Net.BCrypt.Verify(loginUserDto.Password, user.HashedPassword);
@@ -75,8 +79,10 @@ namespace DiceStatsServer.Controllers
                 return Unauthorized(new { message = "Invalid username or password." });
             }
 
+
+            var token = _authService.GenerateJwtToken(user.Email, user.Username);
             // Generate a token or session
-            return Ok(new { message = "Login successful." });
+            return Ok(new { token });
         }
 
         // PUT: api/User/5

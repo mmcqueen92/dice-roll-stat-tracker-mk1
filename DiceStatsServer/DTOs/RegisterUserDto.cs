@@ -1,6 +1,6 @@
 namespace DiceStatsServer.DTOs
 {
-    public class CreateUserDto
+    public class RegisterUserDto
     {
         public string Username { get; set; }
         public string Email { get; set; }

@@ -33,6 +33,8 @@ _ReSharper.Caches/
 *.mdf
 *.ldf
 
+.env
+
 # Entity Framework
 Migrations/
 
