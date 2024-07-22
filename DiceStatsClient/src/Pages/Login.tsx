@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useAuth } from "../Contexts/AuthContext";
 
 export default function Login() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
+  const { login } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -17,14 +20,11 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/api/user/login", {
-        Email: formData.email,
-        Password: formData.password,
-      });
-      console.log(response.data);
+      await login(formData.email, formData.password); // Use the login function from context
+      console.log("Logged in successfully");
       // Redirect or show success message
     } catch (error) {
-      console.error(error);
+      console.error("Login failed", error);
       // Handle error
     }
   };

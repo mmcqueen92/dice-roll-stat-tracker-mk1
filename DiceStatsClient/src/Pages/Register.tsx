@@ -31,6 +31,9 @@ export default function Register() {
           password: formData.password,
         }
       );
+      const { token } = response.data;
+      localStorage.setItem("token", token); // Save token to local storage
+      console.log("Logged in successfully");
       console.log(response.data);
       // Redirect or show success message
     } catch (error) {
