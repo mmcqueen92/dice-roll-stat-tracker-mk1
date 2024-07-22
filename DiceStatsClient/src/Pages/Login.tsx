@@ -17,9 +17,9 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/api/auth/login", {
-        email: formData.email,
-        password: formData.password,
+      const response = await axios.post("/api/user/login", {
+        Email: formData.email,
+        Password: formData.password,
       });
       console.log(response.data);
       // Redirect or show success message

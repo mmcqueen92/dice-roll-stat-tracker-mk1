@@ -34,6 +34,8 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<DiceStatsContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddSingleton<AuthService>();
+
 // Add Swagger for API documentation
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

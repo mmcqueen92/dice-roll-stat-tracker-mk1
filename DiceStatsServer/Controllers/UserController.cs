@@ -45,6 +45,12 @@ namespace DiceStatsServer.Controllers
         [HttpPost("Register")]
         public async Task<ActionResult<User>> RegisterUser(RegisterUserDto registerUserDto)
         {
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == registerUserDto.Email);
+            if (existingUser != null)
+            {
+                return Conflict(new { message = "A user with this email address already exists." });
+            }
+            
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerUserDto.Password);
             var user = new User
             {
