@@ -1,8 +1,8 @@
 // src/contexts/AuthContext.tsx
 import React, { createContext, useState, useContext, ReactNode } from "react";
-import api from "../Utils/api";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { decodeToken } from "../Utils/jwt";
 interface AuthState {
   isAuthenticated: boolean;
   token: string | null;
@@ -26,27 +26,25 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [authState, setAuthState] = useState<AuthState>(initialAuthState);
   const navigate = useNavigate();
-  const login = async (email: string, password: string) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:5050/api/user/login",
-        {
-          email,
-          password,
-        }
-      );
-      const token = response.data.token;
-      localStorage.setItem("DiceStatsToken", token);
-      setAuthState({
-        isAuthenticated: true,
-        token,
-      });
-      navigate("/home");
-    } catch (error) {
-      console.error("Login failed", error);
-      // Handle error appropriately
-    }
-  };
+    const login = async (email: string, password: string) => {
+      try {
+        const response = await axios.post(
+          "http://localhost:5050/api/user/login",
+          { email, password }
+        );
+        decodeToken(response.data.token);
+        const token = response.data.token;
+        localStorage.setItem("DiceStatsToken", token);
+        setAuthState({
+          isAuthenticated: true,
+          token,
+        });
+        navigate("/user-dashboard"); // Redirect after successful login
+      } catch (error) {
+        console.error("Login failed", error);
+        // Handle error appropriately
+      }
+    };
 
   const logout = () => {
     localStorage.removeItem("DiceStatsToken");
@@ -54,6 +52,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       isAuthenticated: false,
       token: null,
     });
+    navigate("/login"); // Optional: Redirect to login page after logout
   };
 
   return (

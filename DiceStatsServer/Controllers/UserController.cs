@@ -62,7 +62,7 @@ namespace DiceStatsServer.Controllers
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            var token = _authService.GenerateJwtToken(user.Email, user.Username);
+            var token = _authService.GenerateJwtToken(user.Email, user.Username, user.UserId);
 
             return CreatedAtAction(nameof(GetUser), new { id = user.UserId }, new { user, token });
         }
@@ -86,7 +86,7 @@ namespace DiceStatsServer.Controllers
             }
 
 
-            var token = _authService.GenerateJwtToken(user.Email, user.Username);
+            var token = _authService.GenerateJwtToken(user.Email, user.Username, user.UserId);
             // Generate a token or session
             return Ok(new { token });
         }

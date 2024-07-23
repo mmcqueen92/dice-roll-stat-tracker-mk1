@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -8,6 +9,8 @@ export default function Register() {
     password: "",
     confirmPassword: "",
   });
+
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -32,9 +35,10 @@ export default function Register() {
         }
       );
       const { token } = response.data;
-      localStorage.setItem("token", token); // Save token to local storage
+      localStorage.setItem("DiceStatsToken", token); // Save token to local storage
       console.log("Logged in successfully");
       console.log(response.data);
+      navigate("/user-dashboard");
       // Redirect or show success message
     } catch (error) {
       console.error(error);

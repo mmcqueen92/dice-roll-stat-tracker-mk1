@@ -5,6 +5,7 @@ import Login from "./Pages/Login";
 import Register from "./Pages/Register";
 import Home from "./Pages/Home";
 import ViewCharacterRolls from "./Pages/ViewCharacterRolls";
+import UserDashboard from "./Pages/UserDashboard";
 import { AuthProvider } from "./Contexts/AuthContext";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
             path="/characters/:id/rolls"
             element={<ViewCharacterRolls />}
           />
+          <Route path="/user-dashboard" element={<UserDashboard />} />
         </Routes>
       </div>
     </AuthProvider>
