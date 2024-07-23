@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import DiceRollData from '../Interfaces/DiceRollData';
-import NewDiceRollFormProps from '../Interfaces/NewDiceRollFormProps'
+import React, { useState } from "react";
+import api from "../Utils/api";
+import DiceRollData from "../Interfaces/DiceRollData";
+import NewDiceRollFormProps from "../Interfaces/NewDiceRollFormProps";
 
 const initialFormData: DiceRollData = {
-  characterId: 1,
   diceSize: 20,
   rollValue: 10,
   rollType: "",
@@ -15,26 +14,73 @@ const initialFormData: DiceRollData = {
 export default function NewDiceRollForm({ characterId }: NewDiceRollFormProps) {
   const [formData, setFormData] = useState<DiceRollData>(initialFormData);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]:
-        type === "checkbox"
-          ? checked
-          : type === "number"
-          ? Number(value)
-          : value,
-    });
+  const skillChecks = [
+    "Acrobatics",
+    "Animal Handling",
+    "Arcana",
+    "Athletics",
+    "Deception",
+    "History",
+    "Insight",
+    "Intimidation",
+    "Investigation",
+    "Medicine",
+    "Nature",
+    "Perception",
+    "Performance",
+    "Persuasion",
+    "Religion",
+    "Sleight of Hand",
+    "Stealth",
+    "Survival",
+  ];
+
+  const savingThrows = [
+    "Strength",
+    "Dexterity",
+    "Constitution",
+    "Intelligence",
+    "Wisdom",
+    "Charisma",
+  ];
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, type, value } = e.target;
+
+    // For checkbox inputs
+    if (type === "checkbox") {
+      const checked = (e.target as HTMLInputElement).checked;
+      setFormData({
+        ...formData,
+        [name]: checked,
+      });
+    } else if (type === "number") {
+      setFormData({
+        ...formData,
+        [name]: Number(value),
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Add characterId to the formData
+    const dataToSubmit: DiceRollData = {
+      ...formData,
+      characterId,
+    };
+
     try {
-      const response = await axios.post(
-        "http://localhost:5050/api/diceroll/create",
-        formData
-      );
+      console.log("DATA: ", dataToSubmit);
+      const response = await api.post("/diceroll/create", dataToSubmit);
       console.log("Dice roll created:", response.data);
       // Reset the form or handle the response as needed
     } catch (error) {
@@ -45,17 +91,6 @@ export default function NewDiceRollForm({ characterId }: NewDiceRollFormProps) {
   return (
     <form onSubmit={handleSubmit}>
       <h1>New DiceRoll Form</h1>
-
-      <div>
-        <label>Character ID:</label>
-        <input
-          type="number"
-          name="characterId"
-          value={formData.characterId}
-          onChange={handleChange}
-          required
-        />
-      </div>
 
       <div>
         <label>Dice Size:</label>
@@ -70,23 +105,53 @@ export default function NewDiceRollForm({ characterId }: NewDiceRollFormProps) {
 
       <div>
         <label>Roll Type:</label>
-        <input
-          type="text"
+        <select
           name="rollType"
           value={formData.rollType}
           onChange={handleChange}
-        />
+        >
+          <option value="">Select Roll Type</option>
+          <option value="Attack">Attack</option>
+          <option value="Skill Check">Skill Check</option>
+          <option value="Saving Throw">Saving Throw</option>
+        </select>
       </div>
 
-      <div>
-        <label>Skill Type:</label>
-        <input
-          type="text"
-          name="skillType"
-          value={formData.skillType}
-          onChange={handleChange}
-        />
-      </div>
+      {formData.rollType === "Skill Check" && (
+        <div>
+          <label>Skill Type:</label>
+          <select
+            name="skillType"
+            value={formData.skillType}
+            onChange={handleChange}
+          >
+            <option value="">Select Skill Type</option>
+            {skillChecks.map((skill) => (
+              <option key={skill} value={skill}>
+                {skill}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {formData.rollType === "Saving Throw" && (
+        <div>
+          <label>Saving Attribute:</label>
+          <select
+            name="skillType"
+            value={formData.skillType}
+            onChange={handleChange}
+          >
+            <option value="">Select Saving Attribute</option>
+            {savingThrows.map((throwType) => (
+              <option key={throwType} value={throwType}>
+                {throwType}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       <div>
         <label>Roll Value:</label>

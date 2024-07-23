@@ -3,4 +3,5 @@ export interface DecodedToken {
   name: string;
   iat: number;
   exp: number;
+  id: number;
 }

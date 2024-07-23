@@ -1,4 +1,4 @@
 export default interface Character {
-  id: number;
+  characterId: number;
   name: string;
 }

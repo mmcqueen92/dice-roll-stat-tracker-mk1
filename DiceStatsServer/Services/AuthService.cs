@@ -18,7 +18,7 @@ namespace DiceStatsServer.Services
             {
                 new Claim("email", email),
                 new Claim("username", username),
-                new Claim("id", userId.ToString())
+                new Claim("userId", userId.ToString())
             };
 
             var token = new JwtSecurityToken(

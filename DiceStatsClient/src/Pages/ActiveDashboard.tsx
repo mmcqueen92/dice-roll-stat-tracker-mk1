@@ -1,39 +1,45 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import NewDiceRollForm from "../Components/NewDiceRollForm";
-import ActiveDashboardProps from "../Interfaces/ActiveDashboardProps";
 import Character from "../Interfaces/Character"
-import DiceRoll from "../Interfaces/DiceRoll";
-export default function ActiveDashboard({ activeCharacterId }: ActiveDashboardProps) {
+// import DiceRoll from "../Interfaces/DiceRoll";
+import { useParams } from "react-router-dom";
+import api from "../Utils/api";
+
+export default function ActiveDashboard() {
+  const { id } = useParams<{ id: string }>();
+  const activeCharacterId = parseInt(id || "0", 10);
   const [character, setCharacter] = useState<Character | null>(null);
-  const [diceRolls, setDiceRolls] = useState<DiceRoll[]>([]);
+  // const [diceRolls, setDiceRolls] = useState<DiceRoll[]>([]);
 
   useEffect(() => {
+    if (!activeCharacterId) return;
+
     const fetchCharacter = async () => {
       try {
-        const response = await axios.get(
-          `/api/characters/${activeCharacterId}`
+
+        const response = await api.get(
+          `/character/${activeCharacterId}`
         );
         setCharacter(response.data);
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching character", error);
       }
     };
 
-    const fetchDiceRolls = async () => {
-      try {
-        const response = await axios.get(
-          `/api/dice-rolls?characterId=${activeCharacterId}`
-        );
-        setDiceRolls(response.data.slice(0, 5)); // Get the latest 5 rolls
-      } catch (error) {
-        console.error(error);
-      }
-    };
+    // const fetchDiceRolls = async () => {
+    //   try {
+    //     const response = await api.get(
+    //       `/dice-rolls?characterId=${activeCharacterId}`
+    //     );
+    //     setDiceRolls(response.data.slice(0, 5)); // Get the latest 5 rolls
+    //   } catch (error) {
+    //     console.error("Error fetching character dice rolls", error);
+    //   }
+    // };
 
     if (activeCharacterId) {
       fetchCharacter();
-      fetchDiceRolls();
+      // fetchDiceRolls();
     }
   }, [activeCharacterId]);
 
@@ -47,14 +53,14 @@ export default function ActiveDashboard({ activeCharacterId }: ActiveDashboardPr
       <h3>Character: {character.name}</h3>
       <NewDiceRollForm characterId={activeCharacterId} />
       <h3>Recent Rolls</h3>
-      <ul>
+      {/* <ul>
         {diceRolls.map((roll: any) => (
           <li key={roll.id}>
             {roll.rollValue} ({roll.diceType}) -{" "}
             {roll.success ? "Success" : "Fail"}
           </li>
         ))}
-      </ul>
+      </ul> */}
     </div>
   );
 };

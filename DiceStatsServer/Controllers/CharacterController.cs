@@ -3,6 +3,7 @@ using DiceStatsServer.Models;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using DiceStatsServer.DTOs;
 
 namespace DiceStatsServer.Controllers
 {
@@ -17,11 +18,26 @@ namespace DiceStatsServer.Controllers
             _context = context;
         }
 
-        // GET: api/Character
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Character>>> GetCharacters()
         {
-            return await _context.Characters.ToListAsync();
+            var userIdString = HttpContext.Items["UserId"] as string;
+
+            if (string.IsNullOrEmpty(userIdString))
+            {
+                return Unauthorized("User ID not found in context");
+            }
+
+            if (!int.TryParse(userIdString, out var userId))
+            {
+                return BadRequest("Invalid User ID format");
+            }
+
+            var characters = await _context.Characters
+                .Where(c => c.UserId == userId)
+                .ToListAsync();
+
+            return Ok(characters);
         }
 
         // GET: api/Character/5
@@ -40,13 +56,35 @@ namespace DiceStatsServer.Controllers
 
         // POST: api/Character
         [HttpPost]
-        public async Task<ActionResult<Character>> PostCharacter(Character character)
+        public async Task<ActionResult<Character>> PostCharacter([FromBody] NewCharacterDto newCharacterDto)
         {
+            // Extract UserId from context
+            var userIdString = HttpContext.Items["UserId"] as string;
+
+            if (string.IsNullOrEmpty(userIdString))
+            {
+                return Unauthorized("User ID not found in context");
+            }
+
+            if (!int.TryParse(userIdString, out var userId))
+            {
+                return BadRequest("Invalid User ID format");
+            }
+
+            // Create a new Character entity with data from DTO and UserId from context
+            var character = new Character
+            {
+                Name = newCharacterDto.Name,
+                Class = newCharacterDto.Class,
+                UserId = userId // Set the UserId
+            };
+
             _context.Characters.Add(character);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetCharacter), new { id = character.CharacterId }, character);
         }
+
 
         // PUT: api/Character/5
         [HttpPut("{id}")]

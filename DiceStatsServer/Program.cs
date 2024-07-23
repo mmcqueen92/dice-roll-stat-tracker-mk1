@@ -66,6 +66,9 @@ app.UseHttpsRedirection();
 app.UseCors("AllowAllOrigins");
 
 app.UseAuthentication();
+
+app.UseMiddleware<JwtMiddleware>();
+
 app.UseAuthorization();
 
 app.MapControllers();
