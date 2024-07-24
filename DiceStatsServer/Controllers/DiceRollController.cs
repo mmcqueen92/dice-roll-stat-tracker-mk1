@@ -27,17 +27,39 @@ namespace DiceStatsServer.Controllers
 
         // GET: api/DiceRoll/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<DiceRoll>> GetDiceRoll(int id)
+        public async Task<ActionResult<IEnumerable<DiceRoll>>> GetDiceRolls(int id, [FromQuery] int limit = 5, [FromQuery] int skip = 0, [FromQuery] string orderBy = "Timestamp", [FromQuery] string orderDirection = "desc")
         {
-            var diceRoll = await _context.DiceRolls.FindAsync(id);
+            Console.WriteLine("LIMIT");
+            Console.WriteLine(limit);
+            var query = _context.DiceRolls.Where(dr => dr.CharacterId == id);
 
-            if (diceRoll == null)
+            if (orderDirection.ToLower() == "asc")
             {
-                return NotFound();
+                query = orderBy.ToLower() switch
+                {
+                    "rollvalue" => query.OrderBy(dr => dr.RollValue),
+                    "success" => query.OrderBy(dr => dr.Success),
+                    _ => query.OrderBy(dr => dr.Timestamp),
+                };
+            }
+            else
+            {
+                query = orderBy.ToLower() switch
+                {
+                    "rollvalue" => query.OrderByDescending(dr => dr.RollValue),
+                    "success" => query.OrderByDescending(dr => dr.Success),
+                    _ => query.OrderByDescending(dr => dr.Timestamp),
+                };
             }
 
-            return diceRoll;
+            var diceRolls = await query
+                .Skip(skip)
+                .Take(limit)
+                .ToListAsync();
+
+            return Ok(diceRolls);
         }
+
 
         // POST: api/DiceRoll/Create
         [HttpPost("Create")]
@@ -46,7 +68,7 @@ namespace DiceStatsServer.Controllers
             _context.DiceRolls.Add(diceRoll);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetDiceRoll), new { id = diceRoll.DiceRollId }, diceRoll);
+            return CreatedAtAction(nameof(GetDiceRolls), new { id = diceRoll.DiceRollId }, diceRoll);
         }
 
         // PUT: api/DiceRoll/5
