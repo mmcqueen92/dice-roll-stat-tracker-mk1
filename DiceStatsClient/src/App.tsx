@@ -19,7 +19,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route
-            path="/characters/:id/rolls"
+            path="/character-rolls/:id"
             element={<ViewCharacterRolls />}
           />
           <Route path="/user-dashboard" element={<UserDashboard />} />

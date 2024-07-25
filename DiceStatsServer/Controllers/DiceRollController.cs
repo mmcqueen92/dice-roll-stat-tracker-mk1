@@ -29,8 +29,6 @@ namespace DiceStatsServer.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<DiceRoll>>> GetDiceRolls(int id, [FromQuery] int limit = 5, [FromQuery] int skip = 0, [FromQuery] string orderBy = "Timestamp", [FromQuery] string orderDirection = "desc")
         {
-            Console.WriteLine("LIMIT");
-            Console.WriteLine(limit);
             var query = _context.DiceRolls.Where(dr => dr.CharacterId == id);
 
             if (orderDirection.ToLower() == "asc")

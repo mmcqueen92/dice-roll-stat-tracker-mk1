@@ -13,6 +13,11 @@ export default function UserDashboard() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const savedActiveCharacterId = localStorage.getItem("activeCharacterId");
+    if (savedActiveCharacterId) {
+      setActiveCharacterId(parseInt(savedActiveCharacterId, 10));
+    }
+
     const fetchCharacters = async () => {
       setLoading(true);
       try {
@@ -37,6 +42,13 @@ export default function UserDashboard() {
 
     fetchCharacters();
   }, []);
+
+  useEffect(() => {
+    // Update localStorage whenever activeCharacterId changes
+    if (activeCharacterId !== null) {
+      localStorage.setItem("activeCharacterId", activeCharacterId.toString());
+    }
+  }, [activeCharacterId]);
 
   const handleSetActiveCharacter = (characterId: number) => {
     setActiveCharacterId(characterId);
@@ -66,7 +78,7 @@ export default function UserDashboard() {
                 >
                   Set Active
                 </button>
-                <Link to={`/characters/${character.characterId}/rolls`}>
+                <Link to={`/character-rolls/${character.characterId}`}>
                   View Rolls
                 </Link>
               </li>

@@ -41,7 +41,7 @@ const initialFormData = {
   rollValue: "",
   rollType: "",
   skillType: "",
-  success: false,
+  success: null as boolean | null,
 };
 
 export default function ActiveDashboard() {
@@ -85,6 +85,13 @@ export default function ActiveDashboard() {
     // Reset rollValue when diceSize changes
     setFormData((prevData) => ({ ...prevData, rollValue: "" }));
   }, [formData.diceSize]);
+
+   useEffect(() => {
+     // Set success to null if rollType is Attack/Spell Damage
+     if (formData.rollType === "Attack/Spell Damage") {
+       setFormData((prevData) => ({ ...prevData, success: null }));
+     }
+   }, [formData.rollType]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -170,6 +177,7 @@ export default function ActiveDashboard() {
             <option value="Attack">Attack</option>
             <option value="Skill Check">Skill Check</option>
             <option value="Saving Throw">Saving Throw</option>
+            <option value="Attack/Spell Damage">Attack/Spell Damage</option>
           </select>
         </div>
 
@@ -226,17 +234,23 @@ export default function ActiveDashboard() {
           </select>
         </div>
 
-        <div>
-          <label>Success:</label>
-          <input
-            type="checkbox"
-            name="success"
-            checked={formData.success}
-            onChange={() =>
-              setFormData({ ...formData, success: !formData.success })
-            }
-          />
-        </div>
+        {formData.rollType !== "Attack/Spell Damage" && (
+          <div>
+            <label>Success:</label>
+            <input
+              type="checkbox"
+              name="success"
+              checked={formData.success || false}
+              onChange={() =>
+                setFormData((prevData) => ({
+                  ...prevData,
+                  success:
+                    prevData.success === null ? false : !prevData.success,
+                }))
+              }
+            />
+          </div>
+        )}
 
         <button type="submit">Submit</button>
       </form>

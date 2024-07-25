@@ -1,4 +1,5 @@
 export default interface DiceRollData {
+  diceRollId?: number;
   characterId?: number;
   diceSize: number;
   rollType?: string;
