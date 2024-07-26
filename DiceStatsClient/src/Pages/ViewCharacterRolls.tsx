@@ -18,6 +18,7 @@ import {
   // TextField,
   Dialog,
 } from "@mui/material";
+import CharacterData from "../Interfaces/CharacterData";
 
 // Dummy filter options
 const rollTypes = [
@@ -38,6 +39,9 @@ const skillTypes = [
 
 export default function ViewCharacterRolls() {
   const { id } = useParams<{ id: string }>();
+  const [characterData, setCharacterData] = useState<CharacterData | null>(
+    null
+  );
   const [rolls, setRolls] = useState<DiceRollData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -56,14 +60,12 @@ export default function ViewCharacterRolls() {
   const [totalRecords, setTotalRecords] = useState<number>(0);
 
   useEffect(() => {
-    console.log("DOING A THING")
     const fetchRolls = async () => {
       setLoading(true);
       try {
         const response = await api.get<DiceRollData[]>(`/diceroll/${id}`, {
           params: { ...filters, skip: (page - 1) * pageSize, limit: pageSize },
         });
-        console.log("DATA: ", response.data)
         setRolls(response.data);
 
         const countResponse = await api.get<number>(`/diceroll/${id}/count`);
@@ -78,6 +80,19 @@ export default function ViewCharacterRolls() {
 
     fetchRolls();
   }, [filters, page, pageSize, id]);
+
+  useEffect(() => {
+    const fetchCharacterData = async () => {
+      try {
+        const response = await api.get<CharacterData>(`/character/${id}`);
+        setCharacterData(response.data);
+      } catch (e) {
+        console.error("Error fetching character data", e);
+      }
+    };
+
+    fetchCharacterData();
+  }, []);
 
   const handleFilterChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -122,7 +137,9 @@ export default function ViewCharacterRolls() {
 
   return (
     <div>
-      <h1>View Rolls for Character {id}</h1>
+      {characterData && characterData.name && (
+        <h1>View Rolls for {characterData.name}</h1>
+      )}
 
       {/* Filter Section */}
       <div>
@@ -238,30 +255,31 @@ export default function ViewCharacterRolls() {
           </ul>
         )}
 
-        {/* Pagination */}
-        <div>
-          <button
-            onClick={() => handlePageChange(page - 1)}
-            disabled={page <= 1}
-          >
-            Previous
-          </button>
-          <span>
-            Page: {page} of {Math.ceil(totalRecords / pageSize)}
-          </span>
-          <button
-            onClick={() => handlePageChange(page + 1)}
-            disabled={page * pageSize >= totalRecords}
-          >
-            Next
-          </button>
-          <select value={pageSize} onChange={handlePageSizeChange}>
-            <option value={5}>5</option>
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-          </select>
-        </div>
+        {totalRecords > 0 && (
+          <div>
+            <button
+              onClick={() => handlePageChange(page - 1)}
+              disabled={page <= 1}
+            >
+              Previous
+            </button>
+            <span>
+              Page: {page} of {Math.ceil(totalRecords / pageSize)}
+            </span>
+            <button
+              onClick={() => handlePageChange(page + 1)}
+              disabled={page * pageSize >= totalRecords}
+            >
+              Next
+            </button>
+            <select value={pageSize} onChange={handlePageSizeChange}>
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={50}>50</option>
+            </select>
+          </div>
+        )}
       </div>
 
       {/* Edit Roll Modal */}

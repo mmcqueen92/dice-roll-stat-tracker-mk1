@@ -28,8 +28,11 @@ export default function CharacterList({
       </Button>
       <List>
         {characters.map((character) => (
-          <ListItem key={character.characterId} >
-            <ListItemText primary={character.name} />
+          <ListItem key={character.characterId}>
+            <ListItemText
+              primary={character.name}
+              secondary={character.class}
+            />
             <ListItemSecondaryAction>
               <IconButton edge="end" onClick={() => onEdit(character)}>
                 Edit

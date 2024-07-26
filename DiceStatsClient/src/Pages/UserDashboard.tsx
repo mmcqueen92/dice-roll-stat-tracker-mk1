@@ -99,17 +99,19 @@ export default function UserDashboard() {
           {characters.map((character) => {
             return (
               <li key={character.characterId}>
-                {character.name}
+                {character.name} - {character.class}
                 {character.characterId === activeCharacterId && (
                   <span> (Active)</span>
                 )}
-                <button
-                  onClick={() =>
-                    handleSetActiveCharacter(character.characterId)
-                  }
-                >
-                  Set Active
-                </button>
+                {character.characterId !== activeCharacterId && (
+                  <button
+                    onClick={() =>
+                      handleSetActiveCharacter(character.characterId)
+                    }
+                  >
+                    Set Active
+                  </button>
+                )}
                 <Link to={`/character-rolls/${character.characterId}`}>
                   View Rolls
                 </Link>
