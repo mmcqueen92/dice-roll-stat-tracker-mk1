@@ -2,15 +2,18 @@ import React, { useEffect, useState } from "react";
 import api from "../Utils/api";
 import { Link } from "react-router-dom";
 import { decodeToken } from "../Utils/jwt";
-import Character from "../Interfaces/Character";
+import CharacterData from "../Interfaces/CharacterData";
+import { Dialog } from "@mui/material";
+import CharacterForm from "../Components/CharacterForm";
 
 export default function UserDashboard() {
-  const [characters, setCharacters] = useState<Character[]>([]);
+  const [characters, setCharacters] = useState<CharacterData[]>([]);
   const [activeCharacterId, setActiveCharacterId] = useState<number | null>(
     null
   );
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const savedActiveCharacterId = localStorage.getItem("activeCharacterId");
@@ -25,7 +28,7 @@ export default function UserDashboard() {
         if (token) {
           const decodedToken = decodeToken(token);
           const userId = decodedToken.id;
-          const response = await api.get<Character[]>(
+          const response = await api.get<CharacterData[]>(
             `/Character?userId=${userId}`
           );
           setCharacters(response.data);
@@ -55,6 +58,33 @@ export default function UserDashboard() {
     // Save active character to state or context
   };
 
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleSave = async (character: CharacterData) => {
+    // Save the character (create or update) to the server
+    // Example: saveCharacter(character).then(fetchCharacters).then(setCharacters);
+    try {
+      
+        // Create new character
+        const { characterId, ...characterData } = character; // Destructure and remove characterId
+        const response = await api.post("/character", characterData);
+        setCharacters((prevCharacters) => [...prevCharacters, response.data]);
+      
+      setIsModalOpen(false);
+    } catch (e) {
+      console.error("Error saving character", e);
+    }
+    
+    
+    setIsModalOpen(false);
+  };
+
+  const handleCreate = () => {
+    setIsModalOpen(true);
+  };
+
   return (
     <div>
       <h2>User Dashboard</h2>
@@ -70,7 +100,9 @@ export default function UserDashboard() {
             return (
               <li key={character.characterId}>
                 {character.name}
-                {character.characterId === activeCharacterId && <span> (Active)</span>}
+                {character.characterId === activeCharacterId && (
+                  <span> (Active)</span>
+                )}
                 <button
                   onClick={() =>
                     handleSetActiveCharacter(character.characterId)
@@ -87,8 +119,19 @@ export default function UserDashboard() {
         </ul>
       )}
       <Link to={`/active-dashboard/${activeCharacterId}`}>Start Rolling</Link>
-      <Link to="/characters/new">Create New Character</Link>
+      {/* <Link to="/characters/new">Create New Character</Link> */}
+      <button onClick={handleCreate}>Create New Character</button>
+      <Link to="/character-management">Manage Characters</Link>
       <Link to="/stats">View Stats</Link>
+      <Dialog open={isModalOpen} onClose={handleCancel}>
+        <CharacterForm
+          initialData={
+            { characterId: 0, name: "", class: "" }
+          } // Add other default fields as needed
+          onSave={handleSave}
+          onCancel={handleCancel}
+        />
+      </Dialog>
     </div>
   );
 }

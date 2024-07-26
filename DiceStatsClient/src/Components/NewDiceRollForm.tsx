@@ -114,6 +114,7 @@ export default function NewDiceRollForm({ characterId }: NewDiceRollFormProps) {
           <option value="Attack">Attack</option>
           <option value="Skill Check">Skill Check</option>
           <option value="Saving Throw">Saving Throw</option>
+          <option value="Attack/Spell Damage">Attack/Spell Damage</option>
         </select>
       </div>
 
@@ -164,17 +165,19 @@ export default function NewDiceRollForm({ characterId }: NewDiceRollFormProps) {
         />
       </div>
 
-      <div>
-        <label>Success:</label>
-        <input
-          type="checkbox"
-          name="success"
-          checked={formData.success}
-          onChange={() =>
-            setFormData({ ...formData, success: !formData.success })
-          }
-        />
-      </div>
+      {formData.rollType !== "Attack/Spell Damage" && (
+        <div>
+          <label>Success:</label>
+          <input
+            type="checkbox"
+            name="success"
+            checked={formData.success || false}
+            onChange={() =>
+              setFormData({ ...formData, success: !formData.success })
+            }
+          />
+        </div>
+      )}
 
       <button type="submit">Submit</button>
     </form>

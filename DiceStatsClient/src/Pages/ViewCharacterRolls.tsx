@@ -5,19 +5,20 @@ import api from "../Utils/api"; // Import your API utility
 import DiceRollData from "../Interfaces/DiceRollData";
 import EditDiceRollForm from "../Components/EditDiceRollForm";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Button,
-  Select,
-  MenuItem,
-  TextField,
+  // Table,
+  // TableBody,
+  // TableCell,
+  // TableContainer,
+  // TableHead,
+  // TableRow,
+  // Paper,
+  // Button,
+  // Select,
+  // MenuItem,
+  // TextField,
   Dialog,
 } from "@mui/material";
+
 // Dummy filter options
 const rollTypes = [
   "Attack",
@@ -99,11 +100,6 @@ export default function ViewCharacterRolls() {
   const handleEditClick = (roll: DiceRollData) => {
     setEditRoll(roll);
     // setIsEditing(true);
-  };
-
-  const handleCloseEditModal = () => {
-    // setIsEditing(false);
-    setEditRoll(null);
   };
 
   const handleSaveEdit = async (updatedRoll: DiceRollData) => {

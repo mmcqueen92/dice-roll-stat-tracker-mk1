@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import Character from "../Interfaces/Character";
+import CharacterData from "../Interfaces/CharacterData";
 import DiceRoll from "../Interfaces/DiceRoll";
 import { useParams } from "react-router-dom";
 import api from "../Utils/api";
@@ -47,7 +47,7 @@ const initialFormData = {
 export default function ActiveDashboard() {
   const { id } = useParams<{ id: string }>();
   const activeCharacterId = parseInt(id || "0", 10);
-  const [character, setCharacter] = useState<Character | null>(null);
+  const [character, setCharacter] = useState<CharacterData | null>(null);
   const [diceRolls, setDiceRolls] = useState<DiceRoll[]>([]);
   const [formData, setFormData] = useState(initialFormData);
   const [rollValues, setRollValues] = useState<number[]>([]);
