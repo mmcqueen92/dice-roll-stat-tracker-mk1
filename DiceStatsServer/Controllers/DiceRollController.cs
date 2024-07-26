@@ -58,6 +58,39 @@ namespace DiceStatsServer.Controllers
             return Ok(diceRolls);
         }
 
+        // GET: api/:id/count
+        [HttpGet("{id}/count")]
+        public async Task<ActionResult<int>> GetDiceRollsCount(int id, [FromQuery] string orderBy = "Timestamp", [FromQuery] string orderDirection = "desc")
+        {
+            var query = _context.DiceRolls.Where(dr => dr.CharacterId == id);
+
+            // Apply ordering to the query (optional, if you want to match the other route exactly)
+            if (orderDirection.ToLower() == "asc")
+            {
+                query = orderBy.ToLower() switch
+                {
+                    "rollvalue" => query.OrderBy(dr => dr.RollValue),
+                    "success" => query.OrderBy(dr => dr.Success),
+                    _ => query.OrderBy(dr => dr.Timestamp),
+                };
+            }
+            else
+            {
+                query = orderBy.ToLower() switch
+                {
+                    "rollvalue" => query.OrderByDescending(dr => dr.RollValue),
+                    "success" => query.OrderByDescending(dr => dr.Success),
+                    _ => query.OrderByDescending(dr => dr.Timestamp),
+                };
+            }
+
+            // Get the count of records
+            var count = await query.CountAsync();
+
+            return Ok(count);
+        }
+
+
 
         // POST: api/DiceRoll/Create
         [HttpPost("Create")]

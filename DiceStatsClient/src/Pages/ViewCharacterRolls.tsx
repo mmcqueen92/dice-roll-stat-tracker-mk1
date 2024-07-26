@@ -50,18 +50,23 @@ export default function ViewCharacterRolls() {
     success: "",
   });
   const [page, setPage] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(10);
+  const [pageSize, setPageSize] = useState<number>(5);
   const [editRoll, setEditRoll] = useState<DiceRollData | null>(null);
-  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [totalRecords, setTotalRecords] = useState<number>(0);
 
   useEffect(() => {
+    console.log("DOING A THING")
     const fetchRolls = async () => {
       setLoading(true);
       try {
         const response = await api.get<DiceRollData[]>(`/diceroll/${id}`, {
-          params: { ...filters, page, pageSize },
+          params: { ...filters, skip: (page - 1) * pageSize, limit: pageSize },
         });
+        console.log("DATA: ", response.data)
         setRolls(response.data);
+
+        const countResponse = await api.get<number>(`/diceroll/${id}/count`);
+        setTotalRecords(countResponse.data);
       } catch (error) {
         setError("Error fetching rolls");
         console.error(error);
@@ -103,7 +108,7 @@ export default function ViewCharacterRolls() {
 
   const handleSaveEdit = async (updatedRoll: DiceRollData) => {
     try {
-      await api.put(`/rolls/${updatedRoll.diceRollId}`, updatedRoll);
+      await api.put(`/diceroll/${updatedRoll.diceRollId}`, updatedRoll);
       setRolls((prevRolls) =>
         prevRolls.map((roll) =>
           roll.diceRollId === updatedRoll.diceRollId ? updatedRoll : roll
@@ -245,9 +250,17 @@ export default function ViewCharacterRolls() {
           >
             Previous
           </button>
-          <span>Page {page}</span>
-          <button onClick={() => handlePageChange(page + 1)}>Next</button>
+          <span>
+            Page: {page} of {Math.ceil(totalRecords / pageSize)}
+          </span>
+          <button
+            onClick={() => handlePageChange(page + 1)}
+            disabled={page * pageSize >= totalRecords}
+          >
+            Next
+          </button>
           <select value={pageSize} onChange={handlePageSizeChange}>
+            <option value={5}>5</option>
             <option value={10}>10</option>
             <option value={20}>20</option>
             <option value={50}>50</option>

@@ -5,5 +5,6 @@ export default interface DiceRollData {
   rollType?: string;
   skillType?: string;
   rollValue: number;
-  success?: boolean; 
+  success?: boolean | null;
+  timestamp?: string;
 }

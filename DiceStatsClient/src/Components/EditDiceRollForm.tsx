@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextField,
   MenuItem,
@@ -6,6 +6,10 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  InputLabel,
+  Select,
+  FormControl,
+  SelectChangeEvent,
 } from "@mui/material";
 import DiceRollData from "../Interfaces/DiceRollData";
 
@@ -22,25 +26,49 @@ const rollTypes = [
   "Attack/Spell Damage",
 ];
 
+const diceSizes = [4, 6, 8, 10, 12, 20];
+
 export default function EditDiceRollForm ({
   roll,
   onSave,
   onCancel,
 }: EditRollFormProps) {
   const [formData, setFormData] = useState<DiceRollData>(roll);
+  const [availableRollValues, setAvailableRollValues] = useState<number[]>([]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  useEffect(() => {
+    // Update available roll values based on selected dice size
+    if (formData.diceSize) {
+      setAvailableRollValues(
+        Array.from({ length: formData.diceSize }, (_, i) => i + 1)
+      );
+    } else {
+      setAvailableRollValues([]);
+    }
+  }, [formData.diceSize]);
+
+  const handleTextFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       [name]: value,
-    });
+    }));
+  };
+
+  const handleSelectChange = (e: SelectChangeEvent<number | string>) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    // Set success to null if Roll Type is "Attack/Spell Damage"
+    if (formData.rollType === "Attack/Spell Damage") {
+      formData.success = null;
+    }
     onSave(formData);
   };
 
@@ -48,33 +76,45 @@ export default function EditDiceRollForm ({
     <form onSubmit={handleSubmit}>
       <DialogTitle>Edit Dice Roll</DialogTitle>
       <DialogContent>
-        <TextField
-          margin="dense"
-          label="Dice Size"
-          type="number"
-          name="diceSize"
-          value={formData.diceSize}
-          onChange={handleChange}
-          fullWidth
-          required
-        />
-        <TextField
-          margin="dense"
-          label="Roll Value"
-          type="number"
-          name="rollValue"
-          value={formData.rollValue}
-          onChange={handleChange}
-          fullWidth
-          required
-        />
+        <FormControl fullWidth margin="dense">
+          <InputLabel>Dice Size</InputLabel>
+          <Select
+            name="diceSize"
+            value={formData.diceSize || ""}
+            onChange={handleSelectChange}
+            required
+          >
+            {diceSizes.map((size) => (
+              <MenuItem key={size} value={size}>
+                {size}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl fullWidth margin="dense">
+          <InputLabel>Roll Value</InputLabel>
+          <Select
+            name="rollValue"
+            value={formData.rollValue || ""}
+            onChange={handleSelectChange}
+            required
+          >
+            {availableRollValues.map((value) => (
+              <MenuItem key={value} value={value}>
+                {value}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
         <TextField
           margin="dense"
           label="Roll Type"
           select
           name="rollType"
-          value={formData.rollType}
-          onChange={handleChange}
+          value={formData.rollType || ""}
+          onChange={handleTextFieldChange}
           fullWidth
           required
         >
@@ -84,27 +124,45 @@ export default function EditDiceRollForm ({
             </MenuItem>
           ))}
         </TextField>
-        <TextField
-          margin="dense"
-          label="Skill Type"
-          type="text"
-          name="skillType"
-          value={formData.skillType}
-          onChange={handleChange}
-          fullWidth
-        />
-        <TextField
-          margin="dense"
-          label="Success"
-          select
-          name="success"
-          value={formData.success}
-          onChange={handleChange}
-          fullWidth
-        >
-          <MenuItem value="true">Success</MenuItem>
-          <MenuItem value="false">Failure</MenuItem>
-        </TextField>
+
+        {formData.rollType === "Skill Check" && (
+          <TextField
+            margin="dense"
+            label="Skill Type"
+            type="text"
+            name="skillType"
+            value={formData.skillType || ""}
+            onChange={handleTextFieldChange}
+            fullWidth
+          />
+        )}
+
+        {formData.rollType === "Saving Throw" && (
+          <TextField
+            margin="dense"
+            label="Saving Throw"
+            type="text"
+            name="savingThrow"
+            value={formData.skillType || ""}
+            onChange={handleTextFieldChange}
+            fullWidth
+          />
+        )}
+
+        {formData.rollType !== "Attack/Spell Damage" && (
+          <TextField
+            margin="dense"
+            label="Success"
+            select
+            name="success"
+            value={formData.success || ""}
+            onChange={handleTextFieldChange}
+            fullWidth
+          >
+            <MenuItem value="true">Success</MenuItem>
+            <MenuItem value="false">Failure</MenuItem>
+          </TextField>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={onCancel} color="primary">
