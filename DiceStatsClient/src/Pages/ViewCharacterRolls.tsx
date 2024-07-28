@@ -92,7 +92,7 @@ export default function ViewCharacterRolls() {
     };
 
     fetchCharacterData();
-  }, []);
+  });
 
   const handleFilterChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
