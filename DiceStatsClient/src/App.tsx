@@ -10,7 +10,7 @@ import ActiveDashboard from "./Pages/ActiveDashboard";
 import NewCharacterForm from "./Pages/NewCharacterForm";
 import { AuthProvider } from "./Contexts/AuthContext";
 import CharacterManagement from "./Pages/CharacterManagement";
-
+import StatsPage from "./Pages/Stats";
 function App() {
   return (
     <AuthProvider>
@@ -27,6 +27,7 @@ function App() {
           <Route path="/characters/new" element={<NewCharacterForm />} />
           <Route path="/active-dashboard/:id" element={<ActiveDashboard />} />
           <Route path="/character-management" element={<CharacterManagement />} />
+          <Route path="/stats" element={<StatsPage />} />
         </Routes>
       </div>
     </AuthProvider>

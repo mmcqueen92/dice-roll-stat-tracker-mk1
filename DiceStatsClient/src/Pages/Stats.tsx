@@ -1,10 +1,20 @@
-import React, { useState, SyntheticEvent } from "react";
-import { Button, Container, Grid, Box, Typography } from "@mui/material";
+import React, { useState, useEffect, SyntheticEvent } from "react";
+import {
+  Button,
+  Container,
+  Grid,
+  Box,
+  Typography,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
 // Import your chart library and tab navigation components here
 // Example: import { LineChart, BarChart } from 'chart-library';
 // Example: import { Tabs, Tab } from 'tab-navigation-library';
+import api from "../Utils/api"; // Adjust the import path as needed
+import CharacterData from "../Interfaces/CharacterData"; // Adjust the import path as needed
 
-type DateRange = "all-time" | "last-month" | "last-week" | "custom";
 type TabValue =
   | "overview"
   | "dice-types"
@@ -13,17 +23,46 @@ type TabValue =
   | "success-rates";
 
 export default function StatsPage() {
-  const [dateRange, setDateRange] = useState("all-time");
-  const [currentTab, setCurrentTab] = useState("overview");
+  const [currentTab, setCurrentTab] = useState<TabValue>("overview");
+  const [characters, setCharacters] = useState<CharacterData[]>([]);
+  const [selectedCharacter, setSelectedCharacter] =
+    useState<CharacterData | null>(null);
 
-  // Placeholder for fetching and filtering data based on date range
-  const handleDateRangeChange = (newRange: DateRange) => {
-    setDateRange(newRange);
-    // Fetch and update data based on the new date range
-  };
+  useEffect(() => {
+    // Fetch all characters for the user
+    api.get(`/character`).then((response) => {
+      setCharacters(response.data);
+    });
+  }, []);
+
+  useEffect(() => {
+    // Fetch rolls when the selected character changes
+    const fetchData = () => {
+      const url =
+        selectedCharacter === null
+          ? `/diceroll`
+          : `/diceroll/${selectedCharacter.characterId}`;
+      api.get(url).then((response) => {
+        console.log("DICEROLL RESPONSE: ", response)
+        // Process and set data for charts
+        // Example: setAverageRollsData(response.data.averageRolls);
+      });
+    };
+
+    fetchData();
+  }, [selectedCharacter]);
 
   const handleTabChange = (event: SyntheticEvent, newValue: TabValue) => {
     setCurrentTab(newValue);
+  };
+
+  const handleCharacterChange = (event: SelectChangeEvent<string>) => {
+    const selectedCharacterId = parseInt(event.target.value);
+    const selectedCharacter =
+      characters.find(
+        (character) => character.characterId === selectedCharacterId
+      ) || null;
+    setSelectedCharacter(selectedCharacter);
   };
 
   return (
@@ -33,21 +72,26 @@ export default function StatsPage() {
           Dice Roll Stats
         </Typography>
 
+        {/* Character Selection Dropdown */}
+        <Select
+          value={
+            selectedCharacter ? selectedCharacter.characterId.toString() : ""
+          }
+          onChange={handleCharacterChange}
+          displayEmpty
+          inputProps={{ "aria-label": "Select Character" }}
+          sx={{ mb: 2 }}
+        >
+          <MenuItem value="">All Characters</MenuItem>
+          {characters.map((character) => (
+            <MenuItem key={character.characterId} value={character.characterId}>
+              {character.name}
+            </MenuItem>
+          ))}
+        </Select>
+
         {/* Date Range Picker */}
-        <Box>
-          <Button onClick={() => handleDateRangeChange("all-time")}>
-            All Time
-          </Button>
-          <Button onClick={() => handleDateRangeChange("last-month")}>
-            Last Month
-          </Button>
-          <Button onClick={() => handleDateRangeChange("last-week")}>
-            Last Week
-          </Button>
-          <Button onClick={() => handleDateRangeChange("custom")}>
-            Custom
-          </Button>
-        </Box>
+        {/* Implement your date range picker here */}
 
         {/* Tab Navigation */}
         {/* Replace with your tab navigation component */}

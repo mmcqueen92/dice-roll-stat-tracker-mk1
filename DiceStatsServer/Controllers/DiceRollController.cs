@@ -22,12 +22,33 @@ namespace DiceStatsServer.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DiceRoll>>> GetDiceRolls()
         {
-            return await _context.DiceRolls.ToListAsync();
+            // Retrieve the user ID from the context
+            var userId = HttpContext.Items["UserId"]?.ToString();
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+
+            // Fetch characters for the user
+            var userCharacters = await _context.Characters
+                .Where(c => c.UserId == int.Parse(userId))
+                .ToListAsync();
+
+            var characterIds = userCharacters.Select(c => c.CharacterId).ToList();
+
+            // Fetch dice rolls for those characters
+            var diceRolls = await _context.DiceRolls
+                .Where(dr => characterIds.Contains(dr.CharacterId))
+                .ToListAsync();
+
+            return Ok(diceRolls);
         }
+
 
         // GET: api/DiceRoll/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<DiceRoll>>> GetDiceRolls(int id, [FromQuery] int limit = 5, [FromQuery] int skip = 0, [FromQuery] string orderBy = "Timestamp", [FromQuery] string orderDirection = "desc")
+        public async Task<ActionResult<IEnumerable<DiceRoll>>> GetDiceRolls(int id, [FromQuery] int? limit, [FromQuery] int skip = 0, [FromQuery] string orderBy = "Timestamp", [FromQuery] string orderDirection = "desc")
         {
             var query = _context.DiceRolls.Where(dr => dr.CharacterId == id);
 
@@ -50,13 +71,18 @@ namespace DiceStatsServer.Controllers
                 };
             }
 
-            var diceRolls = await query
-                .Skip(skip)
-                .Take(limit)
-                .ToListAsync();
+            query = query.Skip(skip);
+
+            if (limit.HasValue && limit.Value > 0)
+            {
+                query = query.Take(limit.Value);
+            }
+
+            var diceRolls = await query.ToListAsync();
 
             return Ok(diceRolls);
         }
+
 
         // GET: api/:id/count
         [HttpGet("{id}/count")]
