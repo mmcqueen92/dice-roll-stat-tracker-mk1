@@ -14,7 +14,7 @@ import {
 // Example: import { Tabs, Tab } from 'tab-navigation-library';
 import api from "../Utils/api"; // Adjust the import path as needed
 import CharacterData from "../Interfaces/CharacterData"; // Adjust the import path as needed
-
+import DiceRollData from "../Interfaces/DiceRollData";
 type TabValue =
   | "overview"
   | "dice-types"
@@ -27,30 +27,21 @@ export default function StatsPage() {
   const [characters, setCharacters] = useState<CharacterData[]>([]);
   const [selectedCharacter, setSelectedCharacter] =
     useState<CharacterData | null>(null);
+  const [diceRollData, setDiceRollData] = useState<DiceRollData[]>([]);
 
   useEffect(() => {
     // Fetch all characters for the user
     api.get(`/character`).then((response) => {
       setCharacters(response.data);
     });
+
+    api.get("/diceroll").then((response) => {
+      console.log("DICEROLLS: ", response.data);
+      setDiceRollData(response.data);
+      // Process and set data for charts
+      // Example: setAverageRollsData(response.data.averageRolls);
+    });
   }, []);
-
-  useEffect(() => {
-    // Fetch rolls when the selected character changes
-    const fetchData = () => {
-      const url =
-        selectedCharacter === null
-          ? `/diceroll`
-          : `/diceroll/${selectedCharacter.characterId}`;
-      api.get(url).then((response) => {
-        console.log("DICEROLL RESPONSE: ", response)
-        // Process and set data for charts
-        // Example: setAverageRollsData(response.data.averageRolls);
-      });
-    };
-
-    fetchData();
-  }, [selectedCharacter]);
 
   const handleTabChange = (event: SyntheticEvent, newValue: TabValue) => {
     setCurrentTab(newValue);
