@@ -28,6 +28,9 @@ export default function StatsPage() {
   const [selectedCharacter, setSelectedCharacter] =
     useState<CharacterData | null>(null);
   const [diceRollData, setDiceRollData] = useState<DiceRollData[]>([]);
+  const [averageRollsByDiceSize, setAverageRollsByDiceSize] = useState<{
+    [key: string]: number;
+  }>({});
 
   useEffect(() => {
     // Fetch all characters for the user
@@ -43,6 +46,13 @@ export default function StatsPage() {
     });
   }, []);
 
+  useEffect(() => {
+    if (diceRollData.length > 0) {
+      const calculatedData = calculateAverageRollsByDiceSize(diceRollData);
+      setAverageRollsByDiceSize(calculatedData);
+    }
+  }, [diceRollData]);
+
   const handleTabChange = (event: SyntheticEvent, newValue: TabValue) => {
     setCurrentTab(newValue);
   };
@@ -54,6 +64,23 @@ export default function StatsPage() {
         (character) => character.characterId === selectedCharacterId
       ) || null;
     setSelectedCharacter(selectedCharacter);
+  };
+
+  const calculateAverageRollsByDiceSize = (diceRolls: DiceRollData[]) => {
+    const diceSizes = Array.from(
+      new Set(diceRolls.map((roll) => roll.diceSize))
+    );
+    const averageRollsByDiceSize: { [key: string]: number } = {};
+
+    diceSizes.forEach((size) => {
+      const rollsOfSize = diceRolls.filter((roll) => roll.diceSize === size);
+      const average =
+        rollsOfSize.reduce((sum, roll) => sum + roll.rollValue, 0) /
+        rollsOfSize.length;
+      averageRollsByDiceSize[size] = average;
+    });
+
+    return averageRollsByDiceSize;
   };
 
   return (
@@ -101,21 +128,23 @@ export default function StatsPage() {
         <Box>
           {currentTab === "overview" && (
             <Grid container spacing={2}>
-              {/* Example Overview Content */}
               <Grid item xs={12} md={6}>
                 <Box>
-                  <Typography variant="h6">Average Rolls</Typography>
-                  {/* Replace with your chart component */}
-                  {/* <BarChart data={averageRollsData} /> */}
+                  <Typography variant="h6">
+                    Average Rolls by Dice Size
+                  </Typography>
+                  <ul>
+                    {Object.entries(averageRollsByDiceSize).map(
+                      ([size, average]) => (
+                        <li key={size}>
+                          Dice Size {size}: {average.toFixed(2)}
+                        </li>
+                      )
+                    )}
+                  </ul>
                 </Box>
               </Grid>
-              <Grid item xs={12} md={6}>
-                <Box>
-                  <Typography variant="h6">Total Rolls</Typography>
-                  {/* Replace with your chart component */}
-                  {/* <PieChart data={totalRollsData} /> */}
-                </Box>
-              </Grid>
+              {/* Other overview content */}
             </Grid>
           )}
 
