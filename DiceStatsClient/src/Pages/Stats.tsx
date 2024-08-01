@@ -9,12 +9,10 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-// Import your chart library and tab navigation components here
-// Example: import { LineChart, BarChart } from 'chart-library';
-// Example: import { Tabs, Tab } from 'tab-navigation-library';
 import api from "../Utils/api"; // Adjust the import path as needed
 import CharacterData from "../Interfaces/CharacterData"; // Adjust the import path as needed
 import DiceRollData from "../Interfaces/DiceRollData";
+
 type TabValue =
   | "overview"
   | "dice-types"
@@ -40,7 +38,9 @@ export default function StatsPage() {
   const [totalRollsByDiceSize, setTotalRollsByDiceSize] = useState<{
     [key: string]: number;
   }>({});
-
+  const [rollDistributionByDiceSize, setRollDistributionByDiceSize] = useState<{
+    [key: string]: { [rollValue: number]: number };
+  }>({});
 
   useEffect(() => {
     // Fetch all characters for the user
@@ -88,13 +88,17 @@ export default function StatsPage() {
 
       const totalRollsData = calculateTotalRollsByDiceSize(activeDiceRollData);
       setTotalRollsByDiceSize(totalRollsData);
+
+      const distributionData =
+        calculateRollDistributionByDiceSize(activeDiceRollData);
+      setRollDistributionByDiceSize(distributionData);
     } else {
       setAverageRollsByDiceSize({});
       setAverageRollByCategory({});
       setTotalRollsByDiceSize({});
+      setRollDistributionByDiceSize({});
     }
   }, [activeDiceRollData]);
-
 
   const handleTabChange = (event: SyntheticEvent, newValue: TabValue) => {
     setCurrentTab(newValue);
@@ -172,6 +176,26 @@ export default function StatsPage() {
     return totalRollsByDiceSize;
   };
 
+  const calculateRollDistributionByDiceSize = (diceRolls: DiceRollData[]) => {
+    const distribution: { [key: string]: { [rollValue: number]: number } } = {};
+
+    diceRolls.forEach((roll) => {
+      const size = roll.diceSize;
+      const rollValue = roll.rollValue;
+
+      if (!distribution[size]) {
+        distribution[size] = {};
+      }
+
+      if (!distribution[size][rollValue]) {
+        distribution[size][rollValue] = 0;
+      }
+
+      distribution[size][rollValue] += 1;
+    });
+
+    return distribution;
+  };
 
   return (
     <Container>
@@ -202,7 +226,6 @@ export default function StatsPage() {
         {/* Implement your date range picker here */}
 
         {/* Tab Navigation */}
-        {/* Replace with your tab navigation component */}
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           {/* Example Tab Navigation */}
           {/* <Tabs value={currentTab} onChange={handleTabChange}>
@@ -250,97 +273,48 @@ export default function StatsPage() {
               </Grid>
               <Grid item xs={12} md={6}>
                 <Box>
-                  <Typography variant="h6">Average Roll by Category</Typography>
-                  <Typography>
-                    Attack Rolls:{" "}
-                    {(averageRollByCategory["Attack"] ?? 0).toFixed(2)}
+                  <Typography variant="h6">
+                    Roll Distribution by Dice Size
                   </Typography>
-                  <Typography>
-                    Skill Checks:{" "}
-                    {(averageRollByCategory["Skill Check"] ?? 0).toFixed(2)}
-                  </Typography>
-                  <Typography>
-                    Saving Throws:{" "}
-                    {(averageRollByCategory["Saving Throw"] ?? 0).toFixed(2)}
-                  </Typography>
+                  {Object.entries(rollDistributionByDiceSize).map(
+                    ([size, distribution]) => (
+                      <Box key={size}>
+                        <Typography variant="subtitle1">
+                          Dice Size {size}:
+                        </Typography>
+                        <ul>
+                          {Object.entries(distribution).map(
+                            ([rollValue, count]) => (
+                              <li key={rollValue}>
+                                Roll Value {rollValue}: {count} times
+                              </li>
+                            )
+                          )}
+                        </ul>
+                      </Box>
+                    )
+                  )}
                 </Box>
               </Grid>
-            </Grid>
-          )}
-
-          {currentTab === "dice-types" && (
-            <Grid container spacing={2}>
-              {/* Example Dice Types Content */}
-              <Grid item xs={12}>
+              <Grid item xs={12} md={6}>
                 <Box>
                   <Typography variant="h6">
-                    Average Rolls by Dice Type
+                    Average Roll by Category (d20)
                   </Typography>
-                  {/* Replace with your chart component */}
-                  {/* <BarChart data={averageRollsByTypeData} /> */}
-                </Box>
-              </Grid>
-              <Grid item xs={12}>
-                <Box>
-                  <Typography variant="h6">
-                    Roll Distribution by Dice Type
-                  </Typography>
-                  {/* Replace with your chart component */}
-                  {/* <Histogram data={rollDistributionByTypeData} /> */}
+                  <ul>
+                    {Object.entries(averageRollByCategory).map(
+                      ([category, average]) => (
+                        <li key={category}>
+                          {category}: {average.toFixed(2)}
+                        </li>
+                      )
+                    )}
+                  </ul>
                 </Box>
               </Grid>
             </Grid>
           )}
-
-          {currentTab === "d20-rolls" && (
-            <Grid container spacing={2}>
-              {/* Example d20 Rolls Content */}
-              <Grid item xs={12}>
-                <Box>
-                  <Typography variant="h6">
-                    Average Rolls by Category
-                  </Typography>
-                  {/* Replace with your chart component */}
-                  {/* <BarChart data={averageRollsByCategoryData} /> */}
-                </Box>
-              </Grid>
-              <Grid item xs={12}>
-                <Box>
-                  <Typography variant="h6">
-                    Success Rates by Category
-                  </Typography>
-                  {/* Replace with your chart component */}
-                  {/* <PieChart data={successRatesByCategoryData} /> */}
-                </Box>
-              </Grid>
-            </Grid>
-          )}
-
-          {currentTab === "trends" && (
-            <Grid container spacing={2}>
-              {/* Example Trends Content */}
-              <Grid item xs={12}>
-                <Box>
-                  <Typography variant="h6">Roll Trends Over Time</Typography>
-                  {/* Replace with your chart component */}
-                  {/* <LineChart data={rollTrendsData} /> */}
-                </Box>
-              </Grid>
-            </Grid>
-          )}
-
-          {currentTab === "success-rates" && (
-            <Grid container spacing={2}>
-              {/* Example Success Rates Content */}
-              <Grid item xs={12}>
-                <Box>
-                  <Typography variant="h6">Success Rates</Typography>
-                  {/* Replace with your chart component */}
-                  {/* <PieChart data={successRatesData} /> */}
-                </Box>
-              </Grid>
-            </Grid>
-          )}
+          {/* Add other tab content here */}
         </Box>
       </Box>
     </Container>
