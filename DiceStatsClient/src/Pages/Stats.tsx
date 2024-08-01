@@ -28,7 +28,13 @@ export default function StatsPage() {
   const [selectedCharacter, setSelectedCharacter] =
     useState<CharacterData | null>(null);
   const [diceRollData, setDiceRollData] = useState<DiceRollData[]>([]);
+  const [activeDiceRollData, setActiveDiceRollData] = useState<DiceRollData[]>(
+    []
+  );
   const [averageRollsByDiceSize, setAverageRollsByDiceSize] = useState<{
+    [key: string]: number;
+  }>({});
+  const [averageRollByCategory, setAverageRollByCategory] = useState<{
     [key: string]: number;
   }>({});
 
@@ -52,6 +58,33 @@ export default function StatsPage() {
       setAverageRollsByDiceSize(calculatedData);
     }
   }, [diceRollData]);
+
+  useEffect(() => {
+    if (selectedCharacter) {
+      // Filter diceRollData for the selected character
+      const filteredData = diceRollData.filter(
+        (roll) => roll.characterId === selectedCharacter.characterId
+      );
+      setActiveDiceRollData(filteredData);
+    } else {
+      // If no character is selected, show all dice rolls
+      setActiveDiceRollData(diceRollData);
+    }
+  }, [selectedCharacter, diceRollData]);
+
+  useEffect(() => {
+    if (activeDiceRollData.length > 0) {
+      const calculatedData =
+        calculateAverageRollsByDiceSize(activeDiceRollData);
+      setAverageRollsByDiceSize(calculatedData);
+
+      const averageByCategory =
+        calculateAverageRollByCategory(activeDiceRollData);
+      setAverageRollByCategory(averageByCategory);
+    } else {
+      setAverageRollsByDiceSize({});
+    }
+  }, [activeDiceRollData]);
 
   const handleTabChange = (event: SyntheticEvent, newValue: TabValue) => {
     setCurrentTab(newValue);
@@ -81,6 +114,38 @@ export default function StatsPage() {
     });
 
     return averageRollsByDiceSize;
+  };
+
+  const calculateAverageRollByCategory = (diceRolls: DiceRollData[]) => {
+    const categories = ["Attack", "Skill Check", "Saving Throw"];
+    const categorySums: { [key: string]: number } = {};
+    const categoryCounts: { [key: string]: number } = {};
+
+    diceRolls.forEach((roll) => {
+      if (
+        roll.diceSize === 20 &&
+        roll.rollType &&
+        categories.includes(roll.rollType)
+      ) {
+        if (!categorySums[roll.rollType]) {
+          categorySums[roll.rollType] = 0;
+          categoryCounts[roll.rollType] = 0;
+        }
+        categorySums[roll.rollType] += roll.rollValue;
+        categoryCounts[roll.rollType] += 1;
+      }
+    });
+
+    const averages: { [key: string]: number } = {};
+    categories.forEach((category) => {
+      if (categoryCounts[category]) {
+        averages[category] = categorySums[category] / categoryCounts[category];
+      } else {
+        averages[category] = 0;
+      }
+    });
+
+    return averages;
   };
 
   return (
@@ -145,6 +210,23 @@ export default function StatsPage() {
                 </Box>
               </Grid>
               {/* Other overview content */}
+              <Grid item xs={12} md={6}>
+                <Box>
+                  <Typography variant="h6">Average Roll by Category</Typography>
+                  <Typography>
+                    Attack Rolls:{" "}
+                    {(averageRollByCategory["Attack"] ?? 0).toFixed(2)}
+                  </Typography>
+                  <Typography>
+                    Skill Checks:{" "}
+                    {(averageRollByCategory["Skill Check"] ?? 0).toFixed(2)}
+                  </Typography>
+                  <Typography>
+                    Saving Throws:{" "}
+                    {(averageRollByCategory["Saving Throw"] ?? 0).toFixed(2)}
+                  </Typography>
+                </Box>
+              </Grid>
             </Grid>
           )}
 
