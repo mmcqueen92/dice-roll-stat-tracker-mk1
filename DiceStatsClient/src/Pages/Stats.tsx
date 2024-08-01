@@ -37,6 +37,10 @@ export default function StatsPage() {
   const [averageRollByCategory, setAverageRollByCategory] = useState<{
     [key: string]: number;
   }>({});
+  const [totalRollsByDiceSize, setTotalRollsByDiceSize] = useState<{
+    [key: string]: number;
+  }>({});
+
 
   useEffect(() => {
     // Fetch all characters for the user
@@ -81,10 +85,16 @@ export default function StatsPage() {
       const averageByCategory =
         calculateAverageRollByCategory(activeDiceRollData);
       setAverageRollByCategory(averageByCategory);
+
+      const totalRollsData = calculateTotalRollsByDiceSize(activeDiceRollData);
+      setTotalRollsByDiceSize(totalRollsData);
     } else {
       setAverageRollsByDiceSize({});
+      setAverageRollByCategory({});
+      setTotalRollsByDiceSize({});
     }
   }, [activeDiceRollData]);
+
 
   const handleTabChange = (event: SyntheticEvent, newValue: TabValue) => {
     setCurrentTab(newValue);
@@ -148,6 +158,21 @@ export default function StatsPage() {
     return averages;
   };
 
+  const calculateTotalRollsByDiceSize = (diceRolls: DiceRollData[]) => {
+    const totalRollsByDiceSize: { [key: string]: number } = {};
+
+    diceRolls.forEach((roll) => {
+      const size = roll.diceSize;
+      if (!totalRollsByDiceSize[size]) {
+        totalRollsByDiceSize[size] = 0;
+      }
+      totalRollsByDiceSize[size] += 1;
+    });
+
+    return totalRollsByDiceSize;
+  };
+
+
   return (
     <Container>
       <Box sx={{ my: 4 }}>
@@ -209,7 +234,20 @@ export default function StatsPage() {
                   </ul>
                 </Box>
               </Grid>
-              {/* Other overview content */}
+              <Grid item xs={12} md={6}>
+                <Box>
+                  <Typography variant="h6">Total Rolls by Dice Size</Typography>
+                  <ul>
+                    {Object.entries(totalRollsByDiceSize).map(
+                      ([size, total]) => (
+                        <li key={size}>
+                          Dice Size {size}: {total}
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </Box>
+              </Grid>
               <Grid item xs={12} md={6}>
                 <Box>
                   <Typography variant="h6">Average Roll by Category</Typography>
