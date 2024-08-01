@@ -41,6 +41,9 @@ export default function StatsPage() {
   const [rollDistributionByDiceSize, setRollDistributionByDiceSize] = useState<{
     [key: string]: { [rollValue: number]: number };
   }>({});
+  const [rollTrendsByDiceSize, setRollTrendsByDiceSize] = useState<{
+    [key: string]: { [index: number]: number };
+  }>({});
 
   useEffect(() => {
     // Fetch all characters for the user
@@ -51,8 +54,6 @@ export default function StatsPage() {
     api.get("/diceroll").then((response) => {
       console.log("DICEROLLS: ", response.data);
       setDiceRollData(response.data);
-      // Process and set data for charts
-      // Example: setAverageRollsData(response.data.averageRolls);
     });
   }, []);
 
@@ -92,11 +93,15 @@ export default function StatsPage() {
       const distributionData =
         calculateRollDistributionByDiceSize(activeDiceRollData);
       setRollDistributionByDiceSize(distributionData);
+
+      const trendsData = calculateRollTrendsByDiceSize(activeDiceRollData);
+      setRollTrendsByDiceSize(trendsData);
     } else {
       setAverageRollsByDiceSize({});
       setAverageRollByCategory({});
       setTotalRollsByDiceSize({});
       setRollDistributionByDiceSize({});
+      setRollTrendsByDiceSize({});
     }
   }, [activeDiceRollData]);
 
@@ -197,50 +202,102 @@ export default function StatsPage() {
     return distribution;
   };
 
+  const calculateRollTrendsByDiceSize = (diceRolls: DiceRollData[]) => {
+    const trends: { [key: number]: { [index: number]: number } } = {};
+
+    // Group rolls by dice size
+    const rollsByDiceSize = diceRolls.reduce<{ [key: number]: number[] }>(
+      (acc, roll) => {
+        if (!acc[roll.diceSize]) {
+          acc[roll.diceSize] = [];
+        }
+        acc[roll.diceSize].push(roll.rollValue);
+        return acc;
+      },
+      {}
+    );
+
+    // Calculate rolling average by roll number
+    Object.keys(rollsByDiceSize).forEach((size) => {
+      const rolls = rollsByDiceSize[parseInt(size)]; // Convert size to number
+      const rollTrends: { [index: number]: number } = {};
+
+      rolls.forEach((rollValue, index) => {
+        const sum = rolls
+          .slice(0, index + 1)
+          .reduce<number>((a, b) => a + b, 0);
+        const average = sum / (index + 1);
+        rollTrends[index + 1] = average;
+      });
+
+      trends[parseInt(size)] = rollTrends; // Convert size to number
+    });
+
+    return trends;
+  };
+
+
+  const formatRollTrendsForDisplay = (trends: {
+    [key: string]: { [index: number]: number };
+  }) => {
+    return Object.entries(trends).map(([size, trendData]) => (
+      <Box key={size}>
+        <Typography variant="subtitle1">Dice Size {size}:</Typography>
+        <ul>
+          {Object.entries(trendData).map(([rollNumber, average]) => (
+            <li key={rollNumber}>
+              Roll {rollNumber}: Average Value {average.toFixed(2)}
+            </li>
+          ))}
+        </ul>
+      </Box>
+    ));
+  };
+
   return (
     <Container>
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Dice Roll Stats
-        </Typography>
-
-        {/* Character Selection Dropdown */}
+      <Box>
         <Select
-          value={
-            selectedCharacter ? selectedCharacter.characterId.toString() : ""
-          }
+          value={String(selectedCharacter?.characterId) || ""}
           onChange={handleCharacterChange}
-          displayEmpty
-          inputProps={{ "aria-label": "Select Character" }}
-          sx={{ mb: 2 }}
         >
-          <MenuItem value="">All Characters</MenuItem>
+          <MenuItem value="">
+            <em>Select a Character</em>
+          </MenuItem>
           {characters.map((character) => (
-            <MenuItem key={character.characterId} value={character.characterId}>
+            <MenuItem
+              key={character.characterId}
+              value={String(character.characterId)}
+            >
               {character.name}
             </MenuItem>
           ))}
         </Select>
-
-        {/* Date Range Picker */}
-        {/* Implement your date range picker here */}
-
-        {/* Tab Navigation */}
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          {/* Example Tab Navigation */}
-          {/* <Tabs value={currentTab} onChange={handleTabChange}>
-            <Tab label="Overview" value="overview" />
-            <Tab label="Dice Types" value="dice-types" />
-            <Tab label="d20 Rolls" value="d20-rolls" />
-            <Tab label="Trends" value="trends" />
-            <Tab label="Success Rates" value="success-rates" />
-          </Tabs> */}
+      </Box>
+      <Box>
+        <Typography variant="h5">Statistics</Typography>
+        {/* Tab navigation */}
+        <Box>
+          <Button onClick={(e) => handleTabChange(e, "overview")}>
+            Overview
+          </Button>
+          <Button onClick={(e) => handleTabChange(e, "dice-types")}>
+            Dice Types
+          </Button>
+          <Button onClick={(e) => handleTabChange(e, "d20-rolls")}>
+            d20 Rolls
+          </Button>
+          <Button onClick={(e) => handleTabChange(e, "trends")}>
+            Roll Trends
+          </Button>
+          <Button onClick={(e) => handleTabChange(e, "success-rates")}>
+            Success Rates
+          </Button>
         </Box>
-
-        {/* Tab Content */}
         <Box>
           {currentTab === "overview" && (
             <Grid container spacing={2}>
+              {/* Overview Tab Content */}
               <Grid item xs={12} md={6}>
                 <Box>
                   <Typography variant="h6">
@@ -313,6 +370,12 @@ export default function StatsPage() {
                 </Box>
               </Grid>
             </Grid>
+          )}
+          {currentTab === "trends" && (
+            <Box>
+              <Typography variant="h6">Roll Trends by Dice Size</Typography>
+              {formatRollTrendsForDisplay(rollTrendsByDiceSize)}
+            </Box>
           )}
           {/* Add other tab content here */}
         </Box>
