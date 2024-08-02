@@ -44,6 +44,9 @@ export default function StatsPage() {
   const [rollTrendsByDiceSize, setRollTrendsByDiceSize] = useState<{
     [key: string]: { [index: number]: number };
   }>({});
+  const [standardDeviationByDiceSize, setStandardDeviationByDiceSize] =
+    useState<{ [key: string]: number }>({});
+
 
   useEffect(() => {
     // Fetch all characters for the user
@@ -96,12 +99,17 @@ export default function StatsPage() {
 
       const trendsData = calculateRollTrendsByDiceSize(activeDiceRollData);
       setRollTrendsByDiceSize(trendsData);
+
+      const standardDeviationData =
+        calculateStandardDeviationByDiceSize(activeDiceRollData);
+      setStandardDeviationByDiceSize(standardDeviationData);
     } else {
       setAverageRollsByDiceSize({});
       setAverageRollByCategory({});
       setTotalRollsByDiceSize({});
       setRollDistributionByDiceSize({});
       setRollTrendsByDiceSize({});
+      setStandardDeviationByDiceSize({});
     }
   }, [activeDiceRollData]);
 
@@ -254,6 +262,32 @@ export default function StatsPage() {
     ));
   };
 
+  const calculateStandardDeviationByDiceSize = (diceRolls: DiceRollData[]) => {
+    const diceSizes = Array.from(
+      new Set(diceRolls.map((roll) => roll.diceSize))
+    );
+    const standardDeviationByDiceSize: { [key: string]: number } = {};
+
+    diceSizes.forEach((size) => {
+      const rollsOfSize = diceRolls.filter((roll) => roll.diceSize === size);
+      const average =
+        rollsOfSize.reduce((sum, roll) => sum + roll.rollValue, 0) /
+        rollsOfSize.length;
+
+      const variance =
+        rollsOfSize.reduce(
+          (sum, roll) => sum + Math.pow(roll.rollValue - average, 2),
+          0
+        ) / rollsOfSize.length;
+
+      const standardDeviation = Math.sqrt(variance);
+      standardDeviationByDiceSize[size] = standardDeviation;
+    });
+
+    return standardDeviationByDiceSize;
+  };
+
+
   return (
     <Container>
       <Box>
@@ -378,6 +412,22 @@ export default function StatsPage() {
                       ([category, average]) => (
                         <li key={category}>
                           {category}: {average.toFixed(2)}
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </Box>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Box>
+                  <Typography variant="h6">
+                    Standard Deviation by Dice Size
+                  </Typography>
+                  <ul>
+                    {Object.entries(standardDeviationByDiceSize).map(
+                      ([size, stdDev]) => (
+                        <li key={size}>
+                          Dice Size {size}: {stdDev.toFixed(2)}
                         </li>
                       )
                     )}
