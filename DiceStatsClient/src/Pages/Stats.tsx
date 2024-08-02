@@ -44,9 +44,11 @@ export default function StatsPage() {
   const [rollTrendsByDiceSize, setRollTrendsByDiceSize] = useState<{
     [key: string]: { [index: number]: number };
   }>({});
+  const [rollTrendsByRollType, setRollTrendsByRollType] = useState<{
+    [key: string]: { [index: number]: number};
+  }>({});
   const [standardDeviationByDiceSize, setStandardDeviationByDiceSize] =
     useState<{ [key: string]: number }>({});
-
 
   useEffect(() => {
     // Fetch all characters for the user
@@ -97,9 +99,11 @@ export default function StatsPage() {
         calculateRollDistributionByDiceSize(activeDiceRollData);
       setRollDistributionByDiceSize(distributionData);
 
-      const trendsData = calculateRollTrendsByDiceSize(activeDiceRollData);
-      setRollTrendsByDiceSize(trendsData);
+      const trendsByDiceSizeData = calculateRollTrendsByDiceSize(activeDiceRollData);
+      setRollTrendsByDiceSize(trendsByDiceSizeData);
 
+        const trendsByRollTypeData = calculateRollTrendsByRollType(activeDiceRollData);
+        setRollTrendsByRollType(trendsByRollTypeData);
       const standardDeviationData =
         calculateStandardDeviationByDiceSize(activeDiceRollData);
       setStandardDeviationByDiceSize(standardDeviationData);
@@ -244,8 +248,7 @@ export default function StatsPage() {
     return trends;
   };
 
-
-  const formatRollTrendsForDisplay = (trends: {
+  const formatRollTrendsByDiceSizeForDisplay = (trends: {
     [key: string]: { [index: number]: number };
   }) => {
     return Object.entries(trends).map(([size, trendData]) => (
@@ -287,6 +290,56 @@ export default function StatsPage() {
     return standardDeviationByDiceSize;
   };
 
+  const calculateRollTrendsByRollType = (diceRolls: DiceRollData[]) => {
+    const trends: { [key: string]: { [index: number]: number } } = {};
+
+    const rollsByRollType = diceRolls.reduce<{ [key: string]: number[] }>(
+      (acc, roll) => {
+        if (roll.rollType) {
+          if (!acc[roll.rollType]) {
+            acc[roll.rollType] = [];
+          }
+          acc[roll.rollType].push(roll.rollValue);
+        }
+        return acc;
+      },
+      {}
+    );
+
+    Object.keys(rollsByRollType).forEach((type) => {
+      const rolls = rollsByRollType[type];
+      const rollTrends: { [index: number]: number } = {};
+
+      rolls.forEach((rollValue, index) => {
+        const sum = rolls
+          .slice(0, index + 1)
+          .reduce<number>((a, b) => a + b, 0);
+        const average = sum / (index + 1);
+        rollTrends[index + 1] = average;
+      });
+
+      trends[type] = rollTrends;
+    });
+
+    return trends;
+  };
+
+  const formatRollTrendsByRollTypeForDisplay = (trends: {
+    [key: string]: { [index: number]: number };
+  }) => {
+    return Object.entries(trends).map(([type, trendData]) => (
+      <Box key={type}>
+        <Typography variant="subtitle1">{type}:</Typography>
+        <ul>
+          {Object.entries(trendData).map(([rollNumber, average]) => (
+            <li key={rollNumber}>
+              Roll {rollNumber}: Average Value {average.toFixed(2)}
+            </li>
+          ))}
+        </ul>
+      </Box>
+    ));
+  };
 
   return (
     <Container>
@@ -437,10 +490,17 @@ export default function StatsPage() {
             </Grid>
           )}
           {currentTab === "trends" && (
-            <Box>
-              <Typography variant="h6">Roll Trends by Dice Size</Typography>
-              {formatRollTrendsForDisplay(rollTrendsByDiceSize)}
-            </Box>
+            <>
+              <Box>
+                <Typography variant="h6">Roll Trends by Dice Size</Typography>
+                {formatRollTrendsByDiceSizeForDisplay(rollTrendsByDiceSize)}
+              </Box>
+
+              <Box>
+                <Typography variant="h6">Roll Trends by Roll Type</Typography>
+                {formatRollTrendsByRollTypeForDisplay(rollTrendsByRollType)}
+              </Box>
+            </>
           )}
           {/* Add other tab content here */}
         </Box>
