@@ -258,8 +258,9 @@ export default function ActiveDashboard() {
       <ul>
         {diceRolls.map((roll: any) => (
           <li key={roll.diceRollId}>
-            {roll.rollType} - {roll.rollValue} / {roll.diceSize} -{" "}
-            {roll.success ? "Success" : "Fail"}
+            {roll.rollType} - {roll.rollValue} / {roll.diceSize}
+            {roll.success === true && " - Success"}
+            {roll.success === false && " - Fail"}
           </li>
         ))}
       </ul>

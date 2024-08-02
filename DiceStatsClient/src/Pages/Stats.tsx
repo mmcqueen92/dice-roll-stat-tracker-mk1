@@ -258,11 +258,25 @@ export default function StatsPage() {
     <Container>
       <Box>
         <Select
-          value={String(selectedCharacter?.characterId) || ""}
+          value={
+            selectedCharacter?.characterId
+              ? String(selectedCharacter.characterId)
+              : ""
+          }
           onChange={handleCharacterChange}
+          displayEmpty
+          renderValue={(value) => {
+            if (value === "") {
+              return <em>Select a Character</em>;
+            }
+            const selectedCharacter = characters.find(
+              (character) => String(character.characterId) === value
+            );
+            return selectedCharacter ? selectedCharacter.name : "";
+          }}
         >
           <MenuItem value="">
-            <em>Select a Character</em>
+            <em>All Characters</em>
           </MenuItem>
           {characters.map((character) => (
             <MenuItem
@@ -274,6 +288,7 @@ export default function StatsPage() {
           ))}
         </Select>
       </Box>
+
       <Box>
         <Typography variant="h5">Statistics</Typography>
         {/* Tab navigation */}

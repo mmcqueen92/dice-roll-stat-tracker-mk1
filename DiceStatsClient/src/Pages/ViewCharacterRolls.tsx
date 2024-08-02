@@ -248,7 +248,8 @@ export default function ViewCharacterRolls() {
             {rolls.map((roll) => (
               <li key={roll.diceRollId}>
                 Dice Size: {roll.diceSize}, Roll Value: {roll.rollValue}, Roll
-                Type: {roll.rollType}
+                Type: {roll.rollType} {roll.success === true && " - Success"}
+                {roll.success === false && " - Fail"}
                 <button onClick={() => handleEditClick(roll)}>Edit</button>
               </li>
             ))}
