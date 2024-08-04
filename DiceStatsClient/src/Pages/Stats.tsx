@@ -55,7 +55,14 @@ export default function StatsPage() {
     failStreak: number;
   }>({ successStreak: 0, failStreak: 0 });
 
-  const [critAndFumbleRates, setCritAndFumbleRates] = useState<{critRate: number, fumbleRate: number}>({critRate: 0, fumbleRate: 0})
+  const [critAndFumbleRates, setCritAndFumbleRates] = useState<{
+    critRate: number;
+    fumbleRate: number;
+  }>({ critRate: 0, fumbleRate: 0 });
+
+  const [rollsBySkillType, setRollsBySkillType] = useState<{
+    [key: string]: number;
+  }>({});
 
   useEffect(() => {
     // Fetch all characters for the user
@@ -121,8 +128,12 @@ export default function StatsPage() {
       const streakData = calculateRollingStreaks(activeDiceRollData);
       setStreakRecords(streakData);
 
-      const critAndFumbleRates = calculateCritAndFumbleRates(activeDiceRollData);
+      const critAndFumbleRates =
+        calculateCritAndFumbleRates(activeDiceRollData);
       setCritAndFumbleRates(critAndFumbleRates);
+
+      const rollsBySkillType = calculateRollsBySkillType(activeDiceRollData);
+      setRollsBySkillType(rollsBySkillType);
     } else {
       setAverageRollsByDiceSize({});
       setAverageRollByCategory({});
@@ -131,6 +142,9 @@ export default function StatsPage() {
       setRollTrendsByDiceSize({});
       setRollTrendsByRollType({});
       setStandardDeviationByDiceSize({});
+      setStreakRecords({ successStreak: 0, failStreak: 0 });
+      setCritAndFumbleRates({ critRate: 0, fumbleRate: 0 });
+      setRollsBySkillType({});
     }
   }, [activeDiceRollData]);
 
@@ -407,6 +421,29 @@ export default function StatsPage() {
     return rates;
   };
 
+  const calculateRollsBySkillType = (diceRolls: DiceRollData[]) => {
+    const filteredRolls = diceRolls.filter(
+      (roll) =>
+        roll.rollType === "Skill Check" || roll.rollType === "Saving Throw"
+    );
+
+    const counts: { [key: string]: number } = {};
+
+    filteredRolls.forEach((roll) => {
+      if (roll.skillType) {
+        const skillType = roll.skillType;
+
+        if (counts[skillType]) {
+          counts[skillType]++;
+        } else {
+          counts[skillType] = 1;
+        }
+      }
+    });
+
+    return counts;
+  };
+
   return (
     <Container>
       <Box>
@@ -567,6 +604,22 @@ export default function StatsPage() {
                   <Typography variant="h6">Crit/Fumble Rates</Typography>
                   <p>Crit rate: {critAndFumbleRates.critRate * 100}%</p>
                   <p>Fumble rate: {critAndFumbleRates.fumbleRate * 100}%</p>
+                </Box>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <Box>
+                  <Typography variant="h6">Rolls by Skill Types</Typography>
+
+                  <ul>
+                    {Object.entries(rollsBySkillType).map(
+                      ([skillType, count], index) => (
+                        <li key={index}>
+                          {skillType}: {count}
+                        </li>
+                      )
+                    )}
+                  </ul>
                 </Box>
               </Grid>
             </Grid>
