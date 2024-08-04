@@ -92,15 +92,16 @@ export default function ViewCharacterRolls() {
     };
 
     fetchCharacterData();
-  });
+  }, [id]);
 
   const handleFilterChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    setFilters({
-      ...filters,
+    setFilters((prevFilters) => ({
+      ...prevFilters,
       [e.target.name]: e.target.value,
-    });
+    }));
+    setPage(1);
   };
 
   const handlePageChange = (newPage: number) => {
@@ -248,8 +249,13 @@ export default function ViewCharacterRolls() {
             {rolls.map((roll) => (
               <li key={roll.diceRollId}>
                 Dice Size: {roll.diceSize}, Roll Value: {roll.rollValue}, Roll
-                Type: {roll.rollType} {roll.success === true && " - Success"}
+                Type: {roll.rollType}
+                {roll.success === true && " - Success"}
                 {roll.success === false && " - Fail"}
+                {(roll.rollType === "Skill Check" ||
+                  roll.rollType === "Saving Throw") && (
+                  <> - Skill Type: {roll.skillType}</>
+                )}
                 <button onClick={() => handleEditClick(roll)}>Edit</button>
               </li>
             ))}

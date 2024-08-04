@@ -45,10 +45,17 @@ export default function StatsPage() {
     [key: string]: { [index: number]: number };
   }>({});
   const [rollTrendsByRollType, setRollTrendsByRollType] = useState<{
-    [key: string]: { [index: number]: number};
+    [key: string]: { [index: number]: number };
   }>({});
   const [standardDeviationByDiceSize, setStandardDeviationByDiceSize] =
     useState<{ [key: string]: number }>({});
+
+  const [streakRecords, setStreakRecords] = useState<{
+    successStreak: number;
+    failStreak: number;
+  }>({ successStreak: 0, failStreak: 0 });
+
+  const [critAndFumbleRates, setCritAndFumbleRates] = useState<{critRate: number, fumbleRate: number}>({critRate: 0, fumbleRate: 0})
 
   useEffect(() => {
     // Fetch all characters for the user
@@ -99,20 +106,30 @@ export default function StatsPage() {
         calculateRollDistributionByDiceSize(activeDiceRollData);
       setRollDistributionByDiceSize(distributionData);
 
-      const trendsByDiceSizeData = calculateRollTrendsByDiceSize(activeDiceRollData);
+      const trendsByDiceSizeData =
+        calculateRollTrendsByDiceSize(activeDiceRollData);
       setRollTrendsByDiceSize(trendsByDiceSizeData);
 
-        const trendsByRollTypeData = calculateRollTrendsByRollType(activeDiceRollData);
-        setRollTrendsByRollType(trendsByRollTypeData);
+      const trendsByRollTypeData =
+        calculateRollTrendsByRollType(activeDiceRollData);
+      setRollTrendsByRollType(trendsByRollTypeData);
+
       const standardDeviationData =
         calculateStandardDeviationByDiceSize(activeDiceRollData);
       setStandardDeviationByDiceSize(standardDeviationData);
+
+      const streakData = calculateRollingStreaks(activeDiceRollData);
+      setStreakRecords(streakData);
+
+      const critAndFumbleRates = calculateCritAndFumbleRates(activeDiceRollData);
+      setCritAndFumbleRates(critAndFumbleRates);
     } else {
       setAverageRollsByDiceSize({});
       setAverageRollByCategory({});
       setTotalRollsByDiceSize({});
       setRollDistributionByDiceSize({});
       setRollTrendsByDiceSize({});
+      setRollTrendsByRollType({});
       setStandardDeviationByDiceSize({});
     }
   }, [activeDiceRollData]);
@@ -341,6 +358,55 @@ export default function StatsPage() {
     ));
   };
 
+  const calculateRollingStreaks = (diceRolls: DiceRollData[]) => {
+    const streaks: { successStreak: number; failStreak: number } = {
+      successStreak: 0,
+      failStreak: 0,
+    };
+
+    let currentSuccessStreak = 0;
+    let currentFailStreak = 0;
+
+    diceRolls.forEach((roll) => {
+      if (roll.success !== null) {
+        if (roll.success === true) {
+          currentFailStreak = 0;
+          currentSuccessStreak++;
+          if (currentSuccessStreak > streaks.successStreak) {
+            streaks.successStreak = currentSuccessStreak;
+          }
+        } else {
+          currentSuccessStreak = 0;
+          currentFailStreak++;
+          if (currentFailStreak > streaks.failStreak) {
+            streaks.failStreak = currentFailStreak;
+          }
+        }
+      }
+    });
+
+    return streaks;
+  };
+
+  const calculateCritAndFumbleRates = (diceRolls: DiceRollData[]) => {
+    const rates: { critRate: number; fumbleRate: number } = {
+      critRate: 0,
+      fumbleRate: 0,
+    };
+
+    const rollsWithoutDamage = diceRolls.filter(
+      (roll) => roll.rollType !== "Attack/Spell Damage"
+    );
+
+    const crits = rollsWithoutDamage.filter((roll) => roll.rollValue === 20);
+    const fumbles = rollsWithoutDamage.filter((roll) => roll.rollValue === 1);
+
+    rates.critRate = crits.length / rollsWithoutDamage.length;
+    rates.fumbleRate = fumbles.length / rollsWithoutDamage.length;
+
+    return rates;
+  };
+
   return (
     <Container>
       <Box>
@@ -485,6 +551,22 @@ export default function StatsPage() {
                       )
                     )}
                   </ul>
+                </Box>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <Box>
+                  <Typography variant="h6">Rolling Streak Records</Typography>
+                  <p>Longest Success Streak: {streakRecords.successStreak}</p>
+                  <p>Longest Fail Streak: {streakRecords.failStreak}</p>
+                </Box>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <Box>
+                  <Typography variant="h6">Crit/Fumble Rates</Typography>
+                  <p>Crit rate: {critAndFumbleRates.critRate * 100}%</p>
+                  <p>Fumble rate: {critAndFumbleRates.fumbleRate * 100}%</p>
                 </Box>
               </Grid>
             </Grid>
