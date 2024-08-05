@@ -132,6 +132,7 @@ namespace DiceStatsServer.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDiceRoll(int id, DiceRoll diceRoll)
         {
+            Console.WriteLine("EDITING DICEROLL");
             if (id != diceRoll.DiceRollId)
             {
                 return BadRequest();

@@ -66,6 +66,8 @@ export default function ViewCharacterRolls() {
         const response = await api.get<DiceRollData[]>(`/diceroll/${id}`, {
           params: { ...filters, skip: (page - 1) * pageSize, limit: pageSize },
         });
+        console.log("ROLLS: ", response.data)
+        response.data.forEach((roll) => delete roll.character)
         setRolls(response.data);
 
         const countResponse = await api.get<number>(`/diceroll/${id}/count`);
@@ -119,6 +121,7 @@ export default function ViewCharacterRolls() {
   };
 
   const handleSaveEdit = async (updatedRoll: DiceRollData) => {
+    console.log("UPDATED ROLL: ", updatedRoll)
     try {
       await api.put(`/diceroll/${updatedRoll.diceRollId}`, updatedRoll);
       setRolls((prevRolls) =>

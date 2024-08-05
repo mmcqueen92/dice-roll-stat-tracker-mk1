@@ -7,4 +7,5 @@ export default interface DiceRollData {
   rollValue: number;
   success?: boolean | null;
   timestamp?: string;
+  character?: any;
 }

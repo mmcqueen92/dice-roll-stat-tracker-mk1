@@ -28,14 +28,13 @@ const rollTypes = [
 
 const diceSizes = [4, 6, 8, 10, 12, 20];
 
-export default function EditDiceRollForm ({
+export default function EditDiceRollForm({
   roll,
   onSave,
   onCancel,
 }: EditRollFormProps) {
   const [formData, setFormData] = useState<DiceRollData>(roll);
   const [availableRollValues, setAvailableRollValues] = useState<number[]>([]);
-
   useEffect(() => {
     // Update available roll values based on selected dice size
     if (formData.diceSize) {
@@ -49,10 +48,20 @@ export default function EditDiceRollForm ({
 
   const handleTextFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
+
+    if (name === "success") {
+      const boolValue = value === "true";
+
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: boolValue,
+      }));
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSelectChange = (e: SelectChangeEvent<number | string>) => {
@@ -65,7 +74,7 @@ export default function EditDiceRollForm ({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Set success to null if Roll Type is "Attack/Spell Damage"
+
     if (formData.rollType === "Attack/Spell Damage") {
       formData.success = null;
     }
@@ -155,7 +164,7 @@ export default function EditDiceRollForm ({
             label="Success"
             select
             name="success"
-            value={formData.success || ""}
+            value={formData.success || "false"}
             onChange={handleTextFieldChange}
             fullWidth
           >
@@ -174,4 +183,4 @@ export default function EditDiceRollForm ({
       </DialogActions>
     </form>
   );
-};
+}

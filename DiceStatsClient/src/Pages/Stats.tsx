@@ -64,6 +64,10 @@ export default function StatsPage() {
     [key: string]: number;
   }>({});
 
+  const [successRateBySkillType, setSuccessRateBySkillType] = useState<{
+    [key: string]: number;
+  }>({});
+
   useEffect(() => {
     // Fetch all characters for the user
     api.get(`/character`).then((response) => {
@@ -134,6 +138,10 @@ export default function StatsPage() {
 
       const rollsBySkillType = calculateRollsBySkillType(activeDiceRollData);
       setRollsBySkillType(rollsBySkillType);
+
+      const successRatesBySkillType =
+        calculateSuccessRateBySkillType(activeDiceRollData);
+      setSuccessRateBySkillType(successRatesBySkillType);
     } else {
       setAverageRollsByDiceSize({});
       setAverageRollByCategory({});
@@ -444,6 +452,41 @@ export default function StatsPage() {
     return counts;
   };
 
+  const calculateSuccessRateBySkillType = (diceRolls: DiceRollData[]) => {
+    const filteredRolls = diceRolls.filter(
+      (roll) =>
+        roll.rollType === "Skill Check" || roll.rollType === "Saving Throw"
+    );
+
+    const successRates: { [key: string]: number } = {};
+
+    const successCounts: { [key: string]: { [key: string]: number } } = {};
+
+    filteredRolls.forEach((roll) => {
+      if (roll.skillType && roll.success !== null) {
+        const skillType = roll.skillType;
+        if (successCounts[skillType]) {
+          successCounts[skillType].total++;
+          if (roll.success) {
+            successCounts[skillType].success++;
+          }
+        } else {
+          successCounts[skillType] = { total: 1, success: 0 };
+          if (roll.success) {
+            successCounts[skillType].success++;
+          }
+        }
+      }
+    });
+
+    Object.keys(successCounts).forEach((skillType) => {
+      successRates[skillType] =
+        successCounts[skillType].success / successCounts[skillType].total;
+    });
+
+    return successRates;
+  };
+
   return (
     <Container>
       <Box>
@@ -616,6 +659,24 @@ export default function StatsPage() {
                       ([skillType, count], index) => (
                         <li key={index}>
                           {skillType}: {count}
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </Box>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <Box>
+                  <Typography variant="h6">
+                    Success Rates by Skill Types
+                  </Typography>
+
+                  <ul>
+                    {Object.entries(successRateBySkillType).map(
+                      ([skillType, successRate], index) => (
+                        <li key={index}>
+                          {skillType}: {successRate}
                         </li>
                       )
                     )}
