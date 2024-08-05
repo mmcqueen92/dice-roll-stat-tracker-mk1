@@ -34,7 +34,9 @@ export default function EditDiceRollForm({
   onCancel,
 }: EditRollFormProps) {
   const [formData, setFormData] = useState<DiceRollData>(roll);
-  const [availableRollValues, setAvailableRollValues] = useState<number[]>([]);
+  const [availableRollValues, setAvailableRollValues] = useState<number[]>(
+    Array.from({ length: 20 }, (_, i) => i + 1)
+  );
   useEffect(() => {
     // Update available roll values based on selected dice size
     if (formData.diceSize) {
