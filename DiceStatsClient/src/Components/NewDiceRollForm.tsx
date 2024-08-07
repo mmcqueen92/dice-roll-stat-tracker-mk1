@@ -90,8 +90,6 @@ export default function NewDiceRollForm({ characterId }: NewDiceRollFormProps) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h1>New DiceRoll Form</h1>
-
       <div>
         <label>Dice Size:</label>
         <input

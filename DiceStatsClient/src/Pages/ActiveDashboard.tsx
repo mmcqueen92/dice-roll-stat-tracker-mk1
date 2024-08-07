@@ -86,12 +86,12 @@ export default function ActiveDashboard() {
     setFormData((prevData) => ({ ...prevData, rollValue: "" }));
   }, [formData.diceSize]);
 
-   useEffect(() => {
-     // Set success to null if rollType is Attack/Spell Damage
-     if (formData.rollType === "Attack/Spell Damage") {
-       setFormData((prevData) => ({ ...prevData, success: null }));
-     }
-   }, [formData.rollType]);
+  useEffect(() => {
+    // Set success to null if rollType is Attack/Spell Damage
+    if (formData.rollType === "Attack/Spell Damage") {
+      setFormData((prevData) => ({ ...prevData, success: null }));
+    }
+  }, [formData.rollType]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -126,12 +126,10 @@ export default function ActiveDashboard() {
     };
 
     try {
-      console.log("DATA: ", dataToSubmit);
       const response = await api.post("/diceroll/create", dataToSubmit);
-      console.log("Dice roll created:", response.data);
-      // Reset the form or handle the response as needed
+
       setFormData(initialFormData);
-      // Fetch the updated dice rolls
+
       fetchDiceRolls();
     } catch (error) {
       console.error("There was an error creating the dice roll!", error);
@@ -144,11 +142,8 @@ export default function ActiveDashboard() {
 
   return (
     <div>
-      <h2>Active Dashboard</h2>
-      <h3>Character: {character.name}</h3>
+      <h3>{character.name}</h3>
       <form onSubmit={handleSubmit}>
-        <h1>New DiceRoll Form</h1>
-
         <div>
           <label>Dice Size:</label>
           <select
