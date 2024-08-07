@@ -66,7 +66,6 @@ export default function ViewCharacterRolls() {
         const response = await api.get<DiceRollData[]>(`/diceroll/${id}`, {
           params: { ...filters, skip: (page - 1) * pageSize, limit: pageSize },
         });
-        console.log("ROLLS: ", response.data)
         response.data.forEach((roll) => delete roll.character)
         setRolls(response.data);
 

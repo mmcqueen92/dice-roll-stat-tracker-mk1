@@ -3,6 +3,18 @@ import CharacterData from "../Interfaces/CharacterData";
 import DiceRoll from "../Interfaces/DiceRoll";
 import { useParams } from "react-router-dom";
 import api from "../Utils/api";
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Checkbox,
+  Button,
+  FormControlLabel,
+  SelectChangeEvent,
+} from "@mui/material";
+
+import '../Styles/ActiveDashboard.css'
 
 const skillChecks = [
   "Acrobatics",
@@ -94,22 +106,33 @@ export default function ActiveDashboard() {
   }, [formData.rollType]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e:
+      | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      | SelectChangeEvent<any>
   ) => {
-    const { name, type, value } = e.target;
+    if ("target" in e && "type" in e.target) {
+      const { name, value, type } = e.target;
 
-    if (type === "checkbox") {
-      const checked = (e.target as HTMLInputElement).checked;
-      setFormData({
-        ...formData,
-        [name]: checked,
-      });
-    } else if (type === "number") {
-      setFormData({
-        ...formData,
-        [name]: Number(value),
-      });
+      if (type === "checkbox") {
+        const checked = (e.target as HTMLInputElement).checked;
+        setFormData({
+          ...formData,
+          [name]: checked,
+        });
+      } else if (type === "number") {
+        setFormData({
+          ...formData,
+          [name]: Number(value),
+        });
+      } else {
+        setFormData({
+          ...formData,
+          [name]: value,
+        });
+      }
     } else {
+      // Handle SelectChangeEvent separately
+      const { name, value } = e.target as { name: string; value: any };
       setFormData({
         ...formData,
         [name]: value,
@@ -120,8 +143,13 @@ export default function ActiveDashboard() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const { rollType, success, ...rest } = formData;
+
     const dataToSubmit = {
-      ...formData,
+      ...rest,
+      rollType,
+      success:
+        rollType === "Attack/Spell Damage" ? null : success ? true : false,
       characterId: activeCharacterId,
     };
 
@@ -143,111 +171,146 @@ export default function ActiveDashboard() {
   return (
     <div>
       <h3>{character.name}</h3>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Dice Size:</label>
-          <select
+      <form onSubmit={handleSubmit} className="new-diceroll-form">
+        <FormControl
+          fullWidth
+          margin="normal"
+          className="new-diceroll-form-control"
+        >
+          <InputLabel id="dice-size-label">Dice Size</InputLabel>
+          <Select
+            labelId="dice-size-label"
             name="diceSize"
             value={formData.diceSize}
             onChange={handleChange}
             required
+            className="new-diceroll-form-select"
           >
             {diceSizes.map((size) => (
-              <option key={size} value={size}>
+              <MenuItem key={size} value={size}>
                 {size}
-              </option>
+              </MenuItem>
             ))}
-          </select>
-        </div>
+          </Select>
+        </FormControl>
 
-        <div>
-          <label>Roll Type:</label>
-          <select
+        <FormControl
+          fullWidth
+          margin="normal"
+          className="new-diceroll-form-control"
+        >
+          <InputLabel id="roll-type-label">Roll Type</InputLabel>
+          <Select
+            labelId="roll-type-label"
             name="rollType"
             value={formData.rollType}
             onChange={handleChange}
+            className="new-diceroll-form-select"
             required
           >
-            <option value="">Select Roll Type</option>
-            <option value="Attack">Attack</option>
-            <option value="Skill Check">Skill Check</option>
-            <option value="Saving Throw">Saving Throw</option>
-            <option value="Attack/Spell Damage">Attack/Spell Damage</option>
-          </select>
-        </div>
+            <MenuItem value="">Select Roll Type</MenuItem>
+            <MenuItem value="Attack">Attack</MenuItem>
+            <MenuItem value="Skill Check">Skill Check</MenuItem>
+            <MenuItem value="Saving Throw">Saving Throw</MenuItem>
+            <MenuItem value="Attack/Spell Damage">Attack/Spell Damage</MenuItem>
+          </Select>
+        </FormControl>
 
         {formData.rollType === "Skill Check" && (
-          <div>
-            <label>Skill Type:</label>
-            <select
+          <FormControl
+            fullWidth
+            margin="normal"
+            className="new-diceroll-form-control"
+          >
+            <InputLabel id="skill-type-label">Skill Type</InputLabel>
+            <Select
+              labelId="skill-type-label"
               name="skillType"
               value={formData.skillType}
               onChange={handleChange}
+              className="new-diceroll-form-select"
             >
-              <option value="">Select Skill Type</option>
+              <MenuItem value="">Select Skill Type</MenuItem>
               {skillChecks.map((skill) => (
-                <option key={skill} value={skill}>
+                <MenuItem key={skill} value={skill}>
                   {skill}
-                </option>
+                </MenuItem>
               ))}
-            </select>
-          </div>
+            </Select>
+          </FormControl>
         )}
 
         {formData.rollType === "Saving Throw" && (
-          <div>
-            <label>Saving Attribute:</label>
-            <select
+          <FormControl
+            fullWidth
+            margin="normal"
+            className="new-diceroll-form-control"
+          >
+            <InputLabel id="saving-attribute-label">
+              Saving Attribute
+            </InputLabel>
+            <Select
+              labelId="saving-attribute-label"
               name="skillType"
               value={formData.skillType}
               onChange={handleChange}
+              className="new-diceroll-form-select"
             >
-              <option value="">Select Saving Attribute</option>
+              <MenuItem value="">Select Saving Attribute</MenuItem>
               {savingThrows.map((throwType) => (
-                <option key={throwType} value={throwType}>
+                <MenuItem key={throwType} value={throwType}>
                   {throwType}
-                </option>
+                </MenuItem>
               ))}
-            </select>
-          </div>
+            </Select>
+          </FormControl>
         )}
 
-        <div>
-          <label>Roll Value:</label>
-          <select
+        <FormControl
+          fullWidth
+          margin="normal"
+          className="new-diceroll-form-control"
+        >
+          <InputLabel id="roll-value-label">Roll Value</InputLabel>
+          <Select
+            labelId="roll-value-label"
             name="rollValue"
             value={formData.rollValue}
             onChange={handleChange}
+            className="new-diceroll-form-select"
             required
           >
-            <option value="">Select Roll Value</option>
+            <MenuItem value="">Select Roll Value</MenuItem>
             {rollValues.map((value) => (
-              <option key={value} value={value}>
+              <MenuItem key={value} value={value}>
                 {value}
-              </option>
+              </MenuItem>
             ))}
-          </select>
-        </div>
+          </Select>
+        </FormControl>
 
         {formData.rollType !== "Attack/Spell Damage" && (
-          <div>
-            <label>Success:</label>
-            <input
-              type="checkbox"
-              name="success"
-              checked={formData.success || false}
-              onChange={() =>
-                setFormData((prevData) => ({
-                  ...prevData,
-                  success:
-                    prevData.success === null ? false : !prevData.success,
-                }))
-              }
-            />
-          </div>
+          <FormControlLabel
+            control={
+              <Checkbox
+                name="success"
+                checked={formData.success || false}
+                onChange={() =>
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    success:
+                      prevData.success === null ? false : !prevData.success,
+                  }))
+                }
+              />
+            }
+            label="Success"
+          />
         )}
 
-        <button type="submit">Submit</button>
+        <Button variant="contained" color="primary" type="submit">
+          Submit
+        </Button>
       </form>
       <h3>Recent Rolls</h3>
       <ul>

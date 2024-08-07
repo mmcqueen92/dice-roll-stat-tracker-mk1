@@ -75,7 +75,6 @@ export default function StatsPage() {
     });
 
     api.get("/diceroll").then((response) => {
-      console.log("DICEROLLS: ", response.data);
       setDiceRollData(response.data);
     });
   }, []);
