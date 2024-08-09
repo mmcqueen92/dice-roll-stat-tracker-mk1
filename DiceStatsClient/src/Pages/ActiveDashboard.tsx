@@ -185,6 +185,7 @@ export default function ActiveDashboard() {
             onChange={handleChange}
             required
             className="new-diceroll-form-select"
+            label="Dice Size"
           >
             {diceSizes.map((size) => (
               <MenuItem key={size} value={size}>
@@ -206,6 +207,7 @@ export default function ActiveDashboard() {
             value={formData.rollType}
             onChange={handleChange}
             className="new-diceroll-form-select"
+            label="Roll Type"
             required
           >
             <MenuItem value="">Select Roll Type</MenuItem>
@@ -279,6 +281,7 @@ export default function ActiveDashboard() {
             onChange={handleChange}
             className="new-diceroll-form-select"
             required
+            label="Roll Value"
           >
             <MenuItem value="">Select Roll Value</MenuItem>
             {rollValues.map((value) => (
