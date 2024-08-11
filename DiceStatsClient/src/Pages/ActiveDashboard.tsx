@@ -76,7 +76,6 @@ export default function ActiveDashboard() {
   const fetchDiceRolls = useCallback(async () => {
     try {
       const response = await api.get(`/diceroll/${activeCharacterId}`);
-      console.log("DICE ROLLS: ", response.data);
       setDiceRolls(response.data);
     } catch (error) {
       console.error("Error fetching character dice rolls", error);
@@ -91,15 +90,12 @@ export default function ActiveDashboard() {
   }, [activeCharacterId, fetchCharacter, fetchDiceRolls]);
 
   useEffect(() => {
-    // Update rollValues based on the selected dice size
     const values = Array.from({ length: formData.diceSize }, (_, i) => i + 1);
     setRollValues(values);
-    // Reset rollValue when diceSize changes
     setFormData((prevData) => ({ ...prevData, rollValue: "" }));
   }, [formData.diceSize]);
 
   useEffect(() => {
-    // Set success to null if rollType is Attack/Spell Damage
     if (formData.rollType === "Attack/Spell Damage") {
       setFormData((prevData) => ({ ...prevData, success: null }));
     }
@@ -131,7 +127,6 @@ export default function ActiveDashboard() {
         });
       }
     } else {
-      // Handle SelectChangeEvent separately
       const { name, value } = e.target as { name: string; value: any };
       setFormData({
         ...formData,
