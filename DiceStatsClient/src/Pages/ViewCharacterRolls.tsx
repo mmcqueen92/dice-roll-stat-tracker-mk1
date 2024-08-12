@@ -120,7 +120,6 @@ export default function ViewCharacterRolls() {
   };
 
   const handleSaveEdit = async (updatedRoll: DiceRollData) => {
-    console.log("UPDATED ROLL: ", updatedRoll)
     try {
       await api.put(`/diceroll/${updatedRoll.diceRollId}`, updatedRoll);
       setRolls((prevRolls) =>

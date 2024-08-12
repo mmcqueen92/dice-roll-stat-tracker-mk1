@@ -19,8 +19,7 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await login(formData.email, formData.password); // Use the login function from context
-      console.log("Logged in successfully");
+      await login(formData.email, formData.password);
       // Redirect or show success message
     } catch (error) {
       console.error("Login failed", error);

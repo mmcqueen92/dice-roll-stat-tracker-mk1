@@ -49,7 +49,6 @@ export default function NewDiceRollForm({ characterId }: NewDiceRollFormProps) {
   ) => {
     const { name, type, value } = e.target;
 
-    // For checkbox inputs
     if (type === "checkbox") {
       const checked = (e.target as HTMLInputElement).checked;
       setFormData({
@@ -72,17 +71,13 @@ export default function NewDiceRollForm({ characterId }: NewDiceRollFormProps) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Add characterId to the formData
     const dataToSubmit: DiceRollData = {
       ...formData,
       characterId,
     };
 
     try {
-      console.log("DATA: ", dataToSubmit);
       const response = await api.post("/diceroll/create", dataToSubmit);
-      console.log("Dice roll created:", response.data);
-      // Reset the form or handle the response as needed
     } catch (error) {
       console.error("There was an error creating the dice roll!", error);
     }

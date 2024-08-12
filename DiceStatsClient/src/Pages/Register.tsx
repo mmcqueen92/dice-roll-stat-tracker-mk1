@@ -36,8 +36,6 @@ export default function Register() {
       );
       const { token } = response.data;
       localStorage.setItem("DiceStatsToken", token); // Save token to local storage
-      console.log("Logged in successfully");
-      console.log(response.data);
       navigate("/user-dashboard");
       // Redirect or show success message
     } catch (error) {
