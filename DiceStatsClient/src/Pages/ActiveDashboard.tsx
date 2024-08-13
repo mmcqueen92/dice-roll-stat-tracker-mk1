@@ -149,7 +149,7 @@ export default function ActiveDashboard() {
     };
 
     try {
-      const response = await api.post("/diceroll/create", dataToSubmit);
+      await api.post("/diceroll/create", dataToSubmit);
 
       setFormData(initialFormData);
 

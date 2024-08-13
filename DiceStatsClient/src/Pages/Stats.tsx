@@ -422,8 +422,12 @@ export default function StatsPage() {
     const crits = rollsWithoutDamage.filter((roll) => roll.rollValue === 20);
     const fumbles = rollsWithoutDamage.filter((roll) => roll.rollValue === 1);
 
-    rates.critRate = crits.length / rollsWithoutDamage.length;
-    rates.fumbleRate = fumbles.length / rollsWithoutDamage.length;
+    rates.critRate = 
+      crits.length / rollsWithoutDamage.length
+    ;
+    rates.fumbleRate = 
+      fumbles.length / rollsWithoutDamage.length
+    
 
     return rates;
   };
@@ -644,7 +648,7 @@ export default function StatsPage() {
               <Grid item xs={12} md={6}>
                 <Box>
                   <Typography variant="h6">Crit/Fumble Rates</Typography>
-                  <p>Crit rate: {critAndFumbleRates.critRate * 100}%</p>
+                  <p>Crit rate: {(critAndFumbleRates.critRate * 100).toFixed(2)}%</p>
                   <p>Fumble rate: {critAndFumbleRates.fumbleRate * 100}%</p>
                 </Box>
               </Grid>
@@ -675,7 +679,7 @@ export default function StatsPage() {
                     {Object.entries(successRateBySkillType).map(
                       ([skillType, successRate], index) => (
                         <li key={index}>
-                          {skillType}: {successRate}
+                          {skillType}: {(successRate * 100).toFixed(2)}%
                         </li>
                       )
                     )}
