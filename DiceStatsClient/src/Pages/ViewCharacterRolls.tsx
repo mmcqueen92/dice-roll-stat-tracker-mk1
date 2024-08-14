@@ -66,7 +66,7 @@ export default function ViewCharacterRolls() {
         const response = await api.get<DiceRollData[]>(`/diceroll/${id}`, {
           params: { ...filters, skip: (page - 1) * pageSize, limit: pageSize },
         });
-        response.data.forEach((roll) => delete roll.character)
+        response.data.forEach((roll) => delete roll.character);
         setRolls(response.data);
 
         const countResponse = await api.get<number>(`/diceroll/${id}/count`);
@@ -249,14 +249,14 @@ export default function ViewCharacterRolls() {
           <ul>
             {rolls.map((roll) => (
               <li key={roll.diceRollId}>
-                Dice Size: {roll.diceSize}, Roll Value: {roll.rollValue}, Roll
-                Type: {roll.rollType}
-                {roll.success === true && " - Success"}
-                {roll.success === false && " - Fail"}
+                {roll.rollType}
                 {(roll.rollType === "Skill Check" ||
                   roll.rollType === "Saving Throw") && (
-                  <> - Skill Type: {roll.skillType}</>
-                )}
+                  <> ({roll.skillType})</>
+                )}{" "}
+                - {roll.rollValue}/{roll.diceSize}
+                {roll.success === true && " - Success"}
+                {roll.success === false && " - Fail"}{" "}
                 <button onClick={() => handleEditClick(roll)}>Edit</button>
               </li>
             ))}
