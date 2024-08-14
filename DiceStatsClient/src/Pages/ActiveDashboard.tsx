@@ -14,7 +14,9 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 
-import '../Styles/ActiveDashboard.css'
+import "../Styles/ActiveDashboard.css";
+
+import DiceRollData from "../Interfaces/DiceRollData";
 
 const skillChecks = [
   "Acrobatics",
@@ -60,34 +62,84 @@ export default function ActiveDashboard() {
   const { id } = useParams<{ id: string }>();
   const activeCharacterId = parseInt(id || "0", 10);
   const [character, setCharacter] = useState<CharacterData | null>(null);
-  const [diceRolls, setDiceRolls] = useState<DiceRoll[]>([]);
+  const [diceRolls, setDiceRolls] = useState<DiceRollData[]>([]);
   const [formData, setFormData] = useState(initialFormData);
   const [rollValues, setRollValues] = useState<number[]>([]);
+  const [totalRecords, setTotalRecords] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(5);
 
-  const fetchCharacter = useCallback(async () => {
-    try {
-      const response = await api.get(`/character/${activeCharacterId}`);
-      setCharacter(response.data);
-    } catch (error) {
-      console.error("Error fetching character", error);
-    }
-  }, [activeCharacterId]);
+  // const fetchCharacter = useCallback(async () => {
+  //   try {
+  //     const response = await api.get(`/character/${activeCharacterId}`);
+  //     setCharacter(response.data);
+  //   } catch (error) {
+  //     console.error("Error fetching character", error);
+  //   }
+  // }, [activeCharacterId]);
 
-  const fetchDiceRolls = useCallback(async () => {
-    try {
-      const response = await api.get(`/diceroll/${activeCharacterId}`);
-      setDiceRolls(response.data);
-    } catch (error) {
-      console.error("Error fetching character dice rolls", error);
-    }
-  }, [activeCharacterId]);
+  // const fetchDiceRolls = useCallback(async () => {
+  //   try {
+  //     const response = await api.get<DiceRollData[]>(
+  //       `/diceroll/${activeCharacterId}`,
+  //       {
+  //         params: {
+  //           skip: (page - 1) * pageSize,
+  //           limit: pageSize,
+  //         },
+  //       }
+  //     );
+  //     response.data.forEach((roll) => delete roll.character)
+  //     setDiceRolls(response.data);
+  //   } catch (error) {
+  //     console.error("Error fetching character dice rolls", error);
+  //   }
+  // }, [activeCharacterId]);
 
   useEffect(() => {
     if (!activeCharacterId) return;
 
+    const fetchCharacter = async () => {
+      try {
+        const response = await api.get(`/character/${activeCharacterId}`);
+        setCharacter(response.data);
+      } catch (error) {
+        console.error("Error fetching character", error);
+      }
+    };
+
+    const fetchDiceRolls = async () => {
+      try {
+        const response = await api.get<DiceRollData[]>(
+          `/diceroll/${activeCharacterId}`,
+          {
+            params: {
+              skip: (page - 1) * pageSize,
+              limit: pageSize,
+            },
+          }
+        );
+        response.data.forEach((roll) => delete roll.character);
+        setDiceRolls(response.data);
+
+        const countResponse = await api.get<number>(
+          `/diceroll/${activeCharacterId}/count`
+        );
+        setTotalRecords(countResponse.data);
+      } catch (error) {
+        console.error("Error fetching character dice rolls", error);
+      }
+    };
     fetchCharacter();
     fetchDiceRolls();
-  }, [activeCharacterId, fetchCharacter, fetchDiceRolls]);
+  }, [page, pageSize, activeCharacterId, formData]);
+
+  // useEffect(() => {
+  //   if (!activeCharacterId) return;
+
+  //   fetchCharacter();
+  //   fetchDiceRolls();
+  // }, [activeCharacterId, fetchCharacter, fetchDiceRolls]);
 
   useEffect(() => {
     const values = Array.from({ length: formData.diceSize }, (_, i) => i + 1);
@@ -153,7 +205,7 @@ export default function ActiveDashboard() {
 
       setFormData(initialFormData);
 
-      fetchDiceRolls();
+      // fetchDiceRolls();
     } catch (error) {
       console.error("There was an error creating the dice roll!", error);
     }
@@ -162,6 +214,15 @@ export default function ActiveDashboard() {
   if (!character) {
     return <div>Loading...</div>;
   }
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setPageSize(parseInt(e.target.value, 10));
+    setPage(1); // Reset to first page on page size change
+  };
 
   return (
     <div>
@@ -323,6 +384,32 @@ export default function ActiveDashboard() {
           </li>
         ))}
       </ul>
+
+      {totalRecords > 0 && (
+        <div>
+          <button
+            onClick={() => handlePageChange(page - 1)}
+            disabled={page <= 1}
+          >
+            Previous
+          </button>
+          <span>
+            Page: {page} of {Math.ceil(totalRecords / pageSize)}
+          </span>
+          <button
+            onClick={() => handlePageChange(page + 1)}
+            disabled={page * pageSize >= totalRecords}
+          >
+            Next
+          </button>
+          <select value={pageSize} onChange={handlePageSizeChange}>
+            <option value={5}>5</option>
+            <option value={10}>10</option>
+            <option value={20}>20</option>
+            <option value={50}>50</option>
+          </select>
+        </div>
+      )}
     </div>
   );
 }
