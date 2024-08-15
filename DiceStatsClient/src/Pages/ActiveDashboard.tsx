@@ -1,6 +1,5 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import CharacterData from "../Interfaces/CharacterData";
-import DiceRoll from "../Interfaces/DiceRoll";
 import { useParams } from "react-router-dom";
 import api from "../Utils/api";
 import {
@@ -69,33 +68,6 @@ export default function ActiveDashboard() {
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(5);
 
-  // const fetchCharacter = useCallback(async () => {
-  //   try {
-  //     const response = await api.get(`/character/${activeCharacterId}`);
-  //     setCharacter(response.data);
-  //   } catch (error) {
-  //     console.error("Error fetching character", error);
-  //   }
-  // }, [activeCharacterId]);
-
-  // const fetchDiceRolls = useCallback(async () => {
-  //   try {
-  //     const response = await api.get<DiceRollData[]>(
-  //       `/diceroll/${activeCharacterId}`,
-  //       {
-  //         params: {
-  //           skip: (page - 1) * pageSize,
-  //           limit: pageSize,
-  //         },
-  //       }
-  //     );
-  //     response.data.forEach((roll) => delete roll.character)
-  //     setDiceRolls(response.data);
-  //   } catch (error) {
-  //     console.error("Error fetching character dice rolls", error);
-  //   }
-  // }, [activeCharacterId]);
-
   useEffect(() => {
     if (!activeCharacterId) return;
 
@@ -133,13 +105,6 @@ export default function ActiveDashboard() {
     fetchCharacter();
     fetchDiceRolls();
   }, [page, pageSize, activeCharacterId, formData]);
-
-  // useEffect(() => {
-  //   if (!activeCharacterId) return;
-
-  //   fetchCharacter();
-  //   fetchDiceRolls();
-  // }, [activeCharacterId, fetchCharacter, fetchDiceRolls]);
 
   useEffect(() => {
     const values = Array.from({ length: formData.diceSize }, (_, i) => i + 1);
@@ -205,7 +170,6 @@ export default function ActiveDashboard() {
 
       setFormData(initialFormData);
 
-      // fetchDiceRolls();
     } catch (error) {
       console.error("There was an error creating the dice roll!", error);
     }
@@ -221,7 +185,7 @@ export default function ActiveDashboard() {
 
   const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setPageSize(parseInt(e.target.value, 10));
-    setPage(1); // Reset to first page on page size change
+    setPage(1);
   };
 
   return (
