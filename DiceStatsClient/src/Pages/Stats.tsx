@@ -13,6 +13,7 @@ import api from "../Utils/api"; // Adjust the import path as needed
 import CharacterData from "../Interfaces/CharacterData"; // Adjust the import path as needed
 import DiceRollData from "../Interfaces/DiceRollData";
 import RollTrendsLineChart from "../Components/RollTrendsLineChart";
+import RollTypeRatesPieChart from "../Components/RollTypeRatesPieChart";
 
 type TabValue =
   | "overview"
@@ -126,8 +127,6 @@ export default function StatsPage() {
 
       const trendsByDiceSizeData =
         calculateRollTrendsByDiceSize(activeDiceRollData);
-      console.log("TRENDS BY DICE SIZE: ", trendsByDiceSizeData);
-      console.log("TRENDS - 20: ", trendsByDiceSizeData[20]);
       setRollTrendsByDiceSize(trendsByDiceSizeData);
 
       const trendsByRollTypeData =
@@ -734,17 +733,12 @@ export default function StatsPage() {
 
               <Grid item xs={12} md={6}>
                 <Box>
-                  <Typography variant="h6">Roll Type Rates</Typography>
+                  <Typography variant="h6">D20 Roll Type Rates</Typography>
 
-                  <ul>
-                    {Object.entries(rollTypeRates).map(
-                      ([rollType, rate], index) => (
-                        <li key={index}>
-                          {rollType}: {rate}
-                        </li>
-                      )
-                    )}
-                  </ul>
+                  <RollTypeRatesPieChart
+                    data={rollTypeRates}
+                    title="Roll Type Distribution"
+                  />
                 </Box>
               </Grid>
             </Grid>
