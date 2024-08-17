@@ -12,6 +12,7 @@ import {
 import api from "../Utils/api"; // Adjust the import path as needed
 import CharacterData from "../Interfaces/CharacterData"; // Adjust the import path as needed
 import DiceRollData from "../Interfaces/DiceRollData";
+import LineChart from "../Components/LineChart";
 
 type TabValue =
   | "overview"
@@ -118,6 +119,8 @@ export default function StatsPage() {
 
       const trendsByDiceSizeData =
         calculateRollTrendsByDiceSize(activeDiceRollData);
+        console.log("TRENDS BY DICE SIZE: ", trendsByDiceSizeData)
+        console.log("TRENDS - 20: ", trendsByDiceSizeData[20])
       setRollTrendsByDiceSize(trendsByDiceSizeData);
 
       const trendsByRollTypeData =
@@ -648,7 +651,9 @@ export default function StatsPage() {
               <Grid item xs={12} md={6}>
                 <Box>
                   <Typography variant="h6">Crit/Fumble Rates</Typography>
-                  <p>Crit rate: {(critAndFumbleRates.critRate * 100).toFixed(2)}%</p>
+                  <p>
+                    Crit rate: {(critAndFumbleRates.critRate * 100).toFixed(2)}%
+                  </p>
                   <p>Fumble rate: {critAndFumbleRates.fumbleRate * 100}%</p>
                 </Box>
               </Grid>
@@ -693,6 +698,7 @@ export default function StatsPage() {
               <Box>
                 <Typography variant="h6">Roll Trends by Dice Size</Typography>
                 {formatRollTrendsByDiceSizeForDisplay(rollTrendsByDiceSize)}
+                <LineChart data={rollTrendsByDiceSize[20]} />
               </Box>
 
               <Box>
