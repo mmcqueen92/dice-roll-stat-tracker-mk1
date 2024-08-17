@@ -289,23 +289,6 @@ export default function StatsPage() {
     return trends;
   };
 
-  const formatRollTrendsByDiceSizeForDisplay = (trends: {
-    [key: string]: { [index: number]: number };
-  }) => {
-    return Object.entries(trends).map(([size, trendData]) => (
-      <Box key={size}>
-        <Typography variant="subtitle1">Dice Size {size}:</Typography>
-        <ul>
-          {Object.entries(trendData).map(([rollNumber, average]) => (
-            <li key={rollNumber}>
-              Roll {rollNumber}: Average Value {average.toFixed(2)}
-            </li>
-          ))}
-        </ul>
-      </Box>
-    ));
-  };
-
   const calculateStandardDeviationByDiceSize = (diceRolls: DiceRollData[]) => {
     const diceSizes = Array.from(
       new Set(diceRolls.map((roll) => roll.diceSize))
@@ -697,7 +680,6 @@ export default function StatsPage() {
             <>
               <Box>
                 <Typography variant="h6">Roll Trends by Dice Size</Typography>
-                {formatRollTrendsByDiceSizeForDisplay(rollTrendsByDiceSize)}
                 <RollTrendsLineChart
                   data={rollTrendsByDiceSize[20]}
                   title="D-20 Roll Trends"
@@ -726,7 +708,22 @@ export default function StatsPage() {
 
               <Box>
                 <Typography variant="h6">Roll Trends by Roll Type</Typography>
-                {formatRollTrendsByRollTypeForDisplay(rollTrendsByRollType)}
+                <RollTrendsLineChart
+                  data={rollTrendsByRollType["Attack"]}
+                  title="Attacks"
+                />
+                <RollTrendsLineChart
+                  data={rollTrendsByRollType["Saving Throw"]}
+                  title="Saving Throws"
+                />
+                <RollTrendsLineChart
+                  data={rollTrendsByRollType["Skill Check"]}
+                  title="Skill Checks"
+                />
+                <RollTrendsLineChart
+                  data={rollTrendsByRollType["Attack/Spell Damage"]}
+                  title="Attack/Spell Damage Rolls"
+                />
               </Box>
             </>
           )}
