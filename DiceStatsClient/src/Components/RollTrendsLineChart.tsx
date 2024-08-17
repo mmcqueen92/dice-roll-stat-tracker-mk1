@@ -10,7 +10,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import LineChartProps from "../Interfaces/LineChartProps";
+import LineChartProps from "../Interfaces/RollTrendsLineChartProps";
 
 ChartJS.register(
   CategoryScale,
@@ -22,7 +22,7 @@ ChartJS.register(
   Legend
 );
 
-export default function LineChart({ data }: LineChartProps) {
+export default function RollTrendsLineChart({ data, title }: LineChartProps) {
   // Extracting keys and values from the data object
   const labels = Object.keys(data).map((key) => parseInt(key)); // x-axis (1, 2, 3, ...)
   const values = Object.values(data); // y-axis (18, 16.5, 12.66, ...)
@@ -32,7 +32,7 @@ export default function LineChart({ data }: LineChartProps) {
     labels: labels,
     datasets: [
       {
-        label: "Dice Roll Trends by Dice Size 20",
+        label: title,
         data: values,
         borderColor: "rgba(75,192,192,1)",
         backgroundColor: "rgba(75,192,192,0.2)",

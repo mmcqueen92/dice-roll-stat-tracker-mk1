@@ -12,7 +12,7 @@ import {
 import api from "../Utils/api"; // Adjust the import path as needed
 import CharacterData from "../Interfaces/CharacterData"; // Adjust the import path as needed
 import DiceRollData from "../Interfaces/DiceRollData";
-import LineChart from "../Components/LineChart";
+import RollTrendsLineChart from "../Components/RollTrendsLineChart";
 
 type TabValue =
   | "overview"
@@ -698,7 +698,30 @@ export default function StatsPage() {
               <Box>
                 <Typography variant="h6">Roll Trends by Dice Size</Typography>
                 {formatRollTrendsByDiceSizeForDisplay(rollTrendsByDiceSize)}
-                <LineChart data={rollTrendsByDiceSize[20]} />
+                <RollTrendsLineChart
+                  data={rollTrendsByDiceSize[20]}
+                  title="D-20 Roll Trends"
+                />
+                <RollTrendsLineChart
+                  data={rollTrendsByDiceSize[12]}
+                  title="D-12 Roll Trends"
+                />
+                <RollTrendsLineChart
+                  data={rollTrendsByDiceSize[10]}
+                  title="D-10 Roll Trends"
+                />
+                <RollTrendsLineChart
+                  data={rollTrendsByDiceSize[8]}
+                  title="D-8 Roll Trends"
+                />
+                <RollTrendsLineChart
+                  data={rollTrendsByDiceSize[6]}
+                  title="D-6 Roll Trends"
+                />
+                <RollTrendsLineChart
+                  data={rollTrendsByDiceSize[4]}
+                  title="D-4 Roll Trends"
+                />
               </Box>
 
               <Box>
