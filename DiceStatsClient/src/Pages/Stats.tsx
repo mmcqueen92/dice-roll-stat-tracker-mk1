@@ -9,11 +9,12 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import api from "../Utils/api"; // Adjust the import path as needed
-import CharacterData from "../Interfaces/CharacterData"; // Adjust the import path as needed
+import api from "../Utils/api";
+import CharacterData from "../Interfaces/CharacterData";
 import DiceRollData from "../Interfaces/DiceRollData";
 import RollTrendsLineChart from "../Components/RollTrendsLineChart";
 import RollTypeRatesPieChart from "../Components/RollTypeRatesPieChart";
+import RollDistributionChart from "../Components/RollDistributionChart";
 
 type TabValue =
   | "overview"
@@ -88,22 +89,13 @@ export default function StatsPage() {
     });
   }, []);
 
-  // useEffect(() => {
-  //   if (diceRollData.length > 0) {
-  //     const calculatedData = calculateAverageRollsByDiceSize(diceRollData);
-  //     setAverageRollsByDiceSize(calculatedData);
-  //   }
-  // }, [diceRollData]);
-
   useEffect(() => {
     if (selectedCharacter) {
-      // Filter diceRollData for the selected character
       const filteredData = diceRollData.filter(
         (roll) => roll.characterId === selectedCharacter.characterId
       );
       setActiveDiceRollData(filteredData);
     } else {
-      // If no character is selected, show all dice rolls
       setActiveDiceRollData(diceRollData);
     }
   }, [selectedCharacter, diceRollData]);
@@ -243,21 +235,58 @@ export default function StatsPage() {
   };
 
   const calculateRollDistributionByDiceSize = (diceRolls: DiceRollData[]) => {
-    const distribution: { [key: string]: { [rollValue: number]: number } } = {};
+    // Initialize the distribution object with all dice sizes and their roll values
+    const distribution: { [key: string]: { [rollValue: number]: number } } = {
+      4: { 1: 0, 2: 0, 3: 0, 4: 0 },
+      6: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 },
+      8: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 },
+      10: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0 },
+      12: {
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+        6: 0,
+        7: 0,
+        8: 0,
+        9: 0,
+        10: 0,
+        11: 0,
+        12: 0,
+      },
+      20: {
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+        6: 0,
+        7: 0,
+        8: 0,
+        9: 0,
+        10: 0,
+        11: 0,
+        12: 0,
+        13: 0,
+        14: 0,
+        15: 0,
+        16: 0,
+        17: 0,
+        18: 0,
+        19: 0,
+        20: 0,
+      },
+    };
 
+    // Process the dice rolls to populate the distribution object
     diceRolls.forEach((roll) => {
       const size = roll.diceSize;
       const rollValue = roll.rollValue;
 
-      if (!distribution[size]) {
-        distribution[size] = {};
+      if (distribution[size] && distribution[size][rollValue] !== undefined) {
+        distribution[size][rollValue] += 1;
       }
-
-      if (!distribution[size][rollValue]) {
-        distribution[size][rollValue] = 0;
-      }
-
-      distribution[size][rollValue] += 1;
     });
 
     return distribution;
@@ -266,7 +295,6 @@ export default function StatsPage() {
   const calculateRollTrendsByDiceSize = (diceRolls: DiceRollData[]) => {
     const trends: { [key: number]: { [index: number]: number } } = {};
 
-    // Group rolls by dice size
     const rollsByDiceSize = diceRolls.reduce<{ [key: number]: number[] }>(
       (acc, roll) => {
         if (!acc[roll.diceSize]) {
@@ -278,9 +306,8 @@ export default function StatsPage() {
       {}
     );
 
-    // Calculate rolling average by roll number
     Object.keys(rollsByDiceSize).forEach((size) => {
-      const rolls = rollsByDiceSize[parseInt(size)]; // Convert size to number
+      const rolls = rollsByDiceSize[parseInt(size)];
       const rollTrends: { [index: number]: number } = {};
 
       rolls.forEach((rollValue, index) => {
@@ -291,7 +318,7 @@ export default function StatsPage() {
         rollTrends[index + 1] = average;
       });
 
-      trends[parseInt(size)] = rollTrends; // Convert size to number
+      trends[parseInt(size)] = rollTrends;
     });
 
     return trends;
@@ -356,22 +383,22 @@ export default function StatsPage() {
     return trends;
   };
 
-  const formatRollTrendsByRollTypeForDisplay = (trends: {
-    [key: string]: { [index: number]: number };
-  }) => {
-    return Object.entries(trends).map(([type, trendData]) => (
-      <Box key={type}>
-        <Typography variant="subtitle1">{type}:</Typography>
-        <ul>
-          {Object.entries(trendData).map(([rollNumber, average]) => (
-            <li key={rollNumber}>
-              Roll {rollNumber}: Average Value {average.toFixed(2)}
-            </li>
-          ))}
-        </ul>
-      </Box>
-    ));
-  };
+  // const formatRollTrendsByRollTypeForDisplay = (trends: {
+  //   [key: string]: { [index: number]: number };
+  // }) => {
+  //   return Object.entries(trends).map(([type, trendData]) => (
+  //     <Box key={type}>
+  //       <Typography variant="subtitle1">{type}:</Typography>
+  //       <ul>
+  //         {Object.entries(trendData).map(([rollNumber, average]) => (
+  //           <li key={rollNumber}>
+  //             Roll {rollNumber}: Average Value {average.toFixed(2)}
+  //           </li>
+  //         ))}
+  //       </ul>
+  //     </Box>
+  //   ));
+  // };
 
   const calculateRollingStreaks = (diceRolls: DiceRollData[]) => {
     const streaks: { successStreak: number; failStreak: number } = {
@@ -644,6 +671,31 @@ export default function StatsPage() {
                       </Box>
                     )
                   )}
+
+                  <RollDistributionChart
+                    data={rollDistributionByDiceSize[20]}
+                    title="D20 Roll Distribution"
+                  />
+                  <RollDistributionChart
+                    data={rollDistributionByDiceSize[12]}
+                    title="D12 Roll Distribution"
+                  />
+                  <RollDistributionChart
+                    data={rollDistributionByDiceSize[10]}
+                    title="D10 Roll Distribution"
+                  />
+                  <RollDistributionChart
+                    data={rollDistributionByDiceSize[8]}
+                    title="D8 Roll Distribution"
+                  />
+                  <RollDistributionChart
+                    data={rollDistributionByDiceSize[6]}
+                    title="D6 Roll Distribution"
+                  />
+                  <RollDistributionChart
+                    data={rollDistributionByDiceSize[4]}
+                    title="D4 Roll Distribution"
+                  />
                 </Box>
               </Grid>
               <Grid item xs={12} md={6}>
