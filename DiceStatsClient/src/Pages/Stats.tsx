@@ -43,7 +43,48 @@ export default function StatsPage() {
   }>({});
   const [rollDistributionByDiceSize, setRollDistributionByDiceSize] = useState<{
     [key: string]: { [rollValue: number]: number };
-  }>({});
+  }>({
+    4: { 1: 0, 2: 0, 3: 0, 4: 0 },
+    6: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 },
+    8: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 },
+    10: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0 },
+    12: {
+      1: 0,
+      2: 0,
+      3: 0,
+      4: 0,
+      5: 0,
+      6: 0,
+      7: 0,
+      8: 0,
+      9: 0,
+      10: 0,
+      11: 0,
+      12: 0,
+    },
+    20: {
+      1: 0,
+      2: 0,
+      3: 0,
+      4: 0,
+      5: 0,
+      6: 0,
+      7: 0,
+      8: 0,
+      9: 0,
+      10: 0,
+      11: 0,
+      12: 0,
+      13: 0,
+      14: 0,
+      15: 0,
+      16: 0,
+      17: 0,
+      18: 0,
+      19: 0,
+      20: 0,
+    },
+  });
   const [rollTrendsByDiceSize, setRollTrendsByDiceSize] = useState<{
     [key: string]: { [index: number]: number };
   }>({});
@@ -235,7 +276,6 @@ export default function StatsPage() {
   };
 
   const calculateRollDistributionByDiceSize = (diceRolls: DiceRollData[]) => {
-    // Initialize the distribution object with all dice sizes and their roll values
     const distribution: { [key: string]: { [rollValue: number]: number } } = {
       4: { 1: 0, 2: 0, 3: 0, 4: 0 },
       6: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 },
@@ -382,23 +422,6 @@ export default function StatsPage() {
 
     return trends;
   };
-
-  // const formatRollTrendsByRollTypeForDisplay = (trends: {
-  //   [key: string]: { [index: number]: number };
-  // }) => {
-  //   return Object.entries(trends).map(([type, trendData]) => (
-  //     <Box key={type}>
-  //       <Typography variant="subtitle1">{type}:</Typography>
-  //       <ul>
-  //         {Object.entries(trendData).map(([rollNumber, average]) => (
-  //           <li key={rollNumber}>
-  //             Roll {rollNumber}: Average Value {average.toFixed(2)}
-  //           </li>
-  //         ))}
-  //       </ul>
-  //     </Box>
-  //   ));
-  // };
 
   const calculateRollingStreaks = (diceRolls: DiceRollData[]) => {
     const streaks: { successStreak: number; failStreak: number } = {
@@ -648,54 +671,58 @@ export default function StatsPage() {
                   </ul>
                 </Box>
               </Grid>
+
+              <Grid item xs={12} md={6}>
+                <Box>
+                  <Typography variant="h6">
+                    Standard Deviation by Dice Size
+                  </Typography>
+                  <ul>
+                    {Object.entries(standardDeviationByDiceSize).map(
+                      ([size, stdDev]) => (
+                        <li key={size}>
+                          Dice Size {size}: {stdDev.toFixed(2)}
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </Box>
+              </Grid>
+
               <Grid item xs={12} md={6}>
                 <Box>
                   <Typography variant="h6">
                     Roll Distribution by Dice Size
                   </Typography>
-                  {Object.entries(rollDistributionByDiceSize).map(
-                    ([size, distribution]) => (
-                      <Box key={size}>
-                        <Typography variant="subtitle1">
-                          Dice Size {size}:
-                        </Typography>
-                        <ul>
-                          {Object.entries(distribution).map(
-                            ([rollValue, count]) => (
-                              <li key={rollValue}>
-                                Roll Value {rollValue}: {count} times
-                              </li>
-                            )
-                          )}
-                        </ul>
-                      </Box>
-                    )
-                  )}
 
-                  <RollDistributionChart
-                    data={rollDistributionByDiceSize[20]}
-                    title="D20 Roll Distribution"
-                  />
-                  <RollDistributionChart
-                    data={rollDistributionByDiceSize[12]}
-                    title="D12 Roll Distribution"
-                  />
-                  <RollDistributionChart
-                    data={rollDistributionByDiceSize[10]}
-                    title="D10 Roll Distribution"
-                  />
-                  <RollDistributionChart
-                    data={rollDistributionByDiceSize[8]}
-                    title="D8 Roll Distribution"
-                  />
-                  <RollDistributionChart
-                    data={rollDistributionByDiceSize[6]}
-                    title="D6 Roll Distribution"
-                  />
-                  <RollDistributionChart
-                    data={rollDistributionByDiceSize[4]}
-                    title="D4 Roll Distribution"
-                  />
+                  {rollDistributionByDiceSize && (
+                    <>
+                      <RollDistributionChart
+                        data={rollDistributionByDiceSize[20]}
+                        title="D20 Roll Distribution"
+                      />
+                      <RollDistributionChart
+                        data={rollDistributionByDiceSize[12]}
+                        title="D12 Roll Distribution"
+                      />
+                      <RollDistributionChart
+                        data={rollDistributionByDiceSize[10]}
+                        title="D10 Roll Distribution"
+                      />
+                      <RollDistributionChart
+                        data={rollDistributionByDiceSize[8]}
+                        title="D8 Roll Distribution"
+                      />
+                      <RollDistributionChart
+                        data={rollDistributionByDiceSize[6]}
+                        title="D6 Roll Distribution"
+                      />
+                      <RollDistributionChart
+                        data={rollDistributionByDiceSize[4]}
+                        title="D4 Roll Distribution"
+                      />
+                    </>
+                  )}
                 </Box>
               </Grid>
               <Grid item xs={12} md={6}>
@@ -714,20 +741,15 @@ export default function StatsPage() {
                   </ul>
                 </Box>
               </Grid>
+
               <Grid item xs={12} md={6}>
                 <Box>
-                  <Typography variant="h6">
-                    Standard Deviation by Dice Size
-                  </Typography>
-                  <ul>
-                    {Object.entries(standardDeviationByDiceSize).map(
-                      ([size, stdDev]) => (
-                        <li key={size}>
-                          Dice Size {size}: {stdDev.toFixed(2)}
-                        </li>
-                      )
-                    )}
-                  </ul>
+                  <Typography variant="h6">D20 Roll Type Rates</Typography>
+
+                  <RollTypeRatesPieChart
+                    data={rollTypeRates}
+                    title="Roll Type Distribution"
+                  />
                 </Box>
               </Grid>
 
@@ -780,17 +802,6 @@ export default function StatsPage() {
                       )
                     )}
                   </ul>
-                </Box>
-              </Grid>
-
-              <Grid item xs={12} md={6}>
-                <Box>
-                  <Typography variant="h6">D20 Roll Type Rates</Typography>
-
-                  <RollTypeRatesPieChart
-                    data={rollTypeRates}
-                    title="Roll Type Distribution"
-                  />
                 </Box>
               </Grid>
             </Grid>

@@ -43,6 +43,7 @@ export default function ViewCharacterRolls() {
     null
   );
   const [rolls, setRolls] = useState<DiceRollData[]>([]);
+  const [filteredRolls, setFilteredRolls] = useState<DiceRollData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState({
@@ -64,7 +65,7 @@ export default function ViewCharacterRolls() {
       setLoading(true);
       try {
         const response = await api.get<DiceRollData[]>(`/diceroll/${id}`, {
-          params: { ...filters, skip: (page - 1) * pageSize, limit: pageSize },
+          params: { skip: (page - 1) * pageSize, limit: pageSize },
         });
         response.data.forEach((roll) => delete roll.character);
         setRolls(response.data);
@@ -80,7 +81,45 @@ export default function ViewCharacterRolls() {
     };
 
     fetchRolls();
-  }, [filters, page, pageSize, id]);
+  }, [page, pageSize, id]);
+
+  useEffect(() => {
+    const applyFilters = () => {
+      let filtered = rolls;
+
+      // Apply Roll Type Filter
+      if (filters.rollType) {
+        filtered = filtered.filter(
+          (roll) => roll.rollType === filters.rollType
+        );
+      }
+
+      // Apply Dice Size Filter
+      if (filters.diceSize) {
+        filtered = filtered.filter(
+          (roll) => roll.diceSize === parseInt(filters.diceSize, 10)
+        );
+      }
+
+      // Apply Skill Type Filter
+      if (filters.skillType) {
+        filtered = filtered.filter(
+          (roll) => roll.skillType === filters.skillType
+        );
+      }
+
+      // Apply Success Filter
+      if (filters.success) {
+        const isSuccess = filters.success === "true";
+        filtered = filtered.filter((roll) => roll.success === isSuccess);
+      }
+
+      setFilteredRolls(filtered);
+    };
+
+    applyFilters();
+    console.log("FILTERS: ", filters);
+  }, [filters, rolls]);
 
   useEffect(() => {
     const fetchCharacterData = async () => {
@@ -244,10 +283,12 @@ export default function ViewCharacterRolls() {
         <h3>Rolls</h3>
         {loading && <p>Loading rolls...</p>}
         {error && <p>{error}</p>}
-        {rolls.length === 0 && !loading && !error && <p>No rolls found.</p>}
-        {rolls.length > 0 && (
+        {filteredRolls.length === 0 && !loading && !error && (
+          <p>No rolls found.</p>
+        )}
+        {filteredRolls.length > 0 && (
           <ul>
-            {rolls.map((roll) => (
+            {filteredRolls.map((roll) => (
               <li key={roll.diceRollId}>
                 {roll.rollType}
                 {(roll.rollType === "Skill Check" ||

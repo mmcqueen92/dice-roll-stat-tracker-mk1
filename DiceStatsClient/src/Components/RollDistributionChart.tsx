@@ -24,9 +24,12 @@ export default function RollDistributionChart({
   data,
   title,
 }: RollDistributionProps) {
-  // Extracting keys and values from the data object
-  const labels = Object.keys(data).map((key) => parseInt(key)); // x-axis (1, 2, 3, ...)
-  const values = Object.values(data); // y-axis (frequency of rolls)
+  if (!data) {
+    return null;
+  }
+
+  const labels = Object.keys(data).map((key) => parseInt(key));
+  const values = Object.values(data);
 
   // Set up chart data
   const chartData = {

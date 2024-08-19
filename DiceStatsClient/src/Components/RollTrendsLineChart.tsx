@@ -36,7 +36,7 @@ export default function RollTrendsLineChart({ data, title }: LineChartProps) {
         data: values,
         borderColor: "rgba(75,192,192,1)",
         backgroundColor: "rgba(75,192,192,0.2)",
-        fill: true,
+        // fill: true,
         tension: 0.3, // For smooth curves, adjust this value as needed
       },
     ],
