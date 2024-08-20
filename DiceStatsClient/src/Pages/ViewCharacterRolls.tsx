@@ -22,6 +22,7 @@ import CharacterData from "../Interfaces/CharacterData";
 
 // Dummy filter options
 const rollTypes = [
+  "All",
   "Attack",
   "Skill Check",
   "Saving Throw",
@@ -47,41 +48,59 @@ export default function ViewCharacterRolls() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState({
-    // dateRange: { start: "", end: "" },
     rollType: "",
     diceSize: "",
     skillType: "",
+    success: "",
+    // dateRange: { start: "", end: "" },
     // rollValueMin: "",
     // rollValueMax: "",
-    success: "",
   });
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(5);
   const [editRoll, setEditRoll] = useState<DiceRollData | null>(null);
   const [totalRecords, setTotalRecords] = useState<number>(0);
 
-  useEffect(() => {
-    const fetchRolls = async () => {
-      setLoading(true);
-      try {
-        const response = await api.get<DiceRollData[]>(`/diceroll/${id}`, {
-          params: { skip: (page - 1) * pageSize, limit: pageSize },
-        });
-        response.data.forEach((roll) => delete roll.character);
-        setRolls(response.data);
+useEffect(() => {
+  const fetchRolls = async () => {
+    setLoading(true);
+    try {
+      const response = await api.get<DiceRollData[]>(`/diceroll/${id}`, {
+        params: {
+          skip: (page - 1) * pageSize,
+          limit: pageSize,
+          rollType: filters.rollType || undefined, // Include filters only if they are set
+          diceSize: filters.diceSize || undefined,
+          skillType: filters.skillType || undefined,
+          success: filters.success !== "" ? filters.success : undefined,
+        },
+      });
 
-        const countResponse = await api.get<number>(`/diceroll/${id}/count`);
-        setTotalRecords(countResponse.data);
-      } catch (error) {
-        setError("Error fetching rolls");
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+      response.data.forEach((roll) => delete roll.character);
+      setRolls(response.data);
 
-    fetchRolls();
-  }, [page, pageSize, id]);
+      const countResponse = await api.get<number>(`/diceroll/${id}/count`, {
+        params: {
+          rollType: filters.rollType || undefined,
+          diceSize: filters.diceSize || undefined,
+          skillType: filters.skillType || undefined,
+          success: filters.success !== "" ? filters.success : undefined,
+        },
+      });
+
+      setTotalRecords(countResponse.data);
+    } catch (error) {
+      setError("Error fetching rolls");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchRolls();
+}, [filters, page, pageSize, id]);
+
+
 
   useEffect(() => {
     const applyFilters = () => {
@@ -118,7 +137,6 @@ export default function ViewCharacterRolls() {
     };
 
     applyFilters();
-    console.log("FILTERS: ", filters);
   }, [filters, rolls]);
 
   useEffect(() => {
@@ -208,8 +226,8 @@ export default function ViewCharacterRolls() {
                 <input
                   type="radio"
                   name="rollType"
-                  value={type}
-                  checked={filters.rollType === type}
+                  value={type === "All" ? "" : type} // Set to "" if "All" is selected
+                  checked={filters.rollType === (type === "All" ? "" : type)}
                   onChange={handleFilterChange}
                 />
                 {type}

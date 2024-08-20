@@ -48,10 +48,42 @@ namespace DiceStatsServer.Controllers
 
         // GET: api/DiceRoll/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<DiceRoll>>> GetDiceRolls(int id, [FromQuery] int? limit, [FromQuery] int skip = 0, [FromQuery] string orderBy = "Timestamp", [FromQuery] string orderDirection = "desc")
+        public async Task<ActionResult<IEnumerable<DiceRoll>>> GetDiceRolls(
+            int id,
+            [FromQuery] int? limit,
+            [FromQuery] int skip = 0,
+            [FromQuery] string orderBy = "Timestamp",
+            [FromQuery] string orderDirection = "desc",
+            [FromQuery] string? rollType = null,
+            [FromQuery] int? diceSize = null,
+            [FromQuery] string? skillType = null,
+            [FromQuery] bool? success = null)
         {
             var query = _context.DiceRolls.Where(dr => dr.CharacterId == id);
 
+            // Apply filters
+            if (!string.IsNullOrEmpty(rollType))
+            {
+                query = query.Where(dr => dr.RollType == rollType);
+            }
+
+            if (diceSize.HasValue)
+            {
+                query = query.Where(dr => dr.DiceSize == diceSize.Value);
+            }
+
+            if (!string.IsNullOrEmpty(skillType))
+            {
+                query = query.Where(dr => dr.SkillType == skillType);
+            }
+
+            if (success.HasValue)
+            {
+                query = query.Where(dr => dr.Success == success.Value);
+            }
+            // Notice: If success is null, do not apply any filter to Success.
+
+            // Apply sorting
             if (orderDirection.ToLower() == "asc")
             {
                 query = orderBy.ToLower() switch
@@ -71,6 +103,7 @@ namespace DiceStatsServer.Controllers
                 };
             }
 
+            // Apply pagination
             query = query.Skip(skip);
 
             if (limit.HasValue && limit.Value > 0)
@@ -84,30 +117,33 @@ namespace DiceStatsServer.Controllers
         }
 
 
+
         // GET: api/:id/count
         [HttpGet("{id}/count")]
-        public async Task<ActionResult<int>> GetDiceRollsCount(int id, [FromQuery] string orderBy = "Timestamp", [FromQuery] string orderDirection = "desc")
+        public async Task<ActionResult<int>> GetDiceRollsCount(int id, [FromQuery] string? rollType, [FromQuery] int? diceSize, [FromQuery] string? skillType, [FromQuery] bool? success)
         {
+            // Base query to filter by CharacterId
             var query = _context.DiceRolls.Where(dr => dr.CharacterId == id);
 
-            // Apply ordering to the query (optional, if you want to match the other route exactly)
-            if (orderDirection.ToLower() == "asc")
+            // Apply filters if they are provided
+            if (!string.IsNullOrEmpty(rollType))
             {
-                query = orderBy.ToLower() switch
-                {
-                    "rollvalue" => query.OrderBy(dr => dr.RollValue),
-                    "success" => query.OrderBy(dr => dr.Success),
-                    _ => query.OrderBy(dr => dr.Timestamp),
-                };
+                query = query.Where(dr => dr.RollType == rollType);
             }
-            else
+
+            if (diceSize.HasValue)
             {
-                query = orderBy.ToLower() switch
-                {
-                    "rollvalue" => query.OrderByDescending(dr => dr.RollValue),
-                    "success" => query.OrderByDescending(dr => dr.Success),
-                    _ => query.OrderByDescending(dr => dr.Timestamp),
-                };
+                query = query.Where(dr => dr.DiceSize == diceSize.Value);
+            }
+
+            if (!string.IsNullOrEmpty(skillType))
+            {
+                query = query.Where(dr => dr.SkillType == skillType);
+            }
+
+            if (success.HasValue)
+            {
+                query = query.Where(dr => dr.Success == success.Value);
             }
 
             // Get the count of records
@@ -115,6 +151,7 @@ namespace DiceStatsServer.Controllers
 
             return Ok(count);
         }
+
 
 
 
