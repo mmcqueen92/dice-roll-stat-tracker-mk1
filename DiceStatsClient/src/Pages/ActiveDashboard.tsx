@@ -17,7 +17,7 @@ import "../Styles/ActiveDashboard.css";
 
 import DiceRollData from "../Interfaces/DiceRollData";
 
-const skillChecks = [
+const skills = [
   "Acrobatics",
   "Animal Handling",
   "Arcana",
@@ -38,7 +38,7 @@ const skillChecks = [
   "Survival",
 ];
 
-const savingThrows = [
+const abilities = [
   "Strength",
   "Dexterity",
   "Constitution",
@@ -46,6 +46,9 @@ const savingThrows = [
   "Wisdom",
   "Charisma",
 ];
+
+const skillsAndAbilities = [...skills, ...abilities].sort();
+
 
 const diceSizes = [4, 6, 8, 10, 12, 20];
 
@@ -232,13 +235,13 @@ export default function ActiveDashboard() {
           >
             <MenuItem value="">Select Roll Type</MenuItem>
             <MenuItem value="Attack">Attack</MenuItem>
-            <MenuItem value="Skill Check">Skill Check</MenuItem>
+            <MenuItem value="Ability/Skill Check">Ability/Skill Check</MenuItem>
             <MenuItem value="Saving Throw">Saving Throw</MenuItem>
             <MenuItem value="Attack/Spell Damage">Attack/Spell Damage</MenuItem>
           </Select>
         </FormControl>
 
-        {formData.rollType === "Skill Check" && (
+        {formData.rollType === "Ability/Skill Check" && (
           <FormControl
             fullWidth
             margin="normal"
@@ -247,13 +250,14 @@ export default function ActiveDashboard() {
             <InputLabel id="skill-type-label">Skill Type</InputLabel>
             <Select
               labelId="skill-type-label"
+              label="Skill Type"
               name="skillType"
               value={formData.skillType}
               onChange={handleChange}
               className="new-diceroll-form-select"
             >
               <MenuItem value="">Select Skill Type</MenuItem>
-              {skillChecks.map((skill) => (
+              {skillsAndAbilities.map((skill) => (
                 <MenuItem key={skill} value={skill}>
                   {skill}
                 </MenuItem>
@@ -273,13 +277,14 @@ export default function ActiveDashboard() {
             </InputLabel>
             <Select
               labelId="saving-attribute-label"
+              label="Saving Attribute"
               name="skillType"
               value={formData.skillType}
               onChange={handleChange}
               className="new-diceroll-form-select"
             >
               <MenuItem value="">Select Saving Attribute</MenuItem>
-              {savingThrows.map((throwType) => (
+              {abilities.map((throwType) => (
                 <MenuItem key={throwType} value={throwType}>
                   {throwType}
                 </MenuItem>
@@ -340,7 +345,7 @@ export default function ActiveDashboard() {
         {diceRolls.map((roll: any) => (
           <li key={roll.diceRollId}>
             {roll.rollType}
-            {(roll.rollType === "Skill Check" ||
+            {(roll.rollType === "Ability/Skill Check" || roll.rollType === "Skill Check" ||
               roll.rollType === "Saving Throw") && <> ({roll.skillType}) </>}
             - {roll.rollValue} / {roll.diceSize}
             {roll.success === true && " - Success"}

@@ -24,7 +24,7 @@ import CharacterData from "../Interfaces/CharacterData";
 const rollTypes = [
   "All",
   "Attack",
-  "Skill Check",
+  "Ability/Skill Check",
   "Saving Throw",
   "Attack/Spell Damage",
 ];
@@ -36,6 +36,24 @@ const skillTypes = [
   "Intelligence",
   "Wisdom",
   "Charisma",
+  "Acrobatics",
+  "Animal Handling",
+  "Arcana",
+  "Athletics",
+  "Deception",
+  "History",
+  "Insight",
+  "Intimidation",
+  "Investigation",
+  "Medicine",
+  "Nature",
+  "Perception",
+  "Performance",
+  "Persuasion",
+  "Religion",
+  "Sleight of Hand",
+  "Stealth",
+  "Survival",
 ];
 
 export default function ViewCharacterRolls() {
@@ -257,11 +275,14 @@ useEffect(() => {
               onChange={handleFilterChange}
             >
               <option value="">Any</option>
-              {skillTypes.map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
+              {skillTypes
+                .slice() // Create a shallow copy to avoid mutating the original array
+                .sort((a, b) => a.localeCompare(b)) // Alphabetize the array
+                .map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
             </select>
           </div>
           {/* <div>
@@ -309,7 +330,7 @@ useEffect(() => {
             {filteredRolls.map((roll) => (
               <li key={roll.diceRollId}>
                 {roll.rollType}
-                {(roll.rollType === "Skill Check" ||
+                {(roll.rollType === "Ability/Skill Check" ||
                   roll.rollType === "Saving Throw") && (
                   <> ({roll.skillType})</>
                 )}{" "}

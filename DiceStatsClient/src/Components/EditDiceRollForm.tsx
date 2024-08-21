@@ -21,10 +21,42 @@ interface EditRollFormProps {
 
 const rollTypes = [
   "Attack",
-  "Skill Check",
+  "Ability/Skill Check",
   "Saving Throw",
   "Attack/Spell Damage",
 ];
+
+const skills = [
+  "Acrobatics",
+  "Animal Handling",
+  "Arcana",
+  "Athletics",
+  "Deception",
+  "History",
+  "Insight",
+  "Intimidation",
+  "Investigation",
+  "Medicine",
+  "Nature",
+  "Perception",
+  "Performance",
+  "Persuasion",
+  "Religion",
+  "Sleight of Hand",
+  "Stealth",
+  "Survival",
+];
+
+const abilities = [
+  "Strength",
+  "Dexterity",
+  "Constitution",
+  "Intelligence",
+  "Wisdom",
+  "Charisma",
+];
+
+const skillsAndAbilities = [...skills, ...abilities].sort();
 
 const diceSizes = [4, 6, 8, 10, 12, 20];
 
@@ -88,12 +120,14 @@ export default function EditDiceRollForm({
       <DialogTitle>Edit Dice Roll</DialogTitle>
       <DialogContent>
         <FormControl fullWidth margin="dense">
-          <InputLabel>Dice Size</InputLabel>
+          <InputLabel id="dice-size-label">Dice Size</InputLabel>
           <Select
             name="diceSize"
             value={formData.diceSize || ""}
             onChange={handleSelectChange}
             required
+            labelId="dice-size-label"
+            label="Dice Size"
           >
             {diceSizes.map((size) => (
               <MenuItem key={size} value={size}>
@@ -104,9 +138,11 @@ export default function EditDiceRollForm({
         </FormControl>
 
         <FormControl fullWidth margin="dense">
-          <InputLabel>Roll Value</InputLabel>
+          <InputLabel id="roll-value-label">Roll Value</InputLabel>
           <Select
             name="rollValue"
+            labelId="roll-value-label"
+            label="Roll Value"
             value={formData.rollValue || ""}
             onChange={handleSelectChange}
             required
@@ -136,16 +172,29 @@ export default function EditDiceRollForm({
           ))}
         </TextField>
 
-        {formData.rollType === "Skill Check" && (
-          <TextField
-            margin="dense"
-            label="Skill Type"
-            type="text"
-            name="skillType"
-            value={formData.skillType || ""}
-            onChange={handleTextFieldChange}
+        {formData.rollType === "Ability/Skill Check" && (
+          <FormControl
             fullWidth
-          />
+            margin="normal"
+            className="new-diceroll-form-control"
+          >
+            <InputLabel id="skill-type-label">Skill Type</InputLabel>
+            <Select
+              labelId="skill-type-label"
+              label="Skill Type"
+              name="skillType"
+              value={formData.skillType}
+              onChange={handleSelectChange}
+              className="new-diceroll-form-select"
+            >
+              <MenuItem value="">Select Skill Type</MenuItem>
+              {skillsAndAbilities.map((skill) => (
+                <MenuItem key={skill} value={skill}>
+                  {skill}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         )}
 
         {formData.rollType === "Saving Throw" && (
