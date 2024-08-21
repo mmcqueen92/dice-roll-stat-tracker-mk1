@@ -6,6 +6,9 @@ import PieChartProps from "../Interfaces/RollTypeRatesPieChartProps";
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 export default function RollTypeRatesPieChart({ data, title }: PieChartProps) {
+  if (!data) {
+    return null;
+  }
   // Extracting labels and values from the data object
   const labels = Object.keys(data); // ["attack", "skillCheck", "savingThrow", "attackOrSpellDamage"]
   const values = Object.values(data).map((value) => value * 100); // Convert fractions to percentages

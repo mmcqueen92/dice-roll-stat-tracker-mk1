@@ -23,6 +23,9 @@ ChartJS.register(
 );
 
 export default function RollTrendsLineChart({ data, title }: LineChartProps) {
+  if (!data) {
+    return null;
+  }
   // Extracting keys and values from the data object
   const labels = Object.keys(data).map((key) => parseInt(key)); // x-axis (1, 2, 3, ...)
   const values = Object.values(data); // y-axis (18, 16.5, 12.66, ...)

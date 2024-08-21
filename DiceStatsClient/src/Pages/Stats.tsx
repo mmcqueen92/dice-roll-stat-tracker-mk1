@@ -585,6 +585,7 @@ export default function StatsPage() {
   return (
     <Container>
       <Box>
+        <Typography variant="h5">Statistics</Typography>
         <Select
           value={
             selectedCharacter?.characterId
@@ -618,7 +619,6 @@ export default function StatsPage() {
       </Box>
 
       <Box>
-        <Typography variant="h5">Statistics</Typography>
         {/* Tab navigation */}
         <Box>
           <Button onClick={(e) => handleTabChange(e, "overview")}>

@@ -176,7 +176,6 @@ export default function EditDiceRollForm({
           <FormControl
             fullWidth
             margin="normal"
-            className="new-diceroll-form-control"
           >
             <InputLabel id="skill-type-label">Skill Type</InputLabel>
             <Select
