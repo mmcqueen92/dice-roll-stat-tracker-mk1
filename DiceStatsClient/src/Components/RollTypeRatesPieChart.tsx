@@ -10,7 +10,13 @@ export default function RollTypeRatesPieChart({ data, title }: PieChartProps) {
     return null;
   }
   // Extracting labels and values from the data object
-  const labels = Object.keys(data); // ["attack", "skillCheck", "savingThrow", "attackOrSpellDamage"]
+  // const labels = Object.keys(data); 
+  const labels = [
+    "Attack",
+    "Ability/Skill Check",
+    "Saving Throw",
+    "Attack/Spell Damage",
+  ];
   const values = Object.values(data).map((value) => value * 100); // Convert fractions to percentages
 
   // Set up chart data

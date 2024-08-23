@@ -112,12 +112,34 @@ export default function StatsPage() {
     [key: string]: number;
   }>({});
 
+  const [attackSuccessRate, setAttackSuccessRate] = useState<{
+    success: number;
+    total: number;
+  }>({ success: 0, total: 0 });
+
+  const [rollsByRollType, setRollsByRollType] = useState<{
+    Attack: number;
+    "Ability/Skill Check": number;
+    "Saving Throw": number;
+    "Attack/Spell Damage": number;
+  }>({
+    Attack: 0,
+    "Ability/Skill Check": 0,
+    "Saving Throw": 0,
+    "Attack/Spell Damage": 0,
+  });
+
   const [rollTypeRates, setRollTypeRates] = useState<{
     attack: number;
-    skillCheck: number;
+    abilityOrSkillCheck: number;
     savingThrow: number;
     attackOrSpellDamage: number;
-  }>({ attack: 0, skillCheck: 0, savingThrow: 0, attackOrSpellDamage: 0 });
+  }>({
+    attack: 0,
+    abilityOrSkillCheck: 0,
+    savingThrow: 0,
+    attackOrSpellDamage: 0,
+  });
 
   useEffect(() => {
     // Fetch all characters for the user
@@ -184,6 +206,8 @@ export default function StatsPage() {
         calculateSuccessRateBySkillType(activeDiceRollData);
       setSuccessRateBySkillType(successRatesBySkillType);
 
+      setAttackSuccessRate(calculateAttackSuccessRate(activeDiceRollData));
+      setRollsByRollType(calculateRollsByRollType(activeDiceRollData));
       setRollTypeRates(calculateRollTypeRates(activeDiceRollData));
     } else {
       setAverageRollsByDiceSize({});
@@ -530,6 +554,65 @@ export default function StatsPage() {
     return successRates;
   };
 
+  const calculateAttackSuccessRate = (diceRolls: DiceRollData[]) => {
+    const filteredRolls = diceRolls.filter(
+      (roll) => roll.rollType === "Attack"
+    );
+
+    const data = {
+      success: 0,
+      total: 0,
+    };
+
+    filteredRolls.forEach((roll) => {
+      if (roll.success) {
+        data.success++;
+        data.total++;
+      } else {
+        data.total++;
+      }
+    });
+
+    return data;
+  };
+
+  const calculateRollsByRollType = (diceRolls: DiceRollData[]) => {
+    const d20Rolls = diceRolls.filter((roll) => roll.diceSize === 20);
+
+    const rollTypeCounts: {
+      Attack: number;
+      "Ability/Skill Check": number;
+      "Saving Throw": number;
+      "Attack/Spell Damage": number;
+    } = {
+      Attack: 0,
+      "Ability/Skill Check": 0,
+      "Saving Throw": 0,
+      "Attack/Spell Damage": 0,
+    };
+
+    d20Rolls.forEach((roll) => {
+      switch (roll.rollType) {
+        case "Attack":
+          rollTypeCounts[roll.rollType]++;
+          break;
+        case "Ability/Skill Check":
+          rollTypeCounts[roll.rollType]++;
+          break;
+        case "Saving Throw":
+          rollTypeCounts[roll.rollType]++;
+          break;
+        case "Attack/Spell Damage":
+          rollTypeCounts[roll.rollType]++;
+          break;
+        default:
+          break;
+      }
+    });
+
+    return rollTypeCounts;
+  };
+
   const calculateRollTypeRates = (diceRolls: DiceRollData[]) => {
     const d20Rolls = diceRolls.filter((roll) => roll.diceSize === 20);
 
@@ -553,7 +636,7 @@ export default function StatsPage() {
           rollTypeCounts.attack++;
           rollTypeCounts.total++;
           break;
-        case "Skill Check":
+        case "Ability/Skill Check":
           rollTypeCounts.skillCheck++;
           rollTypeCounts.total++;
           break;
@@ -573,7 +656,7 @@ export default function StatsPage() {
 
     const rollTypeRates = {
       attack: rollTypeCounts.attack / rollTypeCounts.total,
-      skillCheck: rollTypeCounts.skillCheck / rollTypeCounts.total,
+      abilityOrSkillCheck: rollTypeCounts.skillCheck / rollTypeCounts.total,
       savingThrow: rollTypeCounts.savingThrow / rollTypeCounts.total,
       attackOrSpellDamage:
         rollTypeCounts.attackOrSpellDamage / rollTypeCounts.total,
@@ -584,8 +667,9 @@ export default function StatsPage() {
 
   return (
     <Container>
+      <Typography variant="h5">Statistics</Typography>
+
       <Box>
-        <Typography variant="h5">Statistics</Typography>
         <Select
           value={
             selectedCharacter?.characterId
@@ -617,6 +701,8 @@ export default function StatsPage() {
           ))}
         </Select>
       </Box>
+
+      <Box></Box>
 
       <Box>
         {/* Tab navigation */}
@@ -739,6 +825,17 @@ export default function StatsPage() {
                       )
                     )}
                   </ul>
+
+                  <Typography variant="h6">
+                    Total Rolls by Category (d20)
+                  </Typography>
+                  <ul>
+                    {Object.entries(rollsByRollType).map(([type, total]) => (
+                      <li key={type}>
+                        {type}: {total}
+                      </li>
+                    ))}
+                  </ul>
                 </Box>
               </Grid>
 
@@ -767,7 +864,10 @@ export default function StatsPage() {
                   <p>
                     Crit rate: {(critAndFumbleRates.critRate * 100).toFixed(2)}%
                   </p>
-                  <p>Fumble rate: {critAndFumbleRates.fumbleRate * 100}%</p>
+                  <p>
+                    Fumble rate:{" "}
+                    {(critAndFumbleRates.fumbleRate * 100).toFixed(2)}%
+                  </p>
                 </Box>
               </Grid>
 
@@ -794,6 +894,14 @@ export default function StatsPage() {
                   </Typography>
 
                   <ul>
+                    <li>
+                      Attack:{" "}
+                      {(
+                        (attackSuccessRate.success / attackSuccessRate.total) *
+                        100
+                      ).toFixed(2)}
+                      %
+                    </li>
                     {Object.entries(successRateBySkillType).map(
                       ([skillType, successRate], index) => (
                         <li key={index}>
@@ -813,6 +921,7 @@ export default function StatsPage() {
                 <RollTrendsLineChart
                   data={rollTrendsByDiceSize[20]}
                   title="D-20 Roll Trends"
+                  filters={true}
                 />
                 <RollTrendsLineChart
                   data={rollTrendsByDiceSize[12]}

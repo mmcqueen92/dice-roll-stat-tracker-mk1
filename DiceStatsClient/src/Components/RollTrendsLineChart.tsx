@@ -10,7 +10,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import LineChartProps from "../Interfaces/RollTrendsLineChartProps";
+import RollTrendsLineChartProps from "../Interfaces/RollTrendsLineChartProps";
 
 ChartJS.register(
   CategoryScale,
@@ -22,7 +22,7 @@ ChartJS.register(
   Legend
 );
 
-export default function RollTrendsLineChart({ data, title }: LineChartProps) {
+export default function RollTrendsLineChart({ data, title, filters }: RollTrendsLineChartProps) {
   if (!data) {
     return null;
   }
@@ -59,5 +59,10 @@ export default function RollTrendsLineChart({ data, title }: LineChartProps) {
     },
   };
 
-  return <Line data={chartData} options={chartOptions} />;
+  return (
+    <>
+      {filters && <div>Filters!</div>}
+      <Line data={chartData} options={chartOptions} />
+    </>
+  );
 }

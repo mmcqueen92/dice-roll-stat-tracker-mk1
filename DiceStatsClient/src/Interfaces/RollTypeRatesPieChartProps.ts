@@ -1,7 +1,7 @@
 export default interface RollTypeRatesPieChartProps {
   data: {
     attack: number;
-    skillCheck: number;
+    abilityOrSkillCheck: number;
     savingThrow: number;
     attackOrSpellDamage: number;
   };
