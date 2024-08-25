@@ -142,7 +142,6 @@ export default function StatsPage() {
   });
 
   useEffect(() => {
-    // Fetch all characters for the user
     api.get(`/character`).then((response) => {
       setCharacters(response.data);
     });
@@ -726,7 +725,6 @@ export default function StatsPage() {
         <Box>
           {currentTab === "overview" && (
             <Grid container spacing={2}>
-              {/* Overview Tab Content */}
               <Grid item xs={12} md={6}>
                 <Box>
                   <Typography variant="h6">
@@ -921,7 +919,6 @@ export default function StatsPage() {
                 <RollTrendsLineChart
                   data={rollTrendsByDiceSize[20]}
                   title="D-20 Roll Trends"
-                  filters={true}
                 />
                 <RollTrendsLineChart
                   data={rollTrendsByDiceSize[12]}

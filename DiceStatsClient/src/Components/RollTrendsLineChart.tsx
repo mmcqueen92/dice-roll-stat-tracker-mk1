@@ -22,7 +22,7 @@ ChartJS.register(
   Legend
 );
 
-export default function RollTrendsLineChart({ data, title, filters }: RollTrendsLineChartProps) {
+export default function RollTrendsLineChart({ data, title }: RollTrendsLineChartProps) {
   if (!data) {
     return null;
   }
@@ -61,7 +61,6 @@ export default function RollTrendsLineChart({ data, title, filters }: RollTrends
 
   return (
     <>
-      {filters && <div>Filters!</div>}
       <Line data={chartData} options={chartOptions} />
     </>
   );

@@ -87,7 +87,7 @@ useEffect(() => {
         params: {
           skip: (page - 1) * pageSize,
           limit: pageSize,
-          rollType: filters.rollType || undefined, // Include filters only if they are set
+          rollType: filters.rollType || undefined,
           diceSize: filters.diceSize || undefined,
           skillType: filters.skillType || undefined,
           success: filters.success !== "" ? filters.success : undefined,
