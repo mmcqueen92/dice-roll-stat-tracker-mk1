@@ -15,6 +15,7 @@ import DiceRollData from "../Interfaces/DiceRollData";
 import RollTrendsLineChart from "../Components/RollTrendsLineChart";
 import RollTypeRatesPieChart from "../Components/RollTypeRatesPieChart";
 import RollDistributionChart from "../Components/RollDistributionChart";
+import RollTrendsStatsSection from "../Components/RollTrendsStatsSection";
 
 type TabValue =
   | "overview"
@@ -914,53 +915,9 @@ export default function StatsPage() {
           )}
           {currentTab === "trends" && (
             <>
-              <Box>
-                <Typography variant="h6">Roll Trends by Dice Size</Typography>
-                <RollTrendsLineChart
-                  data={rollTrendsByDiceSize[20]}
-                  title="D-20 Roll Trends"
-                />
-                <RollTrendsLineChart
-                  data={rollTrendsByDiceSize[12]}
-                  title="D-12 Roll Trends"
-                />
-                <RollTrendsLineChart
-                  data={rollTrendsByDiceSize[10]}
-                  title="D-10 Roll Trends"
-                />
-                <RollTrendsLineChart
-                  data={rollTrendsByDiceSize[8]}
-                  title="D-8 Roll Trends"
-                />
-                <RollTrendsLineChart
-                  data={rollTrendsByDiceSize[6]}
-                  title="D-6 Roll Trends"
-                />
-                <RollTrendsLineChart
-                  data={rollTrendsByDiceSize[4]}
-                  title="D-4 Roll Trends"
-                />
-              </Box>
-
-              <Box>
-                <Typography variant="h6">Roll Trends by Roll Type</Typography>
-                <RollTrendsLineChart
-                  data={rollTrendsByRollType["Attack"]}
-                  title="Attacks"
-                />
-                <RollTrendsLineChart
-                  data={rollTrendsByRollType["Saving Throw"]}
-                  title="Saving Throws"
-                />
-                <RollTrendsLineChart
-                  data={rollTrendsByRollType["Skill Check"]}
-                  title="Skill Checks"
-                />
-                <RollTrendsLineChart
-                  data={rollTrendsByRollType["Attack/Spell Damage"]}
-                  title="Attack/Spell Damage Rolls"
-                />
-              </Box>
+              <RollTrendsStatsSection
+                diceRolls={activeDiceRollData}
+              ></RollTrendsStatsSection>
             </>
           )}
           {/* Add other tab content here */}

@@ -11,6 +11,9 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
 } from "@mui/material";
 
 export default function RollTrendsStatsSection({
@@ -24,6 +27,8 @@ export default function RollTrendsStatsSection({
   }>({});
   const [activeDiceRollData, setActiveDiceRollData] =
     useState<DiceRollData[]>(diceRolls);
+  const [selectedChart, setSelectedChart] = useState<number | null>(20); // Default to d20 chart
+  const [selectedRollTypes, setSelectedRollTypes] = useState<string[]>(["All"]);
 
   useEffect(() => {
     if (diceRolls.length > 0) {
@@ -37,6 +42,7 @@ export default function RollTrendsStatsSection({
     }
   }, [activeDiceRollData]);
 
+  // Functions to calculate trends remain the same...
   const calculateRollTrendsByDiceSize = (diceRolls: DiceRollData[]) => {
     const trends: { [key: number]: { [index: number]: number } } = {};
 
@@ -102,55 +108,132 @@ export default function RollTrendsStatsSection({
 
     return trends;
   };
-  return (
-    <>
-      <Box>
-        <Typography variant="h6">Roll Trends by Dice Size</Typography>
-        <RollTrendsLineChart
-          data={rollTrendsByDiceSize[20]}
-          title="D-20 Roll Trends"
-        />
-        <RollTrendsLineChart
-          data={rollTrendsByDiceSize[12]}
-          title="D-12 Roll Trends"
-        />
-        <RollTrendsLineChart
-          data={rollTrendsByDiceSize[10]}
-          title="D-10 Roll Trends"
-        />
-        <RollTrendsLineChart
-          data={rollTrendsByDiceSize[8]}
-          title="D-8 Roll Trends"
-        />
-        <RollTrendsLineChart
-          data={rollTrendsByDiceSize[6]}
-          title="D-6 Roll Trends"
-        />
-        <RollTrendsLineChart
-          data={rollTrendsByDiceSize[4]}
-          title="D-4 Roll Trends"
-        />
-      </Box>
+  // Handle chart selection
+  const handleChartSelect = (event: SelectChangeEvent<number>) => {
+    let diceSize = event.target.value;
+    if (typeof diceSize === "string") {
+      diceSize = parseInt(diceSize);
+    }
+    setSelectedChart(diceSize);
+    if (diceSize !== 20) {
+      setSelectedRollTypes(["All"]);
+      setActiveDiceRollData(diceRolls);
+    }
+  };
 
-      <Box>
-        <Typography variant="h6">Roll Trends by Roll Type</Typography>
+  // Handle roll type filter changes
+  const handleRollTypeFilterChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { name, checked } = event.target;
+    let updatedRollTypes = [...selectedRollTypes];
+
+    if (name === "All") {
+      updatedRollTypes = checked ? ["All"] : [];
+    } else {
+      if (checked) {
+        updatedRollTypes.push(name);
+      } else {
+        updatedRollTypes = updatedRollTypes.filter((type) => type !== name);
+      }
+    }
+
+    if (updatedRollTypes.includes("All")) {
+      updatedRollTypes = ["All"];
+    } else if (updatedRollTypes.length === 4) {
+      updatedRollTypes = ["All"];
+    }
+
+    setSelectedRollTypes(updatedRollTypes);
+  };
+
+  // Filter data based on selected roll types
+  useEffect(() => {
+    if (selectedChart === 20 && selectedRollTypes.length > 0) {
+      const filteredData = diceRolls.filter(
+        (roll) =>
+          selectedRollTypes.includes("All") ||
+          selectedRollTypes.includes(roll.rollType!)
+      );
+      setActiveDiceRollData(filteredData);
+    }
+  }, [selectedRollTypes, selectedChart]);
+
+  return (
+    <Box>
+      <Typography variant="h6">Select Chart</Typography>
+      <Select value={selectedChart || ""} onChange={handleChartSelect}>
+        <MenuItem value={20}>D-20 Roll Trends</MenuItem>
+        <MenuItem value={12}>D-12 Roll Trends</MenuItem>
+        <MenuItem value={10}>D-10 Roll Trends</MenuItem>
+        <MenuItem value={8}>D-8 Roll Trends</MenuItem>
+        <MenuItem value={6}>D-6 Roll Trends</MenuItem>
+        <MenuItem value={4}>D-4 Roll Trends</MenuItem>
+      </Select>
+
+      {selectedChart === 20 && (
+        <FormGroup>
+          <Typography variant="subtitle1">Filter Roll Types</Typography>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={selectedRollTypes.includes("All")}
+                onChange={handleRollTypeFilterChange}
+                name="All"
+              />
+            }
+            label="All"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={selectedRollTypes.includes("Attack")}
+                onChange={handleRollTypeFilterChange}
+                name="Attack"
+              />
+            }
+            label="Attack"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={selectedRollTypes.includes("Saving Throw")}
+                onChange={handleRollTypeFilterChange}
+                name="Saving Throw"
+              />
+            }
+            label="Saving Throw"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={selectedRollTypes.includes("Ability/Skill Check")}
+                onChange={handleRollTypeFilterChange}
+                name="Ability/Skill Check"
+              />
+            }
+            label="Ability/Skill Check"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={selectedRollTypes.includes("Attack/Spell Damage")}
+                onChange={handleRollTypeFilterChange}
+                name="Attack/Spell Damage"
+              />
+            }
+            label="Attack/Spell Damage"
+          />
+        </FormGroup>
+      )}
+
+      {selectedChart && (
         <RollTrendsLineChart
-          data={rollTrendsByRollType["Attack"]}
-          title="Attacks"
+          data={rollTrendsByDiceSize[selectedChart]}
+          title={`D-${selectedChart} Roll Trends`}
+          //   filters={selectedChart === 20}
         />
-        <RollTrendsLineChart
-          data={rollTrendsByRollType["Saving Throw"]}
-          title="Saving Throws"
-        />
-        <RollTrendsLineChart
-          data={rollTrendsByRollType["Skill Check"]}
-          title="Skill Checks"
-        />
-        <RollTrendsLineChart
-          data={rollTrendsByRollType["Attack/Spell Damage"]}
-          title="Attack/Spell Damage Rolls"
-        />
-      </Box>
-    </>
+      )}
+    </Box>
   );
 }
