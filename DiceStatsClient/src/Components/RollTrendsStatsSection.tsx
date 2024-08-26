@@ -127,7 +127,7 @@ export default function RollTrendsStatsSection({
     }
     setSelectedChart(diceSize);
     if (diceSize !== 20) {
-      setSelectedRollTypes(["All"]);
+      setSelectedRollTypes(allRollTypes);
       setActiveDiceRollData(diceRolls);
     }
   };
@@ -136,7 +136,6 @@ export default function RollTrendsStatsSection({
   const handleRollTypeFilterChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    console.log("EVENT.TARGET: ", event.target);
     const { name, checked } = event.target;
     let updatedRollTypes = [...selectedRollTypes];
 
@@ -156,14 +155,12 @@ export default function RollTrendsStatsSection({
   // Filter data based on selected roll types
   useEffect(() => {
     if (selectedChart === 20 && selectedRollTypes.length > 0) {
-      const filteredData = diceRolls.filter(
-        (roll) =>
-          selectedRollTypes.includes("All") ||
-          selectedRollTypes.includes(roll.rollType!)
+      const filteredData = diceRolls.filter((roll) =>
+        selectedRollTypes.includes(roll.rollType!)
       );
       setActiveDiceRollData(filteredData);
     }
-  }, [selectedRollTypes, selectedChart]);
+  }, [selectedRollTypes, selectedChart, diceRolls]);
 
   return (
     <Box>
@@ -183,7 +180,9 @@ export default function RollTrendsStatsSection({
           <FormControlLabel
             control={
               <Checkbox
-                checked={allRollTypes.every((type) => selectedRollTypes.includes(type))}
+                checked={allRollTypes.every((type) =>
+                  selectedRollTypes.includes(type)
+                )}
                 onChange={handleRollTypeFilterChange}
                 name="All"
               />
