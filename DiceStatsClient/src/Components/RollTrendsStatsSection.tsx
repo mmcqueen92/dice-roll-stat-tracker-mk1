@@ -3,9 +3,9 @@ import RollTrendsLineChart from "./RollTrendsLineChart";
 import DiceRollData from "../Interfaces/DiceRollData";
 import StatsSectionProps from "../Interfaces/StatsSectionProps";
 import {
-  Button,
-  Container,
-  Grid,
+  //   Button,
+  //   Container,
+  //   Grid,
   Box,
   Typography,
   MenuItem,
@@ -22,38 +22,26 @@ export default function RollTrendsStatsSection({
   const [rollTrendsByDiceSize, setRollTrendsByDiceSize] = useState<{
     [key: string]: { [index: number]: number };
   }>({});
-  const [rollTrendsByRollType, setRollTrendsByRollType] = useState<{
-    [key: string]: { [index: number]: number };
-  }>({});
   const [activeDiceRollData, setActiveDiceRollData] =
     useState<DiceRollData[]>(diceRolls);
-  const [selectedChart, setSelectedChart] = useState<number | null>(20); // Default to d20 chart
-  const [selectedRollTypes, setSelectedRollTypes] = useState<string[]>([
-    "Attack",
-    "Saving Throw",
-    "Ability/Skill Check",
-    "Attack/Spell Damage",
-  ]);
+  const [selectedChart, setSelectedChart] = useState<number | null>(20);
   const allRollTypes = [
     "Attack",
     "Saving Throw",
     "Ability/Skill Check",
     "Attack/Spell Damage",
   ];
+  const [selectedRollTypes, setSelectedRollTypes] =
+    useState<string[]>(allRollTypes);
 
   useEffect(() => {
     if (diceRolls.length > 0) {
       const trendsByDiceSizeData =
         calculateRollTrendsByDiceSize(activeDiceRollData);
       setRollTrendsByDiceSize(trendsByDiceSizeData);
-
-      const trendsByRollTypeData =
-        calculateRollTrendsByRollType(activeDiceRollData);
-      setRollTrendsByRollType(trendsByRollTypeData);
     }
-  }, [activeDiceRollData]);
+  }, [activeDiceRollData, diceRolls.length]);
 
-  // Functions to calculate trends remain the same...
   const calculateRollTrendsByDiceSize = (diceRolls: DiceRollData[]) => {
     const trends: { [key: number]: { [index: number]: number } } = {};
 
@@ -86,40 +74,6 @@ export default function RollTrendsStatsSection({
     return trends;
   };
 
-  const calculateRollTrendsByRollType = (diceRolls: DiceRollData[]) => {
-    const trends: { [key: string]: { [index: number]: number } } = {};
-
-    const rollsByRollType = diceRolls.reduce<{ [key: string]: number[] }>(
-      (acc, roll) => {
-        if (roll.rollType) {
-          if (!acc[roll.rollType]) {
-            acc[roll.rollType] = [];
-          }
-          acc[roll.rollType].push(roll.rollValue);
-        }
-        return acc;
-      },
-      {}
-    );
-
-    Object.keys(rollsByRollType).forEach((type) => {
-      const rolls = rollsByRollType[type];
-      const rollTrends: { [index: number]: number } = {};
-
-      rolls.forEach((rollValue, index) => {
-        const sum = rolls
-          .slice(0, index + 1)
-          .reduce<number>((a, b) => a + b, 0);
-        const average = sum / (index + 1);
-        rollTrends[index + 1] = average;
-      });
-
-      trends[type] = rollTrends;
-    });
-
-    return trends;
-  };
-  // Handle chart selection
   const handleChartSelect = (event: SelectChangeEvent<number>) => {
     let diceSize = event.target.value;
     if (typeof diceSize === "string") {
@@ -132,7 +86,6 @@ export default function RollTrendsStatsSection({
     }
   };
 
-  // Handle roll type filter changes
   const handleRollTypeFilterChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -152,7 +105,6 @@ export default function RollTrendsStatsSection({
     setSelectedRollTypes(updatedRollTypes);
   };
 
-  // Filter data based on selected roll types
   useEffect(() => {
     if (selectedChart === 20 && selectedRollTypes.length > 0) {
       const filteredData = diceRolls.filter((roll) =>
@@ -236,7 +188,6 @@ export default function RollTrendsStatsSection({
         <RollTrendsLineChart
           data={rollTrendsByDiceSize[selectedChart]}
           title={`D-${selectedChart} Roll Trends`}
-          //   filters={selectedChart === 20}
         />
       )}
     </Box>
