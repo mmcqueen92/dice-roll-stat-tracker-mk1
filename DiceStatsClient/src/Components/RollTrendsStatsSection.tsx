@@ -28,7 +28,18 @@ export default function RollTrendsStatsSection({
   const [activeDiceRollData, setActiveDiceRollData] =
     useState<DiceRollData[]>(diceRolls);
   const [selectedChart, setSelectedChart] = useState<number | null>(20); // Default to d20 chart
-  const [selectedRollTypes, setSelectedRollTypes] = useState<string[]>(["All"]);
+  const [selectedRollTypes, setSelectedRollTypes] = useState<string[]>([
+    "Attack",
+    "Saving Throw",
+    "Ability/Skill Check",
+    "Attack/Spell Damage",
+  ]);
+  const allRollTypes = [
+    "Attack",
+    "Saving Throw",
+    "Ability/Skill Check",
+    "Attack/Spell Damage",
+  ];
 
   useEffect(() => {
     if (diceRolls.length > 0) {
@@ -125,23 +136,18 @@ export default function RollTrendsStatsSection({
   const handleRollTypeFilterChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
+    console.log("EVENT.TARGET: ", event.target);
     const { name, checked } = event.target;
     let updatedRollTypes = [...selectedRollTypes];
 
     if (name === "All") {
-      updatedRollTypes = checked ? ["All"] : [];
+      updatedRollTypes = checked ? allRollTypes : [];
     } else {
       if (checked) {
         updatedRollTypes.push(name);
       } else {
         updatedRollTypes = updatedRollTypes.filter((type) => type !== name);
       }
-    }
-
-    if (updatedRollTypes.includes("All")) {
-      updatedRollTypes = ["All"];
-    } else if (updatedRollTypes.length === 4) {
-      updatedRollTypes = ["All"];
     }
 
     setSelectedRollTypes(updatedRollTypes);
@@ -177,7 +183,7 @@ export default function RollTrendsStatsSection({
           <FormControlLabel
             control={
               <Checkbox
-                checked={selectedRollTypes.includes("All")}
+                checked={allRollTypes.every((type) => selectedRollTypes.includes(type))}
                 onChange={handleRollTypeFilterChange}
                 name="All"
               />
