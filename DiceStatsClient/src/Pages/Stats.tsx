@@ -22,7 +22,9 @@ type TabValue =
   | "dice-types"
   | "d20-rolls"
   | "trends"
-  | "success-rates";
+  | "success-rates"
+  | "roll distribution"
+  | "roll types";
 
 export default function StatsPage() {
   const [currentTab, setCurrentTab] = useState<TabValue>("overview");
@@ -710,17 +712,23 @@ export default function StatsPage() {
           <Button onClick={(e) => handleTabChange(e, "overview")}>
             Overview
           </Button>
-          <Button onClick={(e) => handleTabChange(e, "dice-types")}>
+          {/* <Button onClick={(e) => handleTabChange(e, "dice-types")}>
             Dice Types
-          </Button>
-          <Button onClick={(e) => handleTabChange(e, "d20-rolls")}>
+          </Button> */}
+          {/* <Button onClick={(e) => handleTabChange(e, "d20-rolls")}>
             d20 Rolls
-          </Button>
+          </Button> */}
           <Button onClick={(e) => handleTabChange(e, "trends")}>
             Roll Trends
           </Button>
-          <Button onClick={(e) => handleTabChange(e, "success-rates")}>
+          {/* <Button onClick={(e) => handleTabChange(e, "success-rates")}>
             Success Rates
+          </Button> */}
+          <Button onClick={(e) => handleTabChange(e, "roll distribution")}>
+            Roll Distribution
+          </Button>
+          <Button onClick={(e) => handleTabChange(e, "roll types")}>
+            Roll Types
           </Button>
         </Box>
         <Box>
@@ -776,6 +784,39 @@ export default function StatsPage() {
 
               <Grid item xs={12} md={6}>
                 <Box>
+                  <Typography variant="h6">Rolling Streak Records</Typography>
+                  <p>Longest Success Streak: {streakRecords.successStreak}</p>
+                  <p>Longest Fail Streak: {streakRecords.failStreak}</p>
+                </Box>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <Box>
+                  <Typography variant="h6">Crit/Fumble Rates</Typography>
+                  <p>
+                    Crit rate: {(critAndFumbleRates.critRate * 100).toFixed(2)}%
+                  </p>
+                  <p>
+                    Fumble rate:{" "}
+                    {(critAndFumbleRates.fumbleRate * 100).toFixed(2)}%
+                  </p>
+                </Box>
+              </Grid>
+            </Grid>
+          )}
+
+          {currentTab === "trends" && (
+            <>
+              <RollTrendsStatsSection
+                diceRolls={activeDiceRollData}
+              ></RollTrendsStatsSection>
+            </>
+          )}
+
+          {currentTab === "roll distribution" && (
+            <>
+              <Grid item xs={12} md={6}>
+                <Box>
                   <Typography variant="h6">
                     Roll Distribution by Dice Size
                   </Typography>
@@ -810,6 +851,11 @@ export default function StatsPage() {
                   )}
                 </Box>
               </Grid>
+            </>
+          )}
+
+          {currentTab === "roll types" && (
+            <>
               <Grid item xs={12} md={6}>
                 <Box>
                   <Typography variant="h6">
@@ -836,9 +882,7 @@ export default function StatsPage() {
                     ))}
                   </ul>
                 </Box>
-              </Grid>
 
-              <Grid item xs={12} md={6}>
                 <Box>
                   <Typography variant="h6">D20 Roll Type Rates</Typography>
 
@@ -847,30 +891,7 @@ export default function StatsPage() {
                     title="Roll Type Distribution"
                   />
                 </Box>
-              </Grid>
 
-              <Grid item xs={12} md={6}>
-                <Box>
-                  <Typography variant="h6">Rolling Streak Records</Typography>
-                  <p>Longest Success Streak: {streakRecords.successStreak}</p>
-                  <p>Longest Fail Streak: {streakRecords.failStreak}</p>
-                </Box>
-              </Grid>
-
-              <Grid item xs={12} md={6}>
-                <Box>
-                  <Typography variant="h6">Crit/Fumble Rates</Typography>
-                  <p>
-                    Crit rate: {(critAndFumbleRates.critRate * 100).toFixed(2)}%
-                  </p>
-                  <p>
-                    Fumble rate:{" "}
-                    {(critAndFumbleRates.fumbleRate * 100).toFixed(2)}%
-                  </p>
-                </Box>
-              </Grid>
-
-              <Grid item xs={12} md={6}>
                 <Box>
                   <Typography variant="h6">Rolls by Skill Types</Typography>
 
@@ -884,9 +905,7 @@ export default function StatsPage() {
                     )}
                   </ul>
                 </Box>
-              </Grid>
 
-              <Grid item xs={12} md={6}>
                 <Box>
                   <Typography variant="h6">
                     Success Rates by Skill Types
@@ -911,13 +930,6 @@ export default function StatsPage() {
                   </ul>
                 </Box>
               </Grid>
-            </Grid>
-          )}
-          {currentTab === "trends" && (
-            <>
-              <RollTrendsStatsSection
-                diceRolls={activeDiceRollData}
-              ></RollTrendsStatsSection>
             </>
           )}
           {/* Add other tab content here */}
