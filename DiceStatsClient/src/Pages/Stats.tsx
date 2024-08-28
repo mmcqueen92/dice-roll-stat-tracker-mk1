@@ -12,10 +12,9 @@ import {
 import api from "../Utils/api";
 import CharacterData from "../Interfaces/CharacterData";
 import DiceRollData from "../Interfaces/DiceRollData";
-import RollTrendsLineChart from "../Components/RollTrendsLineChart";
-import RollTypeRatesPieChart from "../Components/RollTypeRatesPieChart";
-import RollDistributionChart from "../Components/RollDistributionChart";
-import RollTrendsStatsSection from "../Components/RollTrendsStatsSection";
+import StatsSectionRollTrends from "../Components/StatsSectionRollTrends";
+import StatsSectionRollDistribution from "../Components/StatsSectionRollDistribution";
+import StatsSectionRollTypes from "../Components/StatsSectionRollTypes";
 
 type TabValue =
   | "overview"
@@ -38,62 +37,11 @@ export default function StatsPage() {
   const [averageRollsByDiceSize, setAverageRollsByDiceSize] = useState<{
     [key: string]: number;
   }>({});
-  const [averageRollByCategory, setAverageRollByCategory] = useState<{
-    [key: string]: number;
-  }>({});
+
   const [totalRollsByDiceSize, setTotalRollsByDiceSize] = useState<{
     [key: string]: number;
   }>({});
-  const [rollDistributionByDiceSize, setRollDistributionByDiceSize] = useState<{
-    [key: string]: { [rollValue: number]: number };
-  }>({
-    4: { 1: 0, 2: 0, 3: 0, 4: 0 },
-    6: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 },
-    8: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 },
-    10: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0 },
-    12: {
-      1: 0,
-      2: 0,
-      3: 0,
-      4: 0,
-      5: 0,
-      6: 0,
-      7: 0,
-      8: 0,
-      9: 0,
-      10: 0,
-      11: 0,
-      12: 0,
-    },
-    20: {
-      1: 0,
-      2: 0,
-      3: 0,
-      4: 0,
-      5: 0,
-      6: 0,
-      7: 0,
-      8: 0,
-      9: 0,
-      10: 0,
-      11: 0,
-      12: 0,
-      13: 0,
-      14: 0,
-      15: 0,
-      16: 0,
-      17: 0,
-      18: 0,
-      19: 0,
-      20: 0,
-    },
-  });
-  const [rollTrendsByDiceSize, setRollTrendsByDiceSize] = useState<{
-    [key: string]: { [index: number]: number };
-  }>({});
-  const [rollTrendsByRollType, setRollTrendsByRollType] = useState<{
-    [key: string]: { [index: number]: number };
-  }>({});
+
   const [standardDeviationByDiceSize, setStandardDeviationByDiceSize] =
     useState<{ [key: string]: number }>({});
 
@@ -106,43 +54,6 @@ export default function StatsPage() {
     critRate: number;
     fumbleRate: number;
   }>({ critRate: 0, fumbleRate: 0 });
-
-  const [rollsBySkillType, setRollsBySkillType] = useState<{
-    [key: string]: number;
-  }>({});
-
-  const [successRateBySkillType, setSuccessRateBySkillType] = useState<{
-    [key: string]: number;
-  }>({});
-
-  const [attackSuccessRate, setAttackSuccessRate] = useState<{
-    success: number;
-    total: number;
-  }>({ success: 0, total: 0 });
-
-  const [rollsByRollType, setRollsByRollType] = useState<{
-    Attack: number;
-    "Ability/Skill Check": number;
-    "Saving Throw": number;
-    "Attack/Spell Damage": number;
-  }>({
-    Attack: 0,
-    "Ability/Skill Check": 0,
-    "Saving Throw": 0,
-    "Attack/Spell Damage": 0,
-  });
-
-  const [rollTypeRates, setRollTypeRates] = useState<{
-    attack: number;
-    abilityOrSkillCheck: number;
-    savingThrow: number;
-    attackOrSpellDamage: number;
-  }>({
-    attack: 0,
-    abilityOrSkillCheck: 0,
-    savingThrow: 0,
-    attackOrSpellDamage: 0,
-  });
 
   useEffect(() => {
     api.get(`/character`).then((response) => {
@@ -171,24 +82,8 @@ export default function StatsPage() {
         calculateAverageRollsByDiceSize(activeDiceRollData);
       setAverageRollsByDiceSize(calculatedData);
 
-      const averageByCategory =
-        calculateAverageRollByCategory(activeDiceRollData);
-      setAverageRollByCategory(averageByCategory);
-
       const totalRollsData = calculateTotalRollsByDiceSize(activeDiceRollData);
       setTotalRollsByDiceSize(totalRollsData);
-
-      const distributionData =
-        calculateRollDistributionByDiceSize(activeDiceRollData);
-      setRollDistributionByDiceSize(distributionData);
-
-      const trendsByDiceSizeData =
-        calculateRollTrendsByDiceSize(activeDiceRollData);
-      setRollTrendsByDiceSize(trendsByDiceSizeData);
-
-      const trendsByRollTypeData =
-        calculateRollTrendsByRollType(activeDiceRollData);
-      setRollTrendsByRollType(trendsByRollTypeData);
 
       const standardDeviationData =
         calculateStandardDeviationByDiceSize(activeDiceRollData);
@@ -200,28 +95,12 @@ export default function StatsPage() {
       const critAndFumbleRates =
         calculateCritAndFumbleRates(activeDiceRollData);
       setCritAndFumbleRates(critAndFumbleRates);
-
-      const rollsBySkillType = calculateRollsBySkillType(activeDiceRollData);
-      setRollsBySkillType(rollsBySkillType);
-
-      const successRatesBySkillType =
-        calculateSuccessRateBySkillType(activeDiceRollData);
-      setSuccessRateBySkillType(successRatesBySkillType);
-
-      setAttackSuccessRate(calculateAttackSuccessRate(activeDiceRollData));
-      setRollsByRollType(calculateRollsByRollType(activeDiceRollData));
-      setRollTypeRates(calculateRollTypeRates(activeDiceRollData));
     } else {
       setAverageRollsByDiceSize({});
-      setAverageRollByCategory({});
       setTotalRollsByDiceSize({});
-      setRollDistributionByDiceSize({});
-      setRollTrendsByDiceSize({});
-      setRollTrendsByRollType({});
       setStandardDeviationByDiceSize({});
       setStreakRecords({ successStreak: 0, failStreak: 0 });
       setCritAndFumbleRates({ critRate: 0, fumbleRate: 0 });
-      setRollsBySkillType({});
     }
   }, [activeDiceRollData]);
 
@@ -255,38 +134,6 @@ export default function StatsPage() {
     return averageRollsByDiceSize;
   };
 
-  const calculateAverageRollByCategory = (diceRolls: DiceRollData[]) => {
-    const categories = ["Attack", "Skill Check", "Saving Throw"];
-    const categorySums: { [key: string]: number } = {};
-    const categoryCounts: { [key: string]: number } = {};
-
-    diceRolls.forEach((roll) => {
-      if (
-        roll.diceSize === 20 &&
-        roll.rollType &&
-        categories.includes(roll.rollType)
-      ) {
-        if (!categorySums[roll.rollType]) {
-          categorySums[roll.rollType] = 0;
-          categoryCounts[roll.rollType] = 0;
-        }
-        categorySums[roll.rollType] += roll.rollValue;
-        categoryCounts[roll.rollType] += 1;
-      }
-    });
-
-    const averages: { [key: string]: number } = {};
-    categories.forEach((category) => {
-      if (categoryCounts[category]) {
-        averages[category] = categorySums[category] / categoryCounts[category];
-      } else {
-        averages[category] = 0;
-      }
-    });
-
-    return averages;
-  };
-
   const calculateTotalRollsByDiceSize = (diceRolls: DiceRollData[]) => {
     const totalRollsByDiceSize: { [key: string]: number } = {};
 
@@ -299,95 +146,6 @@ export default function StatsPage() {
     });
 
     return totalRollsByDiceSize;
-  };
-
-  const calculateRollDistributionByDiceSize = (diceRolls: DiceRollData[]) => {
-    const distribution: { [key: string]: { [rollValue: number]: number } } = {
-      4: { 1: 0, 2: 0, 3: 0, 4: 0 },
-      6: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 },
-      8: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 },
-      10: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0 },
-      12: {
-        1: 0,
-        2: 0,
-        3: 0,
-        4: 0,
-        5: 0,
-        6: 0,
-        7: 0,
-        8: 0,
-        9: 0,
-        10: 0,
-        11: 0,
-        12: 0,
-      },
-      20: {
-        1: 0,
-        2: 0,
-        3: 0,
-        4: 0,
-        5: 0,
-        6: 0,
-        7: 0,
-        8: 0,
-        9: 0,
-        10: 0,
-        11: 0,
-        12: 0,
-        13: 0,
-        14: 0,
-        15: 0,
-        16: 0,
-        17: 0,
-        18: 0,
-        19: 0,
-        20: 0,
-      },
-    };
-
-    // Process the dice rolls to populate the distribution object
-    diceRolls.forEach((roll) => {
-      const size = roll.diceSize;
-      const rollValue = roll.rollValue;
-
-      if (distribution[size] && distribution[size][rollValue] !== undefined) {
-        distribution[size][rollValue] += 1;
-      }
-    });
-
-    return distribution;
-  };
-
-  const calculateRollTrendsByDiceSize = (diceRolls: DiceRollData[]) => {
-    const trends: { [key: number]: { [index: number]: number } } = {};
-
-    const rollsByDiceSize = diceRolls.reduce<{ [key: number]: number[] }>(
-      (acc, roll) => {
-        if (!acc[roll.diceSize]) {
-          acc[roll.diceSize] = [];
-        }
-        acc[roll.diceSize].push(roll.rollValue);
-        return acc;
-      },
-      {}
-    );
-
-    Object.keys(rollsByDiceSize).forEach((size) => {
-      const rolls = rollsByDiceSize[parseInt(size)];
-      const rollTrends: { [index: number]: number } = {};
-
-      rolls.forEach((rollValue, index) => {
-        const sum = rolls
-          .slice(0, index + 1)
-          .reduce<number>((a, b) => a + b, 0);
-        const average = sum / (index + 1);
-        rollTrends[index + 1] = average;
-      });
-
-      trends[parseInt(size)] = rollTrends;
-    });
-
-    return trends;
   };
 
   const calculateStandardDeviationByDiceSize = (diceRolls: DiceRollData[]) => {
@@ -413,40 +171,6 @@ export default function StatsPage() {
     });
 
     return standardDeviationByDiceSize;
-  };
-
-  const calculateRollTrendsByRollType = (diceRolls: DiceRollData[]) => {
-    const trends: { [key: string]: { [index: number]: number } } = {};
-
-    const rollsByRollType = diceRolls.reduce<{ [key: string]: number[] }>(
-      (acc, roll) => {
-        if (roll.rollType) {
-          if (!acc[roll.rollType]) {
-            acc[roll.rollType] = [];
-          }
-          acc[roll.rollType].push(roll.rollValue);
-        }
-        return acc;
-      },
-      {}
-    );
-
-    Object.keys(rollsByRollType).forEach((type) => {
-      const rolls = rollsByRollType[type];
-      const rollTrends: { [index: number]: number } = {};
-
-      rolls.forEach((rollValue, index) => {
-        const sum = rolls
-          .slice(0, index + 1)
-          .reduce<number>((a, b) => a + b, 0);
-        const average = sum / (index + 1);
-        rollTrends[index + 1] = average;
-      });
-
-      trends[type] = rollTrends;
-    });
-
-    return trends;
   };
 
   const calculateRollingStreaks = (diceRolls: DiceRollData[]) => {
@@ -498,175 +222,6 @@ export default function StatsPage() {
     return rates;
   };
 
-  const calculateRollsBySkillType = (diceRolls: DiceRollData[]) => {
-    const filteredRolls = diceRolls.filter(
-      (roll) =>
-        roll.rollType === "Skill Check" || roll.rollType === "Saving Throw"
-    );
-
-    const counts: { [key: string]: number } = {};
-
-    filteredRolls.forEach((roll) => {
-      if (roll.skillType) {
-        const skillType = roll.skillType;
-
-        if (counts[skillType]) {
-          counts[skillType]++;
-        } else {
-          counts[skillType] = 1;
-        }
-      }
-    });
-
-    return counts;
-  };
-
-  const calculateSuccessRateBySkillType = (diceRolls: DiceRollData[]) => {
-    const filteredRolls = diceRolls.filter(
-      (roll) =>
-        roll.rollType === "Skill Check" || roll.rollType === "Saving Throw"
-    );
-
-    const successRates: { [key: string]: number } = {};
-
-    const successCounts: { [key: string]: { [key: string]: number } } = {};
-
-    filteredRolls.forEach((roll) => {
-      if (roll.skillType && roll.success !== null) {
-        const skillType = roll.skillType;
-        if (successCounts[skillType]) {
-          successCounts[skillType].total++;
-          if (roll.success) {
-            successCounts[skillType].success++;
-          }
-        } else {
-          successCounts[skillType] = { total: 1, success: 0 };
-          if (roll.success) {
-            successCounts[skillType].success++;
-          }
-        }
-      }
-    });
-
-    Object.keys(successCounts).forEach((skillType) => {
-      successRates[skillType] =
-        successCounts[skillType].success / successCounts[skillType].total;
-    });
-
-    return successRates;
-  };
-
-  const calculateAttackSuccessRate = (diceRolls: DiceRollData[]) => {
-    const filteredRolls = diceRolls.filter(
-      (roll) => roll.rollType === "Attack"
-    );
-
-    const data = {
-      success: 0,
-      total: 0,
-    };
-
-    filteredRolls.forEach((roll) => {
-      if (roll.success) {
-        data.success++;
-        data.total++;
-      } else {
-        data.total++;
-      }
-    });
-
-    return data;
-  };
-
-  const calculateRollsByRollType = (diceRolls: DiceRollData[]) => {
-    const d20Rolls = diceRolls.filter((roll) => roll.diceSize === 20);
-
-    const rollTypeCounts: {
-      Attack: number;
-      "Ability/Skill Check": number;
-      "Saving Throw": number;
-      "Attack/Spell Damage": number;
-    } = {
-      Attack: 0,
-      "Ability/Skill Check": 0,
-      "Saving Throw": 0,
-      "Attack/Spell Damage": 0,
-    };
-
-    d20Rolls.forEach((roll) => {
-      switch (roll.rollType) {
-        case "Attack":
-          rollTypeCounts[roll.rollType]++;
-          break;
-        case "Ability/Skill Check":
-          rollTypeCounts[roll.rollType]++;
-          break;
-        case "Saving Throw":
-          rollTypeCounts[roll.rollType]++;
-          break;
-        case "Attack/Spell Damage":
-          rollTypeCounts[roll.rollType]++;
-          break;
-        default:
-          break;
-      }
-    });
-
-    return rollTypeCounts;
-  };
-
-  const calculateRollTypeRates = (diceRolls: DiceRollData[]) => {
-    const d20Rolls = diceRolls.filter((roll) => roll.diceSize === 20);
-
-    const rollTypeCounts: {
-      attack: number;
-      skillCheck: number;
-      savingThrow: number;
-      attackOrSpellDamage: number;
-      total: number;
-    } = {
-      attack: 0,
-      skillCheck: 0,
-      savingThrow: 0,
-      attackOrSpellDamage: 0,
-      total: 0,
-    };
-
-    d20Rolls.forEach((roll) => {
-      switch (roll.rollType) {
-        case "Attack":
-          rollTypeCounts.attack++;
-          rollTypeCounts.total++;
-          break;
-        case "Ability/Skill Check":
-          rollTypeCounts.skillCheck++;
-          rollTypeCounts.total++;
-          break;
-        case "Saving Throw":
-          rollTypeCounts.savingThrow++;
-          rollTypeCounts.total++;
-          break;
-        case "Attack/Spell Damage":
-          rollTypeCounts.attackOrSpellDamage++;
-          rollTypeCounts.total++;
-          break;
-
-        default:
-          break;
-      }
-    });
-
-    const rollTypeRates = {
-      attack: rollTypeCounts.attack / rollTypeCounts.total,
-      abilityOrSkillCheck: rollTypeCounts.skillCheck / rollTypeCounts.total,
-      savingThrow: rollTypeCounts.savingThrow / rollTypeCounts.total,
-      attackOrSpellDamage:
-        rollTypeCounts.attackOrSpellDamage / rollTypeCounts.total,
-    };
-
-    return rollTypeRates;
-  };
-
   return (
     <Container>
       <Typography variant="h5">Statistics</Typography>
@@ -704,29 +259,20 @@ export default function StatsPage() {
         </Select>
       </Box>
 
-      <Box></Box>
-
       <Box>
-        {/* Tab navigation */}
         <Box>
           <Button onClick={(e) => handleTabChange(e, "overview")}>
             Overview
           </Button>
-          {/* <Button onClick={(e) => handleTabChange(e, "dice-types")}>
-            Dice Types
-          </Button> */}
-          {/* <Button onClick={(e) => handleTabChange(e, "d20-rolls")}>
-            d20 Rolls
-          </Button> */}
+
           <Button onClick={(e) => handleTabChange(e, "trends")}>
             Roll Trends
           </Button>
-          {/* <Button onClick={(e) => handleTabChange(e, "success-rates")}>
-            Success Rates
-          </Button> */}
+
           <Button onClick={(e) => handleTabChange(e, "roll distribution")}>
             Roll Distribution
           </Button>
+
           <Button onClick={(e) => handleTabChange(e, "roll types")}>
             Roll Types
           </Button>
@@ -806,133 +352,16 @@ export default function StatsPage() {
           )}
 
           {currentTab === "trends" && (
-            <>
-              <RollTrendsStatsSection
-                diceRolls={activeDiceRollData}
-              ></RollTrendsStatsSection>
-            </>
+            <StatsSectionRollTrends diceRolls={activeDiceRollData} />
           )}
 
           {currentTab === "roll distribution" && (
-            <>
-              <Grid item xs={12} md={6}>
-                <Box>
-                  <Typography variant="h6">
-                    Roll Distribution by Dice Size
-                  </Typography>
-
-                  {rollDistributionByDiceSize && (
-                    <>
-                      <RollDistributionChart
-                        data={rollDistributionByDiceSize[20]}
-                        title="D20 Roll Distribution"
-                      />
-                      <RollDistributionChart
-                        data={rollDistributionByDiceSize[12]}
-                        title="D12 Roll Distribution"
-                      />
-                      <RollDistributionChart
-                        data={rollDistributionByDiceSize[10]}
-                        title="D10 Roll Distribution"
-                      />
-                      <RollDistributionChart
-                        data={rollDistributionByDiceSize[8]}
-                        title="D8 Roll Distribution"
-                      />
-                      <RollDistributionChart
-                        data={rollDistributionByDiceSize[6]}
-                        title="D6 Roll Distribution"
-                      />
-                      <RollDistributionChart
-                        data={rollDistributionByDiceSize[4]}
-                        title="D4 Roll Distribution"
-                      />
-                    </>
-                  )}
-                </Box>
-              </Grid>
-            </>
+            <StatsSectionRollDistribution diceRolls={activeDiceRollData} />
           )}
 
           {currentTab === "roll types" && (
-            <>
-              <Grid item xs={12} md={6}>
-                <Box>
-                  <Typography variant="h6">
-                    Average Roll by Category (d20)
-                  </Typography>
-                  <ul>
-                    {Object.entries(averageRollByCategory).map(
-                      ([category, average]) => (
-                        <li key={category}>
-                          {category}: {average.toFixed(2)}
-                        </li>
-                      )
-                    )}
-                  </ul>
-
-                  <Typography variant="h6">
-                    Total Rolls by Category (d20)
-                  </Typography>
-                  <ul>
-                    {Object.entries(rollsByRollType).map(([type, total]) => (
-                      <li key={type}>
-                        {type}: {total}
-                      </li>
-                    ))}
-                  </ul>
-                </Box>
-
-                <Box>
-                  <Typography variant="h6">D20 Roll Type Rates</Typography>
-
-                  <RollTypeRatesPieChart
-                    data={rollTypeRates}
-                    title="Roll Type Distribution"
-                  />
-                </Box>
-
-                <Box>
-                  <Typography variant="h6">Rolls by Skill Types</Typography>
-
-                  <ul>
-                    {Object.entries(rollsBySkillType).map(
-                      ([skillType, count], index) => (
-                        <li key={index}>
-                          {skillType}: {count}
-                        </li>
-                      )
-                    )}
-                  </ul>
-                </Box>
-
-                <Box>
-                  <Typography variant="h6">
-                    Success Rates by Skill Types
-                  </Typography>
-
-                  <ul>
-                    <li>
-                      Attack:{" "}
-                      {(
-                        (attackSuccessRate.success / attackSuccessRate.total) *
-                        100
-                      ).toFixed(2)}
-                      %
-                    </li>
-                    {Object.entries(successRateBySkillType).map(
-                      ([skillType, successRate], index) => (
-                        <li key={index}>
-                          {skillType}: {(successRate * 100).toFixed(2)}%
-                        </li>
-                      )
-                    )}
-                  </ul>
-                </Box>
-              </Grid>
-            </>
+            <StatsSectionRollTypes diceRolls={activeDiceRollData} />
           )}
-          {/* Add other tab content here */}
         </Box>
       </Box>
     </Container>

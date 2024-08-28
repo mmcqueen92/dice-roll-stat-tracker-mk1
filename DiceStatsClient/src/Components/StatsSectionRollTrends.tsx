@@ -16,9 +16,7 @@ import {
   FormGroup,
 } from "@mui/material";
 
-export default function RollTrendsStatsSection({
-  diceRolls,
-}: StatsSectionProps) {
+export default function StatsSectionRollTrends({ diceRolls }: StatsSectionProps) {
   const [rollTrendsByDiceSize, setRollTrendsByDiceSize] = useState<{
     [key: string]: { [index: number]: number };
   }>({});
