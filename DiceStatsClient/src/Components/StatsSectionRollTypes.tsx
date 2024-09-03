@@ -9,12 +9,6 @@ import {
   Grid,
   Box,
   Typography,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
 } from "@mui/material";
 export default function StatsSectionRollTypes({
   diceRolls,

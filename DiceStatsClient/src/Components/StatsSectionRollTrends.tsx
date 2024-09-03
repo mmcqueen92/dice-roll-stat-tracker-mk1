@@ -3,9 +3,6 @@ import RollTrendsLineChart from "./RollTrendsLineChart";
 import DiceRollData from "../Interfaces/DiceRollData";
 import StatsSectionProps from "../Interfaces/StatsSectionProps";
 import {
-  //   Button,
-  //   Container,
-  //   Grid,
   Box,
   Typography,
   MenuItem,
