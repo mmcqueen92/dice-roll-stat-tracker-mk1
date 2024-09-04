@@ -1,13 +1,16 @@
 import React from "react";
 import {
-  List,
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
-  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
   Button,
+  IconButton,
 } from "@mui/material";
-// import EditIcon from "@mui/icons-material/Edit";
+import EditIcon from "@mui/icons-material/Edit";
 import CharacterData from "../Interfaces/CharacterData";
 
 interface CharacterListProps {
@@ -23,24 +26,38 @@ export default function CharacterList({
 }: CharacterListProps) {
   return (
     <>
-      <Button variant="contained" color="primary" onClick={onCreate}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={onCreate}
+        style={{ marginBottom: "1rem" }}
+      >
         Create New Character
       </Button>
-      <List>
-        {characters.map((character) => (
-          <ListItem key={character.characterId}>
-            <ListItemText
-              primary={character.name}
-              secondary={character.class}
-            />
-            <ListItemSecondaryAction>
-              <IconButton edge="end" onClick={() => onEdit(character)}>
-                Edit
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-        ))}
-      </List>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Character Name</TableCell>
+              <TableCell>Class</TableCell>
+              <TableCell align="right">Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {characters.map((character) => (
+              <TableRow key={character.characterId}>
+                <TableCell>{character.name}</TableCell>
+                <TableCell>{character.class}</TableCell>
+                <TableCell align="right">
+                  <IconButton onClick={() => onEdit(character)}>
+                    <EditIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </>
   );
 }

@@ -12,8 +12,6 @@ export default function CharacterManagement() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    // Fetch the list of characters from the server
-    // Example: fetchCharacters().then(setCharacters);
     const fetchCharacters = async () => {
       try {
         const response = await api.get("/character");
@@ -38,12 +36,10 @@ export default function CharacterManagement() {
   const handleSave = async (character: CharacterData) => {
     try {
       if (character.characterId === 0) {
-        // Create new character
-        const { characterId, ...characterData } = character; // Destructure and remove characterId
+        const { characterId, ...characterData } = character;
         const response = await api.post("/character", characterData);
         setCharacters((prevCharacters) => [...prevCharacters, response.data]);
       } else {
-        // Update existing character
         await api.put(
           `/character/${character.characterId}`,
           character
