@@ -3,6 +3,8 @@ import RollTrendsLineChart from "./RollTrendsLineChart";
 import DiceRollData from "../Interfaces/DiceRollData";
 import StatsSectionProps from "../Interfaces/StatsSectionProps";
 import {
+  FormControl,
+  InputLabel,
   Box,
   Typography,
   MenuItem,
@@ -13,7 +15,9 @@ import {
   FormGroup,
 } from "@mui/material";
 
-export default function StatsSectionRollTrends({ diceRolls }: StatsSectionProps) {
+export default function StatsSectionRollTrends({
+  diceRolls,
+}: StatsSectionProps) {
   const [rollTrendsByDiceSize, setRollTrendsByDiceSize] = useState<{
     [key: string]: { [index: number]: number };
   }>({});
@@ -112,14 +116,22 @@ export default function StatsSectionRollTrends({ diceRolls }: StatsSectionProps)
   return (
     <Box>
       <Typography variant="h6">Select Chart</Typography>
-      <Select value={selectedChart || ""} onChange={handleChartSelect}>
-        <MenuItem value={20}>D-20 Roll Trends</MenuItem>
-        <MenuItem value={12}>D-12 Roll Trends</MenuItem>
-        <MenuItem value={10}>D-10 Roll Trends</MenuItem>
-        <MenuItem value={8}>D-8 Roll Trends</MenuItem>
-        <MenuItem value={6}>D-6 Roll Trends</MenuItem>
-        <MenuItem value={4}>D-4 Roll Trends</MenuItem>
-      </Select>
+      <FormControl>
+        <InputLabel id="dice-size-select-label">Dice Size</InputLabel>
+        <Select
+          labelId="dice-size-select-label"
+          label="Dice Size"
+          value={selectedChart || ""}
+          onChange={handleChartSelect}
+        >
+          <MenuItem value={20}>D-20</MenuItem>
+          <MenuItem value={12}>D-12</MenuItem>
+          <MenuItem value={10}>D-10</MenuItem>
+          <MenuItem value={8}>D-8</MenuItem>
+          <MenuItem value={6}>D-6</MenuItem>
+          <MenuItem value={4}>D-4</MenuItem>
+        </Select>
+      </FormControl>
 
       {selectedChart === 20 && (
         <FormGroup>

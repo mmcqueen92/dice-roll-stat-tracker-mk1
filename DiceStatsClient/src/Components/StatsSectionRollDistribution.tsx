@@ -133,7 +133,7 @@ export default function StatsSectionRollDistribution({
         <Box>
           <Typography variant="h6">Roll Distribution by Dice Size</Typography>
 
-          <FormControl fullWidth>
+          <FormControl>
             <InputLabel id="dice-size-select-label">Dice Size</InputLabel>
             <Select
               labelId="dice-size-select-label"
@@ -141,12 +141,12 @@ export default function StatsSectionRollDistribution({
               onChange={handleDiceSizeChange}
               label="Dice Size"
             >
-              <MenuItem value="20">D20</MenuItem>
-              <MenuItem value="12">D12</MenuItem>
-              <MenuItem value="10">D10</MenuItem>
-              <MenuItem value="8">D8</MenuItem>
-              <MenuItem value="6">D6</MenuItem>
-              <MenuItem value="4">D4</MenuItem>
+              <MenuItem value="20">D-20</MenuItem>
+              <MenuItem value="12">D-12</MenuItem>
+              <MenuItem value="10">D-10</MenuItem>
+              <MenuItem value="8">D-8</MenuItem>
+              <MenuItem value="6">D-6</MenuItem>
+              <MenuItem value="4">D-4</MenuItem>
             </Select>
           </FormControl>
 

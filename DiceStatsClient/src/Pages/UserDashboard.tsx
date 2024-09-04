@@ -3,7 +3,17 @@ import api from "../Utils/api";
 import { Link } from "react-router-dom";
 import { decodeToken } from "../Utils/jwt";
 import CharacterData from "../Interfaces/CharacterData";
-import { Dialog } from "@mui/material";
+import {
+  Dialog,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+} from "@mui/material";
 import CharacterForm from "../Components/CharacterForm";
 
 export default function UserDashboard() {
@@ -47,7 +57,6 @@ export default function UserDashboard() {
   }, []);
 
   useEffect(() => {
-    // Update localStorage whenever activeCharacterId changes
     if (activeCharacterId !== null) {
       localStorage.setItem("activeCharacterId", activeCharacterId.toString());
     }
@@ -55,7 +64,6 @@ export default function UserDashboard() {
 
   const handleSetActiveCharacter = (characterId: number) => {
     setActiveCharacterId(characterId);
-    // Save active character to state or context
   };
 
   const handleCancel = () => {
@@ -63,21 +71,16 @@ export default function UserDashboard() {
   };
 
   const handleSave = async (character: CharacterData) => {
-    // Save the character (create or update) to the server
-    // Example: saveCharacter(character).then(fetchCharacters).then(setCharacters);
     try {
-      
-        // Create new character
-        const { characterId, ...characterData } = character; // Destructure and remove characterId
-        const response = await api.post("/character", characterData);
-        setCharacters((prevCharacters) => [...prevCharacters, response.data]);
-      
+      const { characterId, ...characterData } = character;
+      const response = await api.post("/character", characterData);
+      setCharacters((prevCharacters) => [...prevCharacters, response.data]);
+
       setIsModalOpen(false);
     } catch (e) {
       console.error("Error saving character", e);
     }
-    
-    
+
     setIsModalOpen(false);
   };
 
@@ -95,41 +98,77 @@ export default function UserDashboard() {
         <p>No characters found.</p>
       )}
       {characters.length > 0 && (
-        <ul>
-          {characters.map((character) => {
-            return (
-              <li key={character.characterId}>
-                {character.name} - {character.class}
-                {character.characterId === activeCharacterId && (
-                  <span> (Active)</span>
-                )}
-                {character.characterId !== activeCharacterId && (
-                  <button
-                    onClick={() =>
-                      handleSetActiveCharacter(character.characterId)
-                    }
-                  >
-                    Set Active
-                  </button>
-                )}
-                <Link to={`/character-rolls/${character.characterId}`}>
-                  View Rolls
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Character Name</TableCell>
+                <TableCell>Class</TableCell>
+                <TableCell align="center">Active</TableCell>
+                <TableCell align="center">Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {characters.map((character) => (
+                <TableRow key={character.characterId}>
+                  <TableCell>{character.name}</TableCell>
+                  <TableCell>{character.class}</TableCell>
+                  <TableCell align="center">
+                    {character.characterId === activeCharacterId ? (
+                      <span>Active</span>
+                    ) : (
+                      <Button
+                        variant="outlined"
+                        onClick={() =>
+                          handleSetActiveCharacter(character.characterId)
+                        }
+                      >
+                        Set Active
+                      </Button>
+                    )}
+                  </TableCell>
+                  <TableCell align="center">
+                    <Button
+                      variant="contained"
+                      component={Link}
+                      to={`/character-rolls/${character.characterId}`}
+                    >
+                      View Rolls
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       )}
-      <Link to={`/active-dashboard/${activeCharacterId}`}>Start Rolling</Link>
-      {/* <Link to="/characters/new">Create New Character</Link> */}
-      <button onClick={handleCreate}>Create New Character</button>
-      <Link to="/character-management">Manage Characters</Link>
-      <Link to="/stats">View Stats</Link>
+      <div style={{ marginTop: "20px" }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleCreate}
+          style={{ marginRight: "10px" }}
+        >
+          Create New Character
+        </Button>
+        <Button
+          variant="contained"
+          component={Link}
+          to={`/active-dashboard/${activeCharacterId}`}
+          style={{ marginRight: "10px" }}
+        >
+          Start Rolling
+        </Button>
+        <Button variant="outlined" component={Link} to="/character-management">
+          Manage Characters
+        </Button>
+        <Button variant="outlined" component={Link} to="/stats">
+          View Stats
+        </Button>
+      </div>
       <Dialog open={isModalOpen} onClose={handleCancel}>
         <CharacterForm
-          initialData={
-            { characterId: 0, name: "", class: "" }
-          } // Add other default fields as needed
+          initialData={{ characterId: 0, name: "", class: "" }}
           onSave={handleSave}
           onCancel={handleCancel}
         />
