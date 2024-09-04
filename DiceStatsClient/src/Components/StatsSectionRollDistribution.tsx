@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from "react";
-import StatsSectionProps from "../Interfaces/StatsSectionProps";
-import { Grid, Box, Typography } from "@mui/material";
+import {
+  Grid,
+  Box,
+  Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+} from "@mui/material";
 import RollDistributionChart from "./RollDistributionChart";
+import StatsSectionProps from "../Interfaces/StatsSectionProps";
 import DiceRollData from "../Interfaces/DiceRollData";
+
 export default function StatsSectionRollDistribution({
   diceRolls,
 }: StatsSectionProps) {
+  const [selectedDiceSize, setSelectedDiceSize] = useState("20");
   const [rollDistributionByDiceSize, setRollDistributionByDiceSize] = useState<{
     [key: string]: { [rollValue: number]: number };
   }>({
@@ -51,10 +62,14 @@ export default function StatsSectionRollDistribution({
     },
   });
 
+  const handleDiceSizeChange = (event: SelectChangeEvent) => {
+    setSelectedDiceSize(event.target.value);
+  };
+
   useEffect(() => {
     const distributionData = calculateRollDistributionByDiceSize(diceRolls);
     setRollDistributionByDiceSize(distributionData);
-  });
+  }, [diceRolls]);
 
   const calculateRollDistributionByDiceSize = (diceRolls: DiceRollData[]) => {
     const distribution: { [key: string]: { [rollValue: number]: number } } = {
@@ -111,39 +126,35 @@ export default function StatsSectionRollDistribution({
 
     return distribution;
   };
+
   return (
     <>
       <Grid item xs={12} md={6}>
         <Box>
           <Typography variant="h6">Roll Distribution by Dice Size</Typography>
 
+          <FormControl fullWidth>
+            <InputLabel id="dice-size-select-label">Dice Size</InputLabel>
+            <Select
+              labelId="dice-size-select-label"
+              value={selectedDiceSize}
+              onChange={handleDiceSizeChange}
+              label="Dice Size"
+            >
+              <MenuItem value="20">D20</MenuItem>
+              <MenuItem value="12">D12</MenuItem>
+              <MenuItem value="10">D10</MenuItem>
+              <MenuItem value="8">D8</MenuItem>
+              <MenuItem value="6">D6</MenuItem>
+              <MenuItem value="4">D4</MenuItem>
+            </Select>
+          </FormControl>
+
           {rollDistributionByDiceSize && (
-            <>
-              <RollDistributionChart
-                data={rollDistributionByDiceSize[20]}
-                title="D20 Roll Distribution"
-              />
-              <RollDistributionChart
-                data={rollDistributionByDiceSize[12]}
-                title="D12 Roll Distribution"
-              />
-              <RollDistributionChart
-                data={rollDistributionByDiceSize[10]}
-                title="D10 Roll Distribution"
-              />
-              <RollDistributionChart
-                data={rollDistributionByDiceSize[8]}
-                title="D8 Roll Distribution"
-              />
-              <RollDistributionChart
-                data={rollDistributionByDiceSize[6]}
-                title="D6 Roll Distribution"
-              />
-              <RollDistributionChart
-                data={rollDistributionByDiceSize[4]}
-                title="D4 Roll Distribution"
-              />
-            </>
+            <RollDistributionChart
+              data={rollDistributionByDiceSize[selectedDiceSize]}
+              title={`D${selectedDiceSize} Roll Distribution`}
+            />
           )}
         </Box>
       </Grid>
