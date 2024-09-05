@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import api from "../Utils/api"; // Import your API utility
-// import DiceRoll from "../Interfaces/DiceRoll";
 import DiceRollData from "../Interfaces/DiceRollData";
 import EditDiceRollForm from "../Components/EditDiceRollForm";
 import {
-  // Table,
-  // TableBody,
-  // TableCell,
-  // TableContainer,
-  // TableHead,
-  // TableRow,
-  // Paper,
-  // Button,
-  // Select,
-  // MenuItem,
-  // TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  Select,
+  MenuItem,
+  TextField,
   Dialog,
+  TablePagination,
 } from "@mui/material";
 import CharacterData from "../Interfaces/CharacterData";
 
@@ -70,92 +70,50 @@ export default function ViewCharacterRolls() {
     diceSize: "",
     skillType: "",
     success: "",
-    // dateRange: { start: "", end: "" },
-    // rollValueMin: "",
-    // rollValueMax: "",
   });
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(5);
   const [editRoll, setEditRoll] = useState<DiceRollData | null>(null);
   const [totalRecords, setTotalRecords] = useState<number>(0);
 
-useEffect(() => {
-  const fetchRolls = async () => {
-    setLoading(true);
-    try {
-      const response = await api.get<DiceRollData[]>(`/diceroll/${id}`, {
-        params: {
-          skip: (page - 1) * pageSize,
-          limit: pageSize,
-          rollType: filters.rollType || undefined,
-          diceSize: filters.diceSize || undefined,
-          skillType: filters.skillType || undefined,
-          success: filters.success !== "" ? filters.success : undefined,
-        },
-      });
-
-      response.data.forEach((roll) => delete roll.character);
-      setRolls(response.data);
-
-      const countResponse = await api.get<number>(`/diceroll/${id}/count`, {
-        params: {
-          rollType: filters.rollType || undefined,
-          diceSize: filters.diceSize || undefined,
-          skillType: filters.skillType || undefined,
-          success: filters.success !== "" ? filters.success : undefined,
-        },
-      });
-
-      setTotalRecords(countResponse.data);
-    } catch (error) {
-      setError("Error fetching rolls");
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  fetchRolls();
-}, [filters, page, pageSize, id]);
-
-
-
   useEffect(() => {
-    const applyFilters = () => {
-      let filtered = rolls;
+    const fetchRolls = async () => {
+      setLoading(true);
+      try {
+        const response = await api.get<DiceRollData[]>(`/diceroll/${id}`, {
+          params: {
+            skip: (page - 1) * pageSize,
+            limit: pageSize,
+            rollType: filters.rollType || undefined,
+            diceSize: filters.diceSize || undefined,
+            skillType: filters.skillType || undefined,
+            success: filters.success !== "" ? filters.success : undefined,
+          },
+        });
 
-      // Apply Roll Type Filter
-      if (filters.rollType) {
-        filtered = filtered.filter(
-          (roll) => roll.rollType === filters.rollType
-        );
+        response.data.forEach((roll) => delete roll.character);
+        setRolls(response.data);
+
+        const countResponse = await api.get<number>(`/diceroll/${id}/count`, {
+          params: {
+            rollType: filters.rollType || undefined,
+            diceSize: filters.diceSize || undefined,
+            skillType: filters.skillType || undefined,
+            success: filters.success !== "" ? filters.success : undefined,
+          },
+        });
+
+        setTotalRecords(countResponse.data);
+      } catch (error) {
+        setError("Error fetching rolls");
+        console.error(error);
+      } finally {
+        setLoading(false);
       }
-
-      // Apply Dice Size Filter
-      if (filters.diceSize) {
-        filtered = filtered.filter(
-          (roll) => roll.diceSize === parseInt(filters.diceSize, 10)
-        );
-      }
-
-      // Apply Skill Type Filter
-      if (filters.skillType) {
-        filtered = filtered.filter(
-          (roll) => roll.skillType === filters.skillType
-        );
-      }
-
-      // Apply Success Filter
-      if (filters.success) {
-        const isSuccess = filters.success === "true";
-        filtered = filtered.filter((roll) => roll.success === isSuccess);
-      }
-
-      setFilteredRolls(filtered);
     };
 
-    applyFilters();
-  }, [filters, rolls]);
+    fetchRolls();
+  }, [filters, page, pageSize, id]);
 
   useEffect(() => {
     const fetchCharacterData = async () => {
@@ -180,18 +138,17 @@ useEffect(() => {
     setPage(1);
   };
 
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
+  const handlePageChange = (event: unknown, newPage: number) => {
+    setPage(newPage + 1);
   };
 
-  const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setPageSize(parseInt(e.target.value, 10));
-    setPage(1); // Reset to first page on page size change
+  const handlePageSizeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPageSize(parseInt(event.target.value, 10));
+    setPage(1);
   };
 
   const handleEditClick = (roll: DiceRollData) => {
     setEditRoll(roll);
-    // setIsEditing(true);
   };
 
   const handleSaveEdit = async (updatedRoll: DiceRollData) => {
@@ -218,25 +175,9 @@ useEffect(() => {
         <h1>View Rolls for {characterData.name}</h1>
       )}
 
-      {/* Filter Section */}
       <div>
         <h3>Filters</h3>
         <form>
-          {/* <div>
-            <label>Date Range:</label>
-            <input
-              type="date"
-              name="start"
-              value={filters.dateRange.start}
-              onChange={handleFilterChange}
-            />
-            <input
-              type="date"
-              name="end"
-              value={filters.dateRange.end}
-              onChange={handleFilterChange}
-            />
-          </div> */}
           <div>
             <label>Roll Type:</label>
             {rollTypes.map((type) => (
@@ -244,7 +185,7 @@ useEffect(() => {
                 <input
                   type="radio"
                   name="rollType"
-                  value={type === "All" ? "" : type} // Set to "" if "All" is selected
+                  value={type === "All" ? "" : type}
                   checked={filters.rollType === (type === "All" ? "" : type)}
                   onChange={handleFilterChange}
                 />
@@ -276,8 +217,8 @@ useEffect(() => {
             >
               <option value="">Any</option>
               {skillTypes
-                .slice() // Create a shallow copy to avoid mutating the original array
-                .sort((a, b) => a.localeCompare(b)) // Alphabetize the array
+                .slice()
+                .sort((a, b) => a.localeCompare(b))
                 .map((type) => (
                   <option key={type} value={type}>
                     {type}
@@ -285,23 +226,7 @@ useEffect(() => {
                 ))}
             </select>
           </div>
-          {/* <div>
-            <label>Roll Value Range:</label>
-            <input
-              type="number"
-              name="rollValueMin"
-              value={filters.rollValueMin}
-              onChange={handleFilterChange}
-              placeholder="Min"
-            />
-            <input
-              type="number"
-              name="rollValueMax"
-              value={filters.rollValueMax}
-              onChange={handleFilterChange}
-              placeholder="Max"
-            />
-          </div> */}
+
           <div>
             <label>Success:</label>
             <select
@@ -317,69 +242,72 @@ useEffect(() => {
         </form>
       </div>
 
-      {/* Rolls List */}
-      <div>
-        <h3>Rolls</h3>
-        {loading && <p>Loading rolls...</p>}
-        {error && <p>{error}</p>}
-        {filteredRolls.length === 0 && !loading && !error && (
-          <p>No rolls found.</p>
-        )}
-        {filteredRolls.length > 0 && (
-          <ul>
-            {filteredRolls.map((roll) => (
-              <li key={roll.diceRollId}>
-                {roll.rollType}
-                {(roll.rollType === "Ability/Skill Check" ||
-                  roll.rollType === "Saving Throw") && (
-                  <> ({roll.skillType})</>
-                )}{" "}
-                - {roll.rollValue}/{roll.diceSize}
-                {roll.success === true && " - Success"}
-                {roll.success === false && " - Fail"}{" "}
-                <button onClick={() => handleEditClick(roll)}>Edit</button>
-              </li>
-            ))}
-          </ul>
-        )}
+      {/* Rolls Table */}
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Roll Type</TableCell>
+              <TableCell>Skill Type</TableCell>
+              <TableCell>Dice Size</TableCell>
+              <TableCell>Roll Value</TableCell>
+              <TableCell>Success</TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {loading && (
+              <TableRow>
+                <TableCell colSpan={6}>Loading rolls...</TableCell>
+              </TableRow>
+            )}
+            {error && (
+              <TableRow>
+                <TableCell colSpan={6}>{error}</TableCell>
+              </TableRow>
+            )}
+            {!loading && !error && rolls.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={6}>No rolls found.</TableCell>
+              </TableRow>
+            )}
+            {!loading &&
+              !error &&
+              rolls.map((roll) => (
+                <TableRow key={roll.diceRollId}>
+                  <TableCell>{roll.rollType}</TableCell>
+                  <TableCell>{roll.skillType}</TableCell>
+                  <TableCell>{roll.diceSize}</TableCell>
+                  <TableCell>{roll.rollValue}</TableCell>
+                  <TableCell>{roll.success ? "Success" : "Fail"}</TableCell>
+                  <TableCell>
+                    <Button onClick={() => handleEditClick(roll)}>Edit</Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
 
-        {totalRecords > 0 && (
-          <div>
-            <button
-              onClick={() => handlePageChange(page - 1)}
-              disabled={page <= 1}
-            >
-              Previous
-            </button>
-            <span>
-              Page: {page} of {Math.ceil(totalRecords / pageSize)}
-            </span>
-            <button
-              onClick={() => handlePageChange(page + 1)}
-              disabled={page * pageSize >= totalRecords}
-            >
-              Next
-            </button>
-            <select value={pageSize} onChange={handlePageSizeChange}>
-              <option value={5}>5</option>
-              <option value={10}>10</option>
-              <option value={20}>20</option>
-              <option value={50}>50</option>
-            </select>
-          </div>
-        )}
-      </div>
+        <TablePagination
+          component="div"
+          count={totalRecords}
+          page={page - 1}
+          onPageChange={handlePageChange}
+          rowsPerPage={pageSize}
+          onRowsPerPageChange={handlePageSizeChange}
+        />
+      </TableContainer>
 
-      {/* Edit Roll Modal */}
-      <Dialog open={editRoll !== null} onClose={handleCancelEdit}>
-        {editRoll && (
+      {/* Edit Modal */}
+      {editRoll && (
+        <Dialog open={Boolean(editRoll)} onClose={handleCancelEdit}>
           <EditDiceRollForm
             roll={editRoll}
             onSave={handleSaveEdit}
             onCancel={handleCancelEdit}
           />
-        )}
-      </Dialog>
+        </Dialog>
+      )}
     </div>
   );
 }
