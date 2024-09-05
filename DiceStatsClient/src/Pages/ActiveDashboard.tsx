@@ -11,6 +11,14 @@ import {
   Button,
   FormControlLabel,
   SelectChangeEvent,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Pagination,
 } from "@mui/material";
 
 import "../Styles/ActiveDashboard.css";
@@ -48,7 +56,6 @@ const abilities = [
 ];
 
 const skillsAndAbilities = [...skills, ...abilities].sort();
-
 
 const diceSizes = [4, 6, 8, 10, 12, 20];
 
@@ -172,7 +179,6 @@ export default function ActiveDashboard() {
       await api.post("/diceroll/create", dataToSubmit);
 
       setFormData(initialFormData);
-
     } catch (error) {
       console.error("There was an error creating the dice roll!", error);
     }
@@ -182,13 +188,20 @@ export default function ActiveDashboard() {
     return <div>Loading...</div>;
   }
 
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-  };
+  // const handlePageChange = (newPage: number) => {
+  //   setPage(newPage);
+  // };
 
   const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setPageSize(parseInt(e.target.value, 10));
     setPage(1);
+  };
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    newPage: number
+  ) => {
+    setPage(newPage);
   };
 
   return (
@@ -341,43 +354,50 @@ export default function ActiveDashboard() {
         </Button>
       </form>
       <h3>Recent Rolls</h3>
-      <ul>
-        {diceRolls.map((roll: any) => (
-          <li key={roll.diceRollId}>
-            {roll.rollType}
-            {(roll.rollType === "Ability/Skill Check" || roll.rollType === "Skill Check" ||
-              roll.rollType === "Saving Throw") && <> ({roll.skillType}) </>}
-            - {roll.rollValue} / {roll.diceSize}
-            {roll.success === true && " - Success"}
-            {roll.success === false && " - Fail"}
-          </li>
-        ))}
-      </ul>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Roll Type</TableCell>
+              <TableCell>Skill/Ability</TableCell>
+              <TableCell>Roll Value</TableCell>
+              <TableCell>Dice Size</TableCell>
+              <TableCell>Success</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {diceRolls.map((roll) => (
+              <TableRow key={roll.diceRollId}>
+                <TableCell>{roll.rollType}</TableCell>
+                <TableCell>
+                  {(roll.rollType === "Ability/Skill Check" ||
+                    roll.rollType === "Saving Throw") &&
+                    roll.skillType}
+                </TableCell>
+                <TableCell>{roll.rollValue}</TableCell>
+                <TableCell>{roll.diceSize}</TableCell>
+                <TableCell>
+                  {roll.success === true
+                    ? "Success"
+                    : roll.success === false
+                    ? "Fail"
+                    : "N/A"}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
       {totalRecords > 0 && (
-        <div>
-          <button
-            onClick={() => handlePageChange(page - 1)}
-            disabled={page <= 1}
-          >
-            Previous
-          </button>
-          <span>
-            Page: {page} of {Math.ceil(totalRecords / pageSize)}
-          </span>
-          <button
-            onClick={() => handlePageChange(page + 1)}
-            disabled={page * pageSize >= totalRecords}
-          >
-            Next
-          </button>
-          <select value={pageSize} onChange={handlePageSizeChange}>
-            <option value={5}>5</option>
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-          </select>
-        </div>
+        <Pagination
+          count={Math.ceil(totalRecords / pageSize)}
+          page={page}
+          onChange={handlePageChange}
+          color="primary"
+          showFirstButton
+          showLastButton
+        />
       )}
     </div>
   );
