@@ -14,9 +14,16 @@ import {
   Button,
   Select,
   MenuItem,
-  TextField,
   Dialog,
   TablePagination,
+  FormControl,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  InputLabel,
+  SelectChangeEvent,
+  Grid2,
 } from "@mui/material";
 import CharacterData from "../Interfaces/CharacterData";
 
@@ -128,15 +135,16 @@ export default function ViewCharacterRolls() {
     fetchCharacterData();
   }, [id]);
 
-  const handleFilterChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [e.target.name]: e.target.value,
-    }));
-    setPage(1);
-  };
+const handleFilterChange = (
+  event: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>
+) => {
+  const { name, value } = event.target;
+
+  setFilters((prevFilters) => ({
+    ...prevFilters,
+    [name]: value,
+  }));
+};
 
   const handlePageChange = (event: unknown, newPage: number) => {
     setPage(newPage + 1);
@@ -178,67 +186,73 @@ export default function ViewCharacterRolls() {
       <div>
         <h3>Filters</h3>
         <form>
-          <div>
-            <label>Roll Type:</label>
-            {rollTypes.map((type) => (
-              <label key={type}>
-                <input
-                  type="radio"
-                  name="rollType"
-                  value={type === "All" ? "" : type}
-                  checked={filters.rollType === (type === "All" ? "" : type)}
-                  onChange={handleFilterChange}
-                />
-                {type}
-              </label>
-            ))}
-          </div>
-          <div>
-            <label>Dice Size:</label>
-            <select
-              name="diceSize"
-              value={filters.diceSize}
-              onChange={handleFilterChange}
-            >
-              <option value="">Any</option>
-              {diceSizes.map((size) => (
-                <option key={size} value={size}>
-                  {size}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label>Skill Type:</label>
-            <select
-              name="skillType"
-              value={filters.skillType}
-              onChange={handleFilterChange}
-            >
-              <option value="">Any</option>
-              {skillTypes
-                .slice()
-                .sort((a, b) => a.localeCompare(b))
-                .map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
+          <Grid2 container direction="column" alignItems="center" spacing={2}>
+            <FormControl component="fieldset">
+              <FormLabel component="legend">Roll Type:</FormLabel>
+              <RadioGroup
+                name="rollType"
+                value={filters.rollType}
+                onChange={handleFilterChange}
+              >
+                {rollTypes.map((type) => (
+                  <FormControlLabel
+                    key={type}
+                    value={type === "All" ? "" : type}
+                    control={<Radio />}
+                    label={type}
+                  />
                 ))}
-            </select>
-          </div>
+              </RadioGroup>
+            </FormControl>
 
-          <div>
-            <label>Success:</label>
-            <select
-              name="success"
-              value={filters.success}
-              onChange={handleFilterChange}
-            >
-              <option value="">Any</option>
-              <option value="true">Success</option>
-              <option value="false">Failure</option>
-            </select>
-          </div>
+            <FormControl style={{ width: "300px" }}>
+              <InputLabel>Dice Size</InputLabel>
+              <Select
+                name="diceSize"
+                value={filters.diceSize}
+                onChange={handleFilterChange}
+              >
+                <MenuItem value="">Any</MenuItem>
+                {diceSizes.map((size) => (
+                  <MenuItem key={size} value={size}>
+                    {size}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl style={{ width: "300px" }}>
+              <InputLabel>Skill Type</InputLabel>
+              <Select
+                name="skillType"
+                value={filters.skillType}
+                onChange={handleFilterChange}
+              >
+                <MenuItem value="">Any</MenuItem>
+                {skillTypes
+                  .slice()
+                  .sort((a, b) => a.localeCompare(b))
+                  .map((type) => (
+                    <MenuItem key={type} value={type}>
+                      {type}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+
+            <FormControl style={{ width: "300px" }}>
+              <InputLabel>Success</InputLabel>
+              <Select
+                name="success"
+                value={filters.success}
+                onChange={handleFilterChange}
+              >
+                <MenuItem value="">Any</MenuItem>
+                <MenuItem value="true">Success</MenuItem>
+                <MenuItem value="false">Failure</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid2>
         </form>
       </div>
 
