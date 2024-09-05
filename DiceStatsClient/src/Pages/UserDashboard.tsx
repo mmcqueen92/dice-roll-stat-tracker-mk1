@@ -91,7 +91,7 @@ export default function UserDashboard() {
   return (
     <div>
       <h2>User Dashboard</h2>
-      <h3>Your Characters</h3>
+      {/* <h3>Your Characters</h3> */}
       {loading && <p>Loading characters...</p>}
       {error && <p>{error}</p>}
       {characters.length === 0 && !loading && !error && (
@@ -159,10 +159,20 @@ export default function UserDashboard() {
         >
           Start Rolling
         </Button>
-        <Button variant="outlined" component={Link} to="/character-management">
+        <Button
+          variant="outlined"
+          component={Link}
+          to="/character-management"
+          style={{ marginRight: "10px" }}
+        >
           Manage Characters
         </Button>
-        <Button variant="outlined" component={Link} to="/stats">
+        <Button
+          variant="outlined"
+          component={Link}
+          to="/stats"
+          style={{ marginRight: "10px" }}
+        >
           View Stats
         </Button>
       </div>

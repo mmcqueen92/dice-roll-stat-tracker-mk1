@@ -116,7 +116,7 @@ export default function StatsSectionRollTrends({
   return (
     <Box>
       <Typography variant="h6">Select Chart</Typography>
-      <FormControl>
+      <FormControl style={{ width: "150px" }}>
         <InputLabel id="dice-size-select-label">Dice Size</InputLabel>
         <Select
           labelId="dice-size-select-label"

@@ -133,7 +133,7 @@ export default function StatsSectionRollDistribution({
         <Box>
           <Typography variant="h6">Roll Distribution by Dice Size</Typography>
 
-          <FormControl>
+          <FormControl style={{ width: "150px" }}>
             <InputLabel id="dice-size-select-label">Dice Size</InputLabel>
             <Select
               labelId="dice-size-select-label"
