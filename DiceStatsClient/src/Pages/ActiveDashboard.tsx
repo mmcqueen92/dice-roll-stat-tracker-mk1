@@ -19,6 +19,7 @@ import {
   TableRow,
   Paper,
   Pagination,
+  TablePagination,
 } from "@mui/material";
 
 import "../Styles/ActiveDashboard.css";
@@ -192,24 +193,39 @@ export default function ActiveDashboard() {
   //   setPage(newPage);
   // };
 
-  const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setPageSize(parseInt(e.target.value, 10));
-    setPage(1);
-  };
+  // const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  //   setPageSize(parseInt(e.target.value, 10));
+  //   setPage(1);
+  // };
 
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    newPage: number
-  ) => {
-    setPage(newPage);
-  };
+  // const handlePageChange = (
+  //   event: React.ChangeEvent<unknown>,
+  //   newPage: number
+  // ) => {
+  //   setPage(newPage);
+  // };
+
+const handlePageChange = (
+  event: React.MouseEvent<HTMLButtonElement> | null,
+  newPage: number
+) => {
+  setPage(newPage + 1); // Adjust for your API if necessary (1-indexed)
+};
+
+const handlePageSizeChange = (
+  event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+) => {
+  setPageSize(parseInt(event.target.value, 10)); // Update page size
+  setPage(1); // Reset to first page
+};
+
 
   return (
     <div>
       <h3>{character.name}</h3>
       <form onSubmit={handleSubmit} className="new-diceroll-form">
         <FormControl
-          fullWidth
+          style={{ width: "300px" }}
           margin="normal"
           className="new-diceroll-form-control"
         >
@@ -232,7 +248,7 @@ export default function ActiveDashboard() {
         </FormControl>
 
         <FormControl
-          fullWidth
+          style={{ width: "300px" }}
           margin="normal"
           className="new-diceroll-form-control"
         >
@@ -256,7 +272,7 @@ export default function ActiveDashboard() {
 
         {formData.rollType === "Ability/Skill Check" && (
           <FormControl
-            fullWidth
+            style={{ width: "300px" }}
             margin="normal"
             className="new-diceroll-form-control"
           >
@@ -281,7 +297,7 @@ export default function ActiveDashboard() {
 
         {formData.rollType === "Saving Throw" && (
           <FormControl
-            fullWidth
+            style={{ width: "300px" }}
             margin="normal"
             className="new-diceroll-form-control"
           >
@@ -307,7 +323,7 @@ export default function ActiveDashboard() {
         )}
 
         <FormControl
-          fullWidth
+          style={{ width: "300px" }}
           margin="normal"
           className="new-diceroll-form-control"
         >
@@ -387,9 +403,18 @@ export default function ActiveDashboard() {
             ))}
           </TableBody>
         </Table>
+
+        <TablePagination
+          component="div"
+          count={totalRecords} // Total number of records
+          page={page - 1} // Material UI TablePagination uses zero-indexed pages
+          onPageChange={handlePageChange}
+          rowsPerPage={pageSize} // Number of records per page
+          onRowsPerPageChange={handlePageSizeChange} // Callback for changing page size
+        />
       </TableContainer>
 
-      {totalRecords > 0 && (
+      {/* {totalRecords > 0 && (
         <Pagination
           count={Math.ceil(totalRecords / pageSize)}
           page={page}
@@ -398,7 +423,7 @@ export default function ActiveDashboard() {
           showFirstButton
           showLastButton
         />
-      )}
+      )} */}
     </div>
   );
 }
