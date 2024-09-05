@@ -24,7 +24,9 @@ import {
   InputLabel,
   SelectChangeEvent,
   Grid2,
+  IconButton,
 } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 import CharacterData from "../Interfaces/CharacterData";
 
 // Dummy filter options
@@ -295,7 +297,9 @@ const handleFilterChange = (
                   <TableCell>{roll.rollValue}</TableCell>
                   <TableCell>{roll.success ? "Success" : "Fail"}</TableCell>
                   <TableCell>
-                    <Button onClick={() => handleEditClick(roll)}>Edit</Button>
+                    <IconButton onClick={() => handleEditClick(roll)}>
+                      <EditIcon />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))}
@@ -309,7 +313,7 @@ const handleFilterChange = (
           onPageChange={handlePageChange}
           rowsPerPage={pageSize}
           onRowsPerPageChange={handlePageSizeChange}
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[5, 10, 25, 50]}
         />
       </TableContainer>
 
