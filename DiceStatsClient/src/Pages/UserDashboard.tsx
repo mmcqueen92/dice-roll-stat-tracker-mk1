@@ -91,7 +91,6 @@ export default function UserDashboard() {
   return (
     <div>
       <h2>User Dashboard</h2>
-      {/* <h3>Your Characters</h3> */}
       {loading && <p>Loading characters...</p>}
       {error && <p>{error}</p>}
       {characters.length === 0 && !loading && !error && (

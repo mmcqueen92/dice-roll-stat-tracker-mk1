@@ -29,7 +29,6 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import CharacterData from "../Interfaces/CharacterData";
 
-// Dummy filter options
 const rollTypes = [
   "All",
   "Attack",
@@ -258,7 +257,6 @@ const handleFilterChange = (
         </form>
       </div>
 
-      {/* Rolls Table */}
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -317,7 +315,6 @@ const handleFilterChange = (
         />
       </TableContainer>
 
-      {/* Edit Modal */}
       {editRoll && (
         <Dialog open={Boolean(editRoll)} onClose={handleCancelEdit}>
           <EditDiceRollForm
