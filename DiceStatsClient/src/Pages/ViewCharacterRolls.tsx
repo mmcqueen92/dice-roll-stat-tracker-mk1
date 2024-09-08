@@ -16,10 +16,6 @@ import {
   Dialog,
   TablePagination,
   FormControl,
-  FormLabel,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
   InputLabel,
   SelectChangeEvent,
   Grid2,
@@ -29,7 +25,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import CharacterData from "../Interfaces/CharacterData";
 
 const rollTypes = [
-  "All",
   "Attack",
   "Ability/Skill Check",
   "Saving Throw",
@@ -139,9 +134,11 @@ const handleFilterChange = (
 ) => {
   const { name, value } = event.target;
 
+  const newVal = value === "All" ? "" : value;
+
   setFilters((prevFilters) => ({
     ...prevFilters,
-    [name]: value,
+    [name]: newVal,
   }));
 };
 
@@ -186,22 +183,21 @@ const handleFilterChange = (
         <h3>Filters</h3>
         <form>
           <Grid2 container direction="column" alignItems="center" spacing={2}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend">Roll Type:</FormLabel>
-              <RadioGroup
+            <FormControl style={{ width: "300px" }}>
+              <InputLabel>Roll Type</InputLabel>
+              <Select
                 name="rollType"
                 value={filters.rollType}
                 onChange={handleFilterChange}
+                label="Roll Type"
               >
+                <MenuItem value="All">All</MenuItem>
                 {rollTypes.map((type) => (
-                  <FormControlLabel
-                    key={type}
-                    value={type === "All" ? "" : type}
-                    control={<Radio />}
-                    label={type}
-                  />
+                  <MenuItem key={type} value={type}>
+                    {type}
+                  </MenuItem>
                 ))}
-              </RadioGroup>
+              </Select>
             </FormControl>
 
             <FormControl style={{ width: "300px" }}>
@@ -210,8 +206,9 @@ const handleFilterChange = (
                 name="diceSize"
                 value={filters.diceSize}
                 onChange={handleFilterChange}
+                label="Dice Size"
               >
-                <MenuItem value="">Any</MenuItem>
+                <MenuItem value="All">All</MenuItem>
                 {diceSizes.map((size) => (
                   <MenuItem key={size} value={size}>
                     {size}
@@ -226,8 +223,9 @@ const handleFilterChange = (
                 name="skillType"
                 value={filters.skillType}
                 onChange={handleFilterChange}
+                label="Skill Type"
               >
-                <MenuItem value="">Any</MenuItem>
+                <MenuItem value="All">All</MenuItem>
                 {skillTypes
                   .slice()
                   .sort((a, b) => a.localeCompare(b))
@@ -245,8 +243,9 @@ const handleFilterChange = (
                 name="success"
                 value={filters.success}
                 onChange={handleFilterChange}
+                label="Success"
               >
-                <MenuItem value="">Any</MenuItem>
+                <MenuItem value="All">All</MenuItem>
                 <MenuItem value="true">Success</MenuItem>
                 <MenuItem value="false">Failure</MenuItem>
               </Select>
