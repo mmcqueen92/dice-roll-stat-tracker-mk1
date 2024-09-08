@@ -1,13 +1,7 @@
 import React, { useState } from "react";
-import {
-  TextField,
-  Button,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from "@mui/material";
-import CharacterData from "../Interfaces/CharacterData";
+import { TextField, Button, DialogActions, DialogContent } from "@mui/material";
 
+import CharacterData from "../Interfaces/CharacterData";
 
 interface CharacterFormProps {
   initialData: CharacterData;
@@ -37,9 +31,6 @@ export default function CharacterForm({
 
   return (
     <form onSubmit={handleSubmit}>
-      <DialogTitle>
-        {formData.characterId ? "Edit Character" : "Create New Character"}
-      </DialogTitle>
       <DialogContent>
         <TextField
           margin="dense"

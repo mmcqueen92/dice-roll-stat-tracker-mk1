@@ -5,6 +5,8 @@ import { decodeToken } from "../Utils/jwt";
 import CharacterData from "../Interfaces/CharacterData";
 import {
   Dialog,
+  DialogTitle,
+  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -14,6 +16,7 @@ import {
   Paper,
   Button,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import CharacterForm from "../Components/CharacterForm";
 
 export default function UserDashboard() {
@@ -184,6 +187,21 @@ export default function UserDashboard() {
         </Button>
       </div>
       <Dialog open={isModalOpen} onClose={handleCancel}>
+        <DialogTitle>
+          <span>Create New Character</span>
+          <IconButton
+            aria-label="close"
+            onClick={handleCancel}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
         <CharacterForm
           initialData={{ characterId: 0, name: "", class: "" }}
           onSave={handleSave}

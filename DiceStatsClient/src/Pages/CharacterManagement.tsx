@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Dialog } from "@mui/material";
+import { Dialog, DialogTitle, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import CharacterList from "../Components/CharacterList";
 import CharacterForm from "../Components/CharacterForm";
 import CharacterData from "../Interfaces/CharacterData";
@@ -9,7 +10,8 @@ export default function CharacterManagement() {
   const [characters, setCharacters] = useState<CharacterData[]>([]);
   const [selectedCharacter, setSelectedCharacter] =
     useState<CharacterData | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editChar, setEditChar] = useState(false);
+  const [newChar, setNewChar] = useState(false);
 
   useEffect(() => {
     const fetchCharacters = async () => {
@@ -25,12 +27,12 @@ export default function CharacterManagement() {
 
   const handleEdit = (character: CharacterData) => {
     setSelectedCharacter(character);
-    setIsModalOpen(true);
+    setEditChar(true);
   };
 
   const handleCreate = () => {
     setSelectedCharacter(null);
-    setIsModalOpen(true);
+    setNewChar(true);
   };
 
   const handleSave = async (character: CharacterData) => {
@@ -40,25 +42,27 @@ export default function CharacterManagement() {
         const response = await api.post("/character", characterData);
         setCharacters((prevCharacters) => [...prevCharacters, response.data]);
       } else {
-        await api.put(
-          `/character/${character.characterId}`,
-          character
-        );
+        await api.put(`/character/${character.characterId}`, character);
         setCharacters((prevCharacters) =>
           prevCharacters.map((char) =>
             char.characterId === character.characterId ? character : char
           )
         );
       }
-      setIsModalOpen(false);
+      setEditChar(false);
+      setNewChar(false);
     } catch (e) {
       console.error("Error saving character", e);
     }
   };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
+  const handleCancelEdit = () => {
+    setEditChar(false);
   };
+
+  const handleCancelCreate = () => {
+    setNewChar(false);
+  }
 
   return (
     <>
@@ -67,11 +71,50 @@ export default function CharacterManagement() {
         onEdit={handleEdit}
         onCreate={handleCreate}
       />
-      <Dialog open={isModalOpen} onClose={handleCancel}>
+      <Dialog open={newChar} onClose={handleCancelCreate}>
+        <DialogTitle>
+          <span>Create New Character</span>
+          <IconButton
+            aria-label="close"
+            onClick={handleCancelCreate}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
         <CharacterForm
-          initialData={selectedCharacter || { characterId: 0, name: "", class: "" }} // Add other default fields as needed
+          initialData={{ characterId: 0, name: "", class: "" }}
           onSave={handleSave}
-          onCancel={handleCancel}
+          onCancel={handleCancelCreate}
+        />
+      </Dialog>
+      <Dialog open={editChar} onClose={handleCancelEdit}>
+        <DialogTitle>
+          <span>Edit Character</span>
+          <IconButton
+            aria-label="close"
+            onClick={handleCancelEdit}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <CharacterForm
+          initialData={
+            selectedCharacter || { characterId: 0, name: "", class: "" }
+          }
+          onSave={handleSave}
+          onCancel={handleCancelEdit}
         />
       </Dialog>
     </>
