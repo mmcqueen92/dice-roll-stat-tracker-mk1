@@ -18,7 +18,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Pagination,
   TablePagination,
 } from "@mui/material";
 
@@ -189,36 +188,19 @@ export default function ActiveDashboard() {
     return <div>Loading...</div>;
   }
 
-  // const handlePageChange = (newPage: number) => {
-  //   setPage(newPage);
-  // };
-
-  // const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  //   setPageSize(parseInt(e.target.value, 10));
-  //   setPage(1);
-  // };
-
-  // const handlePageChange = (
-  //   event: React.ChangeEvent<unknown>,
-  //   newPage: number
-  // ) => {
-  //   setPage(newPage);
-  // };
-
 const handlePageChange = (
   event: React.MouseEvent<HTMLButtonElement> | null,
   newPage: number
 ) => {
-  setPage(newPage + 1); // Adjust for your API if necessary (1-indexed)
+  setPage(newPage + 1);
 };
 
 const handlePageSizeChange = (
   event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
 ) => {
-  setPageSize(parseInt(event.target.value, 10)); // Update page size
-  setPage(1); // Reset to first page
-};
-
+  setPageSize(parseInt(event.target.value, 10)); 
+  setPage(1);
+}
 
   return (
     <div>
@@ -374,11 +356,21 @@ const handlePageSizeChange = (
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Roll Type</TableCell>
-              <TableCell>Skill/Ability</TableCell>
-              <TableCell>Roll Value</TableCell>
-              <TableCell>Dice Size</TableCell>
-              <TableCell>Success</TableCell>
+              <TableCell>
+                <h4>Roll Type</h4>
+              </TableCell>
+              <TableCell>
+                <h4>Skill/Ability</h4>
+              </TableCell>
+              <TableCell>
+                <h4>Roll Value</h4>
+              </TableCell>
+              <TableCell>
+                <h4>Dice Size</h4>
+              </TableCell>
+              <TableCell>
+                <h4>Success</h4>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -406,24 +398,13 @@ const handlePageSizeChange = (
 
         <TablePagination
           component="div"
-          count={totalRecords} // Total number of records
-          page={page - 1} // Material UI TablePagination uses zero-indexed pages
+          count={totalRecords}
+          page={page - 1}
           onPageChange={handlePageChange}
-          rowsPerPage={pageSize} // Number of records per page
-          onRowsPerPageChange={handlePageSizeChange} // Callback for changing page size
+          rowsPerPage={pageSize}
+          onRowsPerPageChange={handlePageSizeChange}
         />
       </TableContainer>
-
-      {/* {totalRecords > 0 && (
-        <Pagination
-          count={Math.ceil(totalRecords / pageSize)}
-          page={page}
-          onChange={handlePageChange}
-          color="primary"
-          showFirstButton
-          showLastButton
-        />
-      )} */}
     </div>
   );
 }

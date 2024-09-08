@@ -101,10 +101,18 @@ export default function UserDashboard() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Character Name</TableCell>
-                <TableCell>Class</TableCell>
-                <TableCell align="center">Active</TableCell>
-                <TableCell align="center">Actions</TableCell>
+                <TableCell>
+                  <h4>Character Name</h4>
+                </TableCell>
+                <TableCell>
+                  <h4>Class</h4>
+                </TableCell>
+                <TableCell>
+                  <h4>Active</h4>
+                </TableCell>
+                <TableCell>
+                  <h4>Actions</h4>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

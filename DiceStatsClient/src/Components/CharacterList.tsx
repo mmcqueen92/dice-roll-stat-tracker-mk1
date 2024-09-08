@@ -38,9 +38,15 @@ export default function CharacterList({
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Character Name</TableCell>
-              <TableCell>Class</TableCell>
-              <TableCell align="right">Actions</TableCell>
+              <TableCell>
+                <h4>Character Name</h4>
+              </TableCell>
+              <TableCell>
+                <h4>Class</h4>
+              </TableCell>
+              <TableCell align="right">
+                <h4>Actions</h4>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
