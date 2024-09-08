@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import api from "../Utils/api"; // Import your API utility
+import api from "../Utils/api";
 import DiceRollData from "../Interfaces/DiceRollData";
 import EditDiceRollForm from "../Components/EditDiceRollForm";
 import {
@@ -11,7 +11,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Button,
   Select,
   MenuItem,
   Dialog,
@@ -70,7 +69,6 @@ export default function ViewCharacterRolls() {
     null
   );
   const [rolls, setRolls] = useState<DiceRollData[]>([]);
-  const [filteredRolls, setFilteredRolls] = useState<DiceRollData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState({
