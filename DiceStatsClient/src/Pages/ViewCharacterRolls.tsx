@@ -259,12 +259,24 @@ const handleFilterChange = (
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Roll Type</TableCell>
-              <TableCell>Skill Type</TableCell>
-              <TableCell>Dice Size</TableCell>
-              <TableCell>Roll Value</TableCell>
-              <TableCell>Success</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell>
+                <h4>Roll Type</h4>
+              </TableCell>
+              <TableCell>
+                <h4>Skill Type</h4>
+              </TableCell>
+              <TableCell>
+                <h4>Dice Size</h4>
+              </TableCell>
+              <TableCell>
+                <h4>Roll Value</h4>
+              </TableCell>
+              <TableCell>
+                <h4>Success</h4>
+              </TableCell>
+              <TableCell>
+                <h4>Actions</h4>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
