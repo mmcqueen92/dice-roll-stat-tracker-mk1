@@ -53,7 +53,12 @@ export default function CharacterList({
             {characters.map((character) => (
               <TableRow key={character.characterId}>
                 <TableCell>{character.name}</TableCell>
-                <TableCell>{character.class}</TableCell>
+                <TableCell>
+                  {character.class}
+                  {character.secondaryClass
+                    ? `/${character.secondaryClass}`
+                    : ""}
+                </TableCell>
                 <TableCell align="right">
                   <IconButton onClick={() => onEdit(character)}>
                     <EditIcon />

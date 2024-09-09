@@ -76,7 +76,8 @@ namespace DiceStatsServer.Controllers
             {
                 Name = newCharacterDto.Name,
                 Class = newCharacterDto.Class,
-                UserId = userId // Set the UserId
+                UserId = userId,
+                SecondaryClass = string.IsNullOrWhiteSpace(newCharacterDto.SecondaryClass) ? null : newCharacterDto.SecondaryClass
             };
 
             _context.Characters.Add(character);

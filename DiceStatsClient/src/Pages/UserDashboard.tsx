@@ -122,7 +122,12 @@ export default function UserDashboard() {
               {characters.map((character) => (
                 <TableRow key={character.characterId}>
                   <TableCell>{character.name}</TableCell>
-                  <TableCell>{character.class}</TableCell>
+                  <TableCell>
+                    {character.class}
+                    {character.secondaryClass
+                      ? `/${character.secondaryClass}`
+                      : ""}
+                  </TableCell>
                   <TableCell align="center">
                     {character.characterId === activeCharacterId ? (
                       <span>Active</span>
@@ -203,7 +208,12 @@ export default function UserDashboard() {
           </IconButton>
         </DialogTitle>
         <CharacterForm
-          initialData={{ characterId: 0, name: "", class: "" }}
+          initialData={{
+            characterId: 0,
+            name: "",
+            class: "",
+            secondaryClass: "",
+          }}
           onSave={handleSave}
           onCancel={handleCancel}
         />

@@ -22,10 +22,13 @@ namespace DiceStatsServer.Models
         [MaxLength(50)]
         public string Class { get; set; }
 
+        [MaxLength(50)]
+        public string? SecondaryClass { get; set; }
+
         // Parameterless constructor for EF Core
         public Character()
         {
-            
+
         }
     }
 }

@@ -62,7 +62,7 @@ export default function CharacterManagement() {
 
   const handleCancelCreate = () => {
     setNewChar(false);
-  }
+  };
 
   return (
     <>
@@ -88,7 +88,7 @@ export default function CharacterManagement() {
           </IconButton>
         </DialogTitle>
         <CharacterForm
-          initialData={{ characterId: 0, name: "", class: "" }}
+          initialData={{ characterId: 0, name: "", class: "", secondaryClass: "" }}
           onSave={handleSave}
           onCancel={handleCancelCreate}
         />
@@ -111,7 +111,7 @@ export default function CharacterManagement() {
         </DialogTitle>
         <CharacterForm
           initialData={
-            selectedCharacter || { characterId: 0, name: "", class: "" }
+            selectedCharacter || { characterId: 0, name: "", class: "", secondaryClass: "" }
           }
           onSave={handleSave}
           onCancel={handleCancelEdit}
