@@ -20,6 +20,7 @@ import {
   SelectChangeEvent,
   Grid2,
   IconButton,
+  Container
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import CharacterData from "../Interfaces/CharacterData";
@@ -174,7 +175,7 @@ const handleFilterChange = (
   };
 
   return (
-    <div>
+    <Container>
       {characterData && characterData.name && (
         <h1>View Rolls for {characterData.name}</h1>
       )}
@@ -333,6 +334,6 @@ const handleFilterChange = (
           />
         </Dialog>
       )}
-    </div>
+    </Container>
   );
 }

@@ -19,6 +19,7 @@ import {
   TableRow,
   Paper,
   TablePagination,
+  Container
 } from "@mui/material";
 
 import "../Styles/ActiveDashboard.css";
@@ -203,7 +204,7 @@ const handlePageSizeChange = (
 }
 
   return (
-    <div>
+    <Container>
       <h3>{character.name}</h3>
       <form onSubmit={handleSubmit} className="new-diceroll-form">
         <FormControl
@@ -403,8 +404,9 @@ const handlePageSizeChange = (
           onPageChange={handlePageChange}
           rowsPerPage={pageSize}
           onRowsPerPageChange={handlePageSizeChange}
+          rowsPerPageOptions={[5, 10, 25, 50]}
         />
       </TableContainer>
-    </div>
+    </Container>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Dialog, DialogTitle, IconButton } from "@mui/material";
+import { Dialog, DialogTitle, IconButton, Container } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CharacterList from "../Components/CharacterList";
 import CharacterForm from "../Components/CharacterForm";
@@ -65,7 +65,7 @@ export default function CharacterManagement() {
   };
 
   return (
-    <>
+    <Container>
       <CharacterList
         characters={characters}
         onEdit={handleEdit}
@@ -117,6 +117,6 @@ export default function CharacterManagement() {
           onCancel={handleCancelEdit}
         />
       </Dialog>
-    </>
+    </Container>
   );
 }

@@ -15,6 +15,7 @@ import {
   TableRow,
   Paper,
   Button,
+  Container
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CharacterForm from "../Components/CharacterForm";
@@ -92,7 +93,7 @@ export default function UserDashboard() {
   };
 
   return (
-    <div>
+    <Container>
       <h2>User Dashboard</h2>
       {loading && <p>Loading characters...</p>}
       {error && <p>{error}</p>}
@@ -130,7 +131,7 @@ export default function UserDashboard() {
                   </TableCell>
                   <TableCell align="center">
                     {character.characterId === activeCharacterId ? (
-                      <span>Active</span>
+                      <h4>Active</h4>
                     ) : (
                       <Button
                         variant="outlined"
@@ -218,6 +219,6 @@ export default function UserDashboard() {
           onCancel={handleCancel}
         />
       </Dialog>
-    </div>
+    </Container>
   );
 }

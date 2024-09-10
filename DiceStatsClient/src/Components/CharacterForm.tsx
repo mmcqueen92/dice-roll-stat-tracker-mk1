@@ -85,7 +85,6 @@ export default function CharacterForm({
           required
         />
 
-        {/* Primary Class Dropdown */}
         <FormControl fullWidth margin="dense">
           <InputLabel>Class</InputLabel>
           <Select
@@ -105,7 +104,6 @@ export default function CharacterForm({
           </Select>
         </FormControl>
 
-        {/* Secondary Class Dropdown */}
         <FormControl fullWidth margin="dense">
           <InputLabel>Secondary Class</InputLabel>
           <Select
@@ -113,7 +111,7 @@ export default function CharacterForm({
             name="secondaryClass"
             value={formData.secondaryClass}
             onChange={handleSelectChange}
-            disabled={!formData.class} // Disable until primary class is selected
+            disabled={!formData.class}
           >
             {secondaryClassOptions.map((classOption) => (
               <MenuItem key={classOption} value={classOption}>
