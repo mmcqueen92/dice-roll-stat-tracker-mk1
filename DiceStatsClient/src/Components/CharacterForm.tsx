@@ -95,11 +95,13 @@ export default function CharacterForm({
             onChange={handleSelectChange}
             required
           >
-            {classOptions.map((classOption) => (
-              <MenuItem key={classOption} value={classOption}>
-                {classOption}
-              </MenuItem>
-            ))}
+            {classOptions
+              .sort((a, b) => a.localeCompare(b))
+              .map((classOption) => (
+                <MenuItem key={classOption} value={classOption}>
+                  {classOption}
+                </MenuItem>
+              ))}
           </Select>
         </FormControl>
 
