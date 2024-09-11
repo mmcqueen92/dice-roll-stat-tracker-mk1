@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../Utils/api";
+import "../Styles/UserDashboard.css";
 import { Link } from "react-router-dom";
 import { decodeToken } from "../Utils/jwt";
 import CharacterData from "../Interfaces/CharacterData";
@@ -15,7 +16,7 @@ import {
   TableRow,
   Paper,
   Button,
-  Container
+  Container,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CharacterForm from "../Components/CharacterForm";
@@ -93,132 +94,124 @@ export default function UserDashboard() {
   };
 
   return (
-    <Container>
-      <h2>User Dashboard</h2>
-      {loading && <p>Loading characters...</p>}
-      {error && <p>{error}</p>}
-      {characters.length === 0 && !loading && !error && (
-        <p>No characters found.</p>
-      )}
-      {characters.length > 0 && (
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  <h4>Character Name</h4>
-                </TableCell>
-                <TableCell>
-                  <h4>Class</h4>
-                </TableCell>
-                <TableCell>
-                  <h4>Active</h4>
-                </TableCell>
-                <TableCell>
-                  <h4>Actions</h4>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {characters.map((character) => (
-                <TableRow key={character.characterId}>
-                  <TableCell>{character.name}</TableCell>
+    <Container disableGutters>
+      <Paper className="page-content">
+        <h2>User Dashboard</h2>
+        {loading && <p>Loading characters...</p>}
+        {error && <p>{error}</p>}
+        {characters.length === 0 && !loading && !error && (
+          <p>No characters found.</p>
+        )}
+        {characters.length > 0 && (
+          <TableContainer component={Paper} className="table-container">
+            <Table>
+              <TableHead>
+                <TableRow>
                   <TableCell>
-                    {character.class}
-                    {character.secondaryClass
-                      ? `/${character.secondaryClass}`
-                      : ""}
+                    <h4>Character Name</h4>
                   </TableCell>
-                  <TableCell align="center">
-                    {character.characterId === activeCharacterId ? (
-                      <h4>Active</h4>
-                    ) : (
-                      <Button
-                        variant="outlined"
-                        onClick={() =>
-                          handleSetActiveCharacter(character.characterId)
-                        }
-                      >
-                        Set Active
-                      </Button>
-                    )}
+                  <TableCell>
+                    <h4>Class</h4>
                   </TableCell>
-                  <TableCell align="center">
-                    <Button
-                      variant="contained"
-                      component={Link}
-                      to={`/character-rolls/${character.characterId}`}
-                    >
-                      View Rolls
-                    </Button>
+                  <TableCell>
+                    <h4>Active</h4>
+                  </TableCell>
+                  <TableCell>
+                    <h4>Actions</h4>
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )}
-      <div style={{ marginTop: "20px" }}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleCreate}
-          style={{ marginRight: "10px" }}
+              </TableHead>
+              <TableBody>
+                {characters.map((character) => (
+                  <TableRow key={character.characterId}>
+                    <TableCell>{character.name}</TableCell>
+                    <TableCell>
+                      {character.class}
+                      {character.secondaryClass
+                        ? `/${character.secondaryClass}`
+                        : ""}
+                    </TableCell>
+                    <TableCell align="center">
+                      {character.characterId === activeCharacterId ? (
+                        <h4>Active</h4>
+                      ) : (
+                        <Button
+                          variant="outlined"
+                          onClick={() =>
+                            handleSetActiveCharacter(character.characterId)
+                          }
+                        >
+                          Set Active
+                        </Button>
+                      )}
+                    </TableCell>
+                    <TableCell align="center">
+                      <Button
+                        variant="contained"
+                        component={Link}
+                        to={`/character-rolls/${character.characterId}`}
+                      >
+                        View Rolls
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+        <div
+          className="button-container"
         >
-          Create New Character
-        </Button>
-        <Button
-          variant="contained"
-          component={Link}
-          to={`/active-dashboard/${activeCharacterId}`}
-          style={{ marginRight: "10px" }}
-        >
-          Start Rolling
-        </Button>
-        <Button
-          variant="outlined"
-          component={Link}
-          to="/character-management"
-          style={{ marginRight: "10px" }}
-        >
-          Manage Characters
-        </Button>
-        <Button
-          variant="outlined"
-          component={Link}
-          to="/stats"
-          style={{ marginRight: "10px" }}
-        >
-          View Stats
-        </Button>
-      </div>
-      <Dialog open={isModalOpen} onClose={handleCancel}>
-        <DialogTitle>
-          <span>Create New Character</span>
-          <IconButton
-            aria-label="close"
-            onClick={handleCancel}
-            sx={{
-              position: "absolute",
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
-            }}
+          <Button variant="contained" color="primary" onClick={handleCreate}>
+            Create New Character
+          </Button>
+          <Button
+            variant="contained"
+            component={Link}
+            to={`/active-dashboard/${activeCharacterId}`}
           >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <CharacterForm
-          initialData={{
-            characterId: 0,
-            name: "",
-            class: "",
-            secondaryClass: "",
-          }}
-          onSave={handleSave}
-          onCancel={handleCancel}
-        />
-      </Dialog>
+            Start Rolling
+          </Button>
+          <Button
+            variant="outlined"
+            component={Link}
+            to="/character-management"
+          >
+            Manage Characters
+          </Button>
+          <Button variant="outlined" component={Link} to="/stats">
+            View Stats
+          </Button>
+        </div>
+        <Dialog open={isModalOpen} onClose={handleCancel}>
+          <DialogTitle>
+            <span>Create New Character</span>
+            <IconButton
+              aria-label="close"
+              onClick={handleCancel}
+              sx={{
+                position: "absolute",
+                right: 8,
+                top: 8,
+                color: (theme) => theme.palette.grey[500],
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
+          <CharacterForm
+            initialData={{
+              characterId: 0,
+              name: "",
+              class: "",
+              secondaryClass: "",
+            }}
+            onSave={handleSave}
+            onCancel={handleCancel}
+          />
+        </Dialog>
+      </Paper>
     </Container>
   );
 }

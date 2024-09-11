@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Dialog, DialogTitle, IconButton, Container } from "@mui/material";
+import { Dialog, DialogTitle, IconButton, Container, Paper } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CharacterList from "../Components/CharacterList";
 import CharacterForm from "../Components/CharacterForm";
@@ -66,57 +66,69 @@ export default function CharacterManagement() {
 
   return (
     <Container>
-      <CharacterList
-        characters={characters}
-        onEdit={handleEdit}
-        onCreate={handleCreate}
-      />
-      <Dialog open={newChar} onClose={handleCancelCreate}>
-        <DialogTitle>
-          <span>Create New Character</span>
-          <IconButton
-            aria-label="close"
-            onClick={handleCancelCreate}
-            sx={{
-              position: "absolute",
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <CharacterForm
-          initialData={{ characterId: 0, name: "", class: "", secondaryClass: "" }}
-          onSave={handleSave}
-          onCancel={handleCancelCreate}
+      <Paper sx={{ padding: "20px" }}>
+        <CharacterList
+          characters={characters}
+          onEdit={handleEdit}
+          onCreate={handleCreate}
         />
-      </Dialog>
-      <Dialog open={editChar} onClose={handleCancelEdit}>
-        <DialogTitle>
-          <span>Edit Character</span>
-          <IconButton
-            aria-label="close"
-            onClick={handleCancelEdit}
-            sx={{
-              position: "absolute",
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
+        <Dialog open={newChar} onClose={handleCancelCreate}>
+          <DialogTitle>
+            <span>Create New Character</span>
+            <IconButton
+              aria-label="close"
+              onClick={handleCancelCreate}
+              sx={{
+                position: "absolute",
+                right: 8,
+                top: 8,
+                color: (theme) => theme.palette.grey[500],
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
+          <CharacterForm
+            initialData={{
+              characterId: 0,
+              name: "",
+              class: "",
+              secondaryClass: "",
             }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <CharacterForm
-          initialData={
-            selectedCharacter || { characterId: 0, name: "", class: "", secondaryClass: "" }
-          }
-          onSave={handleSave}
-          onCancel={handleCancelEdit}
-        />
-      </Dialog>
+            onSave={handleSave}
+            onCancel={handleCancelCreate}
+          />
+        </Dialog>
+        <Dialog open={editChar} onClose={handleCancelEdit}>
+          <DialogTitle>
+            <span>Edit Character</span>
+            <IconButton
+              aria-label="close"
+              onClick={handleCancelEdit}
+              sx={{
+                position: "absolute",
+                right: 8,
+                top: 8,
+                color: (theme) => theme.palette.grey[500],
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
+          <CharacterForm
+            initialData={
+              selectedCharacter || {
+                characterId: 0,
+                name: "",
+                class: "",
+                secondaryClass: "",
+              }
+            }
+            onSave={handleSave}
+            onCancel={handleCancelEdit}
+          />
+        </Dialog>
+      </Paper>
     </Container>
   );
 }
