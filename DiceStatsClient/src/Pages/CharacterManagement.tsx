@@ -6,6 +6,8 @@ import CharacterForm from "../Components/CharacterForm";
 import CharacterData from "../Interfaces/CharacterData";
 import api from "../Utils/api";
 
+import "../Styles/CharacterManagement.css";
+
 export default function CharacterManagement() {
   const [characters, setCharacters] = useState<CharacterData[]>([]);
   const [selectedCharacter, setSelectedCharacter] =
@@ -66,7 +68,8 @@ export default function CharacterManagement() {
 
   return (
     <Container>
-      <Paper sx={{ padding: "20px" }}>
+      <Paper className="main-container">
+        <h3>Manage Characters</h3>
         <CharacterList
           characters={characters}
           onEdit={handleEdit}

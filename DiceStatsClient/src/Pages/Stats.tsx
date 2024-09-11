@@ -17,6 +17,8 @@ import StatsSectionRollDistribution from "../Components/StatsSectionRollDistribu
 import StatsSectionRollTypes from "../Components/StatsSectionRollTypes";
 import StatsSectionOverview from "../Components/StatsSectionOverview";
 
+import "../Styles/Stats.css";
+
 type TabValue =
   | "overview"
   | "dice-types"
@@ -72,7 +74,7 @@ export default function StatsPage() {
 
   return (
     <Container>
-      <Paper sx={{ padding: "20px" }}>
+      <Paper sx={{ padding: "20px" }} className="main-container">
         <Typography variant="h5">Statistics</Typography>
 
         <Box>
