@@ -8,11 +8,6 @@
     width: 98%;
 }
 
-@media screen and (min-width: 1024px) {
-    form {
-        display: "flex";
-        flex-direction: row;
-        justify-content: space-evenly;
-    }
+/* @media screen and (min-width: 1024px) {
 
-}
+} */

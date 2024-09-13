@@ -185,7 +185,6 @@ const handleFilterChange = (
         <div>
           <h3>Filters</h3>
           <form>
-            {/* <Grid2 container direction="column" alignItems="center" spacing={2}> */}
             <FormControl
               style={{
                 width: "300px",
@@ -271,7 +270,6 @@ const handleFilterChange = (
                 <MenuItem value="false">Failure</MenuItem>
               </Select>
             </FormControl>
-            {/* </Grid2> */}
           </form>
         </div>
 
