@@ -1,9 +1,19 @@
-.main-container {
-    margin-top: 5px;
+.page-content {
+  min-height: 100vh;
 }
 
 .checkbox-container {
-    display: flex;
+  display: flex;
+  flex-direction: column;
+}
+
+@media screen and (min-width: 1024px) {
+  .page-content {
+    margin-top: 5px;
+    min-height: auto;
+  }
+  .checkbox-container {
     flex-direction: row;
     justify-content: center;
+  }
 }

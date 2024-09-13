@@ -129,7 +129,7 @@ export default function StatsSectionRollDistribution({
 
   return (
     <>
-      <Grid item xs={12} md={6}>
+      {/* <Grid item xs={12} md={6}> */}
         <Box>
           <Typography variant="h6">Roll Distribution by Dice Size</Typography>
 
@@ -157,7 +157,7 @@ export default function StatsSectionRollDistribution({
             />
           )}
         </Box>
-      </Grid>
+      {/* </Grid> */}
     </>
   );
 }

@@ -7,7 +7,7 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
-  Paper
+  Paper,
 } from "@mui/material";
 import api from "../Utils/api";
 import CharacterData from "../Interfaces/CharacterData";
@@ -73,10 +73,9 @@ export default function StatsPage() {
   };
 
   return (
-    <Container>
-      <Paper sx={{ padding: "20px" }} className="main-container">
+    <Container disableGutters>
+      <Paper className="page-content">
         <Typography variant="h5">Statistics</Typography>
-
         <Box>
           <Select
             value={

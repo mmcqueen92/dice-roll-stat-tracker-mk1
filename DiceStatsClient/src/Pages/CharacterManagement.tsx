@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Dialog, DialogTitle, IconButton, Container, Paper } from "@mui/material";
+import { Dialog, DialogTitle, IconButton, Paper, Container } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CharacterList from "../Components/CharacterList";
 import CharacterForm from "../Components/CharacterForm";
@@ -67,8 +67,8 @@ export default function CharacterManagement() {
   };
 
   return (
-    <Container>
-      <Paper className="main-container">
+    <Container disableGutters>
+      <Paper className="page-content">
         <h3>Manage Characters</h3>
         <CharacterList
           characters={characters}

@@ -204,8 +204,8 @@ export default function ActiveDashboard() {
   };
 
   return (
-    <Container>
-      <Paper className="main-container">
+    <Container disableGutters>
+      <Paper className="page-content">
         <h3>{character.name}</h3>
         <Paper className="form-container">
           <h4>Create New Roll</h4>
