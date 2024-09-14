@@ -8,6 +8,8 @@ import {
   Select,
   SelectChangeEvent,
   Paper,
+  Tab,
+  Tabs
 } from "@mui/material";
 import api from "../Utils/api";
 import CharacterData from "../Interfaces/CharacterData";
@@ -110,23 +112,17 @@ export default function StatsPage() {
         </Box>
 
         <Box>
-          <Box>
-            <Button onClick={(e) => handleTabChange(e, "overview")}>
-              Overview
-            </Button>
-
-            <Button onClick={(e) => handleTabChange(e, "trends")}>
-              Roll Trends
-            </Button>
-
-            <Button onClick={(e) => handleTabChange(e, "roll distribution")}>
-              Roll Distribution
-            </Button>
-
-            <Button onClick={(e) => handleTabChange(e, "roll types")}>
-              Roll Types
-            </Button>
-          </Box>
+          <Tabs
+            value={currentTab}
+            onChange={handleTabChange}
+            aria-label="stats navigation tabs"
+            centered
+          >
+            <Tab label="Overview" value="overview" />
+            <Tab label="Roll Trends" value="trends" />
+            <Tab label="Roll Distribution" value="roll distribution" />
+            <Tab label="Roll Types" value="roll types" />
+          </Tabs>
 
           <Box>
             {currentTab === "overview" && (
