@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import DiceRollData from "../Interfaces/DiceRollData";
 import StatsSectionProps from "../Interfaces/StatsSectionProps";
-import { Grid2, Box, Typography, Container } from "@mui/material";
+import { Grid2, Box, Typography } from "@mui/material";
 
 export default function StatsSectionOverview({ diceRolls }: StatsSectionProps) {
   const [averageRollsByDiceSize, setAverageRollsByDiceSize] = useState<{
