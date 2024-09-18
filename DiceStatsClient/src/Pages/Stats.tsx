@@ -8,7 +8,9 @@ import {
   SelectChangeEvent,
   Paper,
   Tab,
-  Tabs
+  Tabs,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import api from "../Utils/api";
 import CharacterData from "../Interfaces/CharacterData";
@@ -27,6 +29,10 @@ type TabValue =
   | "roll types";
 
 export default function StatsPage() {
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+
   const [currentTab, setCurrentTab] = useState<TabValue>("overview");
   const [characters, setCharacters] = useState<CharacterData[]>([]);
   const [selectedCharacter, setSelectedCharacter] =
@@ -113,6 +119,10 @@ export default function StatsPage() {
             onChange={handleTabChange}
             aria-label="stats navigation tabs"
             centered
+            orientation={isMobile ? "vertical" : "horizontal"}
+            variant={isMobile ? "standard" : "scrollable"}
+            scrollButtons="auto"
+            allowScrollButtonsMobile
           >
             <Tab label="Overview" value="overview" />
             <Tab label="Roll Trends" value="trends" />

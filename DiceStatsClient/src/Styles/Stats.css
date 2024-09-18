@@ -7,6 +7,11 @@
   flex-direction: column;
 }
 
+.overview-container {
+  display: flex;
+  flex-direction: column;
+}
+
 @media screen and (min-width: 1024px) {
   .page-content {
     margin-top: 5px;
@@ -15,5 +20,13 @@
   .checkbox-container {
     flex-direction: row;
     justify-content: center;
+  }
+  .overview-stats-half {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+  .overview-stat {
+    margin: 20px;
   }
 }

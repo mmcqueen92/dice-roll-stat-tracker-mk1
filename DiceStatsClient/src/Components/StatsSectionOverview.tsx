@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import DiceRollData from "../Interfaces/DiceRollData";
 import StatsSectionProps from "../Interfaces/StatsSectionProps";
-import { Grid2, Box, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 export default function StatsSectionOverview({ diceRolls }: StatsSectionProps) {
+
   const [averageRollsByDiceSize, setAverageRollsByDiceSize] = useState<{
     [key: string]: number;
   }>({});
@@ -157,51 +158,59 @@ export default function StatsSectionOverview({ diceRolls }: StatsSectionProps) {
   };
 
   return (
-    <Grid2 container spacing={2}>
-      <Box>
-        <Typography variant="h6">Average Rolls by Dice Size</Typography>
-        <ul>
-          {Object.entries(averageRollsByDiceSize).map(([size, average]) => (
-            <li key={size}>
-              Dice Size {size}: {average.toFixed(2)}
-            </li>
-          ))}
-        </ul>
-      </Box>
+    <div className="overview-container">
+      <div className="overview-stats-half">
+        <Box className="overview-stat">
+          <Typography variant="h6">Average Rolls by Dice Size</Typography>
+          <ul>
+            {Object.entries(averageRollsByDiceSize).map(([size, average]) => (
+              <li key={size}>
+                Dice Size {size}: {average.toFixed(2)}
+              </li>
+            ))}
+          </ul>
+        </Box>
 
-      <Box>
-        <Typography variant="h6">Total Rolls by Dice Size</Typography>
-        <ul>
-          {Object.entries(totalRollsByDiceSize).map(([size, total]) => (
-            <li key={size}>
-              Dice Size {size}: {total}
-            </li>
-          ))}
-        </ul>
-      </Box>
+        <Box className="overview-stat">
+          <Typography variant="h6">Total Rolls by Dice Size</Typography>
+          <ul>
+            {Object.entries(totalRollsByDiceSize).map(([size, total]) => (
+              <li key={size}>
+                Dice Size {size}: {total}
+              </li>
+            ))}
+          </ul>
+        </Box>
 
-      <Box>
-        <Typography variant="h6">Standard Deviation by Dice Size</Typography>
-        <ul>
-          {Object.entries(standardDeviationByDiceSize).map(([size, stdDev]) => (
-            <li key={size}>
-              Dice Size {size}: {stdDev.toFixed(2)}
-            </li>
-          ))}
-        </ul>
-      </Box>
+        <Box className="overview-stat">
+          <Typography variant="h6">Standard Deviation by Dice Size</Typography>
+          <ul>
+            {Object.entries(standardDeviationByDiceSize).map(
+              ([size, stdDev]) => (
+                <li key={size}>
+                  Dice Size {size}: {stdDev.toFixed(2)}
+                </li>
+              )
+            )}
+          </ul>
+        </Box>
+      </div>
 
-      <Box>
-        <Typography variant="h6">Rolling Streak Records</Typography>
-        <p>Longest Success Streak: {streakRecords.successStreak}</p>
-        <p>Longest Fail Streak: {streakRecords.failStreak}</p>
-      </Box>
+      <div className="overview-stats-half">
+        <Box className="overview-stat">
+          <Typography variant="h6">Rolling Streak Records</Typography>
+          <p>Longest Success Streak: {streakRecords.successStreak}</p>
+          <p>Longest Fail Streak: {streakRecords.failStreak}</p>
+        </Box>
 
-      <Box>
-        <Typography variant="h6">Crit/Fumble Rates</Typography>
-        <p>Crit rate: {(critAndFumbleRates.critRate * 100).toFixed(2)}%</p>
-        <p>Fumble rate: {(critAndFumbleRates.fumbleRate * 100).toFixed(2)}%</p>
-      </Box>
-    </Grid2>
+        <Box className="overview-stat">
+          <Typography variant="h6">Crit/Fumble Rates</Typography>
+          <p>Crit rate: {(critAndFumbleRates.critRate * 100).toFixed(2)}%</p>
+          <p>
+            Fumble rate: {(critAndFumbleRates.fumbleRate * 100).toFixed(2)}%
+          </p>
+        </Box>
+      </div>
+    </div>
   );
 }
