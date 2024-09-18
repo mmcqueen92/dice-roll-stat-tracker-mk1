@@ -22,10 +22,7 @@ import "../Styles/Stats.css";
 
 type TabValue =
   | "overview"
-  | "dice-types"
-  | "d20-rolls"
   | "trends"
-  | "success-rates"
   | "roll distribution"
   | "roll types";
 
