@@ -261,76 +261,70 @@ export default function StatsSectionRollTypes({
 
   return (
     <>
-      <Grid item xs={12} md={6}>
-        <Box>
-          <Typography variant="h6">Average Roll by Category (d20)</Typography>
-          <ul>
-            {Object.entries(averageRollByCategory).map(
-              ([category, average]) => (
-                <li key={category}>
-                  {category}: {average.toFixed(2)}
-                </li>
-              )
-            )}
-          </ul>
-
-          <Typography variant="h6">Total Rolls by Category (d20)</Typography>
-          <ul>
-            {Object.entries(rollsByRollType).map(([type, total]) => (
-              <li key={type}>
-                {type}: {total}
-              </li>
-            ))}
-          </ul>
-        </Box>
-
-        <Box>
-          <Typography variant="h6">D20 Roll Type Rates</Typography>
-
-          <RollTypeRatesPieChart
-            data={rollTypeRates}
-            title="Roll Type Distribution"
-          />
-        </Box>
-
-        <Box>
-          <Typography variant="h6">
-            Ability/Skill Checks and Saving Rolls by Skill Types
-          </Typography>
-
-          <ul>
-            {Object.entries(rollsBySkillType).map(
-              ([skillType, count], index) => (
-                <li key={index}>
-                  {skillType}: {count}
-                </li>
-              )
-            )}
-          </ul>
-        </Box>
-
-        <Box>
-          <Typography variant="h6">Success Rates by Skill Types</Typography>
-
-          <ul>
-            <li>
-              Attack:{" "}
-              {(
-                (attackSuccessRate.success / attackSuccessRate.total) *
-                100
-              ).toFixed(2)}
-              %
+      <Box>
+        <Typography variant="h6">Average Roll by Category (d20)</Typography>
+        <ul>
+          {Object.entries(averageRollByCategory).map(([category, average]) => (
+            <li key={category}>
+              {category}: {average.toFixed(2)}
             </li>
-            {Object.entries(successRateBySkillType).map(
-              ([skillType, successRate], index) => (
-                <li key={index}>
-                  {skillType}: {(successRate * 100).toFixed(2)}%
-                </li>
-              )
-            )}
-          </ul>
-        </Box>
-      </Grid>
+          ))}
+        </ul>
+
+        <Typography variant="h6">Total Rolls by Category (d20)</Typography>
+        <ul>
+          {Object.entries(rollsByRollType).map(([type, total]) => (
+            <li key={type}>
+              {type}: {total}
+            </li>
+          ))}
+        </ul>
+      </Box>
+
+      <Box>
+        <Typography variant="h6">D20 Roll Type Rates</Typography>
+
+        <RollTypeRatesPieChart
+          data={rollTypeRates}
+          // title="Roll Type Distribution"
+        />
+      </Box>
+
+      <Box>
+        <Typography variant="h6">
+          Checks and Saves by Skill Types
+        </Typography>
+
+        <ul>
+          {Object.entries(rollsBySkillType).map(([skillType, count], index) => (
+            <li key={index}>
+              {skillType}: {count}
+            </li>
+          ))}
+        </ul>
+      </Box>
+
+      <Box>
+        <Typography variant="h6">Success Rates by Skill Types</Typography>
+
+        <ul>
+          <li>
+            Attack:{" "}
+            {(
+              (attackSuccessRate.success / attackSuccessRate.total) *
+              100
+            ).toFixed(2)}
+            %
+          </li>
+          {Object.entries(successRateBySkillType).map(
+            ([skillType, successRate], index) => (
+              <li key={index}>
+                {skillType}: {(successRate * 100).toFixed(2)}%
+              </li>
+            )
+          )}
+        </ul>
+      </Box>
     </>
   );
 }

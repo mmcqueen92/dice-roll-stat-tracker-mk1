@@ -143,6 +143,7 @@ export default function StatsPage() {
             <Accordion
               expanded={accordionOpen}
               onChange={handleAccordionToggle}
+              className="accordion-container"
             >
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}

@@ -5,5 +5,5 @@ export default interface RollTypeRatesPieChartProps {
     savingThrow: number;
     attackOrSpellDamage: number;
   };
-  title: string;
+  title?: string;
 }

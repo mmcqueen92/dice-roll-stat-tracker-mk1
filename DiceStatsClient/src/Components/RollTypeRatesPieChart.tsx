@@ -9,23 +9,21 @@ export default function RollTypeRatesPieChart({ data, title }: PieChartProps) {
   if (!data) {
     return null;
   }
-  // Extracting labels and values from the data object
-  // const labels = Object.keys(data); 
+
   const labels = [
     "Attack",
     "Ability/Skill Check",
     "Saving Throw",
     "Attack/Spell Damage",
   ];
-  const values = Object.values(data).map((value) => value * 100); // Convert fractions to percentages
+  const values = Object.values(data).map((value) => value * 100);
 
-  // Set up chart data
   const chartData = {
-    labels: labels, // Use the keys as labels
+    labels: labels, 
     datasets: [
       {
-        label: title, // Optional title
-        data: values, // Values as percentages
+        label: title, 
+        data: values,
         backgroundColor: [
           "rgba(255, 99, 132, 0.2)",
           "rgba(54, 162, 235, 0.2)",
@@ -43,11 +41,10 @@ export default function RollTypeRatesPieChart({ data, title }: PieChartProps) {
     ],
   };
 
-  // Set up chart options
   const chartOptions = {
     plugins: {
       title: {
-        display: !!title, // Display title if provided
+        display: !!title,
         text: title,
       },
     },
