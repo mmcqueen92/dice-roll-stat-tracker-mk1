@@ -11,7 +11,9 @@
   display: flex;
   flex-direction: column;
 }
-
+.tabs-container {
+  display: hidden;
+}
 @media screen and (min-width: 1024px) {
   .page-content {
     margin-top: 5px;
