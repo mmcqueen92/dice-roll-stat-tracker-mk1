@@ -22,16 +22,11 @@ import StatsSectionOverview from "../Components/StatsSectionOverview";
 
 import "../Styles/Stats.css";
 
-type TabValue =
-  | "overview"
-  | "trends"
-  | "roll distribution"
-  | "roll types";
+type TabValue = "overview" | "trends" | "roll distribution" | "roll types";
 
 export default function StatsPage() {
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [currentTab, setCurrentTab] = useState<TabValue>("overview");
   const [characters, setCharacters] = useState<CharacterData[]>([]);
@@ -114,21 +109,23 @@ export default function StatsPage() {
         </Box>
 
         <Box>
-          <Tabs
-            value={currentTab}
-            onChange={handleTabChange}
-            aria-label="stats navigation tabs"
-            centered
-            orientation={isMobile ? "vertical" : "horizontal"}
-            variant={isMobile ? "standard" : "scrollable"}
-            scrollButtons="auto"
-            allowScrollButtonsMobile
-          >
-            <Tab label="Overview" value="overview" />
-            <Tab label="Roll Trends" value="trends" />
-            <Tab label="Roll Distribution" value="roll distribution" />
-            <Tab label="Roll Types" value="roll types" />
-          </Tabs>
+          <Box className="tabs-container">
+            <Tabs
+              value={currentTab}
+              onChange={handleTabChange}
+              aria-label="stats navigation tabs"
+              centered
+              orientation={isMobile ? "vertical" : "horizontal"}
+              variant={isMobile ? "standard" : "scrollable"}
+              scrollButtons="auto"
+              allowScrollButtonsMobile
+            >
+              <Tab label="Overview" value="overview" />
+              <Tab label="Roll Trends" value="trends" />
+              <Tab label="Roll Distribution" value="roll distribution" />
+              <Tab label="Roll Types" value="roll types" />
+            </Tabs>
+          </Box>
 
           <Box>
             {currentTab === "overview" && (

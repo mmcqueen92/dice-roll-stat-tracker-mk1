@@ -29,4 +29,9 @@
   .overview-stat {
     margin: 20px;
   }
+  .tabs-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
 }
