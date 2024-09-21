@@ -4,9 +4,6 @@ import DiceRollData from "../Interfaces/DiceRollData";
 import RollTypeRatesPieChart from "./RollTypeRatesPieChart";
 
 import {
-  //   Button,
-  //   Container,
-  Grid,
   Box,
   Typography,
 } from "@mui/material";
@@ -94,12 +91,12 @@ export default function StatsSectionRollTypes({
     const d20Rolls = diceRolls.filter((roll) => roll.diceSize === 20);
 
     const rollTypeCounts: {
-      Attack: number;
+      "Attack": number;
       "Ability/Skill Check": number;
       "Saving Throw": number;
       "Attack/Spell Damage": number;
     } = {
-      Attack: 0,
+      "Attack": 0,
       "Ability/Skill Check": 0,
       "Saving Throw": 0,
       "Attack/Spell Damage": 0,

@@ -60,12 +60,20 @@ const skillsAndAbilities = [...skills, ...abilities].sort();
 
 const diceSizes = [4, 6, 8, 10, 12, 20];
 
-const initialFormData = {
+interface FormData {
+  diceSize: number;
+  rollValue: string;
+  rollType: string;
+  skillType: string;
+  success: boolean | null; // Allow success to be either boolean or null
+}
+
+const initialFormData: FormData = {
   diceSize: 20,
   rollValue: "",
   rollType: "",
   skillType: "",
-  success: null as boolean | null,
+  success: false,
 };
 
 export default function ActiveDashboard() {
