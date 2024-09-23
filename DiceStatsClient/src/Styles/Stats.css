@@ -52,4 +52,21 @@
     width: 100%;
     margin-bottom: 10px;
   }
+  .roll-types-section-container {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+  }
+  .subsection-container {
+    display: flex;
+    flex-direction: column;
+  }
+  .subsection {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .stat-display {
+    margin: 5px;
+  }
 }

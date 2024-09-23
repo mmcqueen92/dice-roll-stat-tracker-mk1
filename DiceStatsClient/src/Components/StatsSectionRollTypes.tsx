@@ -3,12 +3,7 @@ import StatsSectionProps from "../Interfaces/StatsSectionProps";
 import DiceRollData from "../Interfaces/DiceRollData";
 import RollTypeRatesPieChart from "./RollTypeRatesPieChart";
 
-import {
-  Box,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import { Box, Grid2, Typography, useMediaQuery, useTheme } from "@mui/material";
 
 export default function StatsSectionRollTypes({
   diceRolls,
@@ -260,69 +255,91 @@ export default function StatsSectionRollTypes({
   };
 
   return (
-    <>
-      <Box>
-        <Typography variant="h6">Average Roll by Category (d20)</Typography>
-        <ul>
-          {Object.entries(averageRollByCategory).map(([category, average]) => (
-            <li key={category}>
-              {category}: {average.toFixed(2)}
-            </li>
-          ))}
-        </ul>
+    <Grid2
+      container
+      spacing={5}
+      direction={{ xs: "column", md: "row" }}
+      className="roll-types-section-container"
+    >
+      <Box className="subsection-container">
+        <Box className="subsection">
+          <Box className="stat-display">
+            <Typography variant="subtitle1">
+              Average Roll by Category (d20)
+            </Typography>
+            <ul>
+              {Object.entries(averageRollByCategory).map(
+                ([category, average]) => (
+                  <li key={category}>
+                    {category}: {average.toFixed(2)}
+                  </li>
+                )
+              )}
+            </ul>
+          </Box>
 
-        <Typography variant="h6">Total Rolls by Category (d20)</Typography>
-        <ul>
-          {Object.entries(rollsByRollType).map(([type, total]) => (
-            <li key={type}>
-              {type}: {total}
-            </li>
-          ))}
-        </ul>
-      </Box>
+          <Box className="stat-display">
+            <Typography variant="subtitle1">
+              Total Rolls by Category (d20)
+            </Typography>
+            <ul>
+              {Object.entries(rollsByRollType).map(([type, total]) => (
+                <li key={type}>
+                  {type}: {total}
+                </li>
+              ))}
+            </ul>
+          </Box>
+        </Box>
 
-      <Box>
-        <Typography variant="h6">D20 Roll Type Rates</Typography>
+        <Box className="subsection">
+          <Box className="stat-display">
+            <Typography variant="subtitle1">
+              Checks and Saves by Skill Types
+            </Typography>
 
-        <RollTypeRatesPieChart
-          data={rollTypeRates}
-          // title="Roll Type Distribution"
-        />
-      </Box>
+            <ul>
+              {Object.entries(rollsBySkillType).map(
+                ([skillType, count], index) => (
+                  <li key={index}>
+                    {skillType}: {count}
+                  </li>
+                )
+              )}
+            </ul>
+          </Box>
 
-      <Box>
-        <Typography variant="h6">Checks and Saves by Skill Types</Typography>
+          <Box className="stat-display">
+            <Typography variant="subtitle1">
+              Success Rates by Skill Types
+            </Typography>
 
-        <ul>
-          {Object.entries(rollsBySkillType).map(([skillType, count], index) => (
-            <li key={index}>
-              {skillType}: {count}
-            </li>
-          ))}
-        </ul>
-      </Box>
-
-      <Box>
-        <Typography variant="h6">Success Rates by Skill Types</Typography>
-
-        <ul>
-          <li>
-            Attack:{" "}
-            {(
-              (attackSuccessRate.success / attackSuccessRate.total) *
-              100
-            ).toFixed(2)}
-            %
-          </li>
-          {Object.entries(successRateBySkillType).map(
-            ([skillType, successRate], index) => (
-              <li key={index}>
-                {skillType}: {(successRate * 100).toFixed(2)}%
+            <ul>
+              <li>
+                Attack:{" "}
+                {(
+                  (attackSuccessRate.success / attackSuccessRate.total) *
+                  100
+                ).toFixed(2)}
+                %
               </li>
-            )
-          )}
-        </ul>
+              {Object.entries(successRateBySkillType).map(
+                ([skillType, successRate], index) => (
+                  <li key={index}>
+                    {skillType}: {(successRate * 100).toFixed(2)}%
+                  </li>
+                )
+              )}
+            </ul>
+          </Box>
+        </Box>
       </Box>
-    </>
+
+      <Box className="pie-chart-container">
+        <Typography variant="subtitle1">D20 Roll Type Rates</Typography>
+
+        <RollTypeRatesPieChart data={rollTypeRates} />
+      </Box>
+    </Grid2>
   );
 }
