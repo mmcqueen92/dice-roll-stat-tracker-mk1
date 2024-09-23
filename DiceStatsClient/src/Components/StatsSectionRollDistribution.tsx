@@ -131,7 +131,7 @@ export default function StatsSectionRollDistribution({
     <>
       {/* <Grid item xs={12} md={6}> */}
         <Box>
-          <Typography variant="h6">Roll Distribution by Dice Size</Typography>
+          {/* <Typography variant="h6">Roll Distribution by Dice Size</Typography> */}
 
           <FormControl style={{ width: "150px" }}>
             <InputLabel id="dice-size-select-label">Dice Size</InputLabel>

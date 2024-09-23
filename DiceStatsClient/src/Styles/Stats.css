@@ -15,17 +15,18 @@
   display: hidden;
 }
 .accordion-container {
-  width: 100%;
-  min-width: 300px;
-  max-width: 400px;
-  margin: 0 auto;
+  width: 300px;
+  margin:  0 auto;
 }
 .mobile-section-dropdown {
-  margin: 5px;
+  margin: 10px;
   width: 200px;
 }
 .character-select {
   width: 200px;
+}
+.dice-size-dropdown {
+  margin-bottom: 10px;
 }
 
 @media screen and (min-width: 1024px) {
@@ -49,5 +50,6 @@
     display: flex;
     justify-content: center;
     width: 100%;
+    margin-bottom: 10px;
   }
 }

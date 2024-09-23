@@ -130,7 +130,7 @@ export default function StatsSectionRollTrends({
   return (
     <>
       <Box>
-        <Typography variant="h6">Select Chart</Typography>
+        {/* <Typography variant="h6">Select Chart</Typography> */}
         <FormControl style={{ width: "150px" }}>
           <InputLabel id="dice-size-select-label">Dice Size</InputLabel>
           <Select
@@ -138,6 +138,7 @@ export default function StatsSectionRollTrends({
             label="Dice Size"
             value={selectedChart || ""}
             onChange={handleChartSelect}
+            className="dice-size-dropdown"
           >
             <MenuItem value={20}>D-20</MenuItem>
             <MenuItem value={12}>D-12</MenuItem>
