@@ -82,6 +82,7 @@ const handleDropdownChange = (event: SelectChangeEvent<TabValue>) => {
         <Typography variant="h5">Statistics</Typography>
         <Box>
           <Select
+          className="character-select"
             value={
               selectedCharacter?.characterId
                 ? String(selectedCharacter.characterId)
@@ -131,7 +132,7 @@ const handleDropdownChange = (event: SelectChangeEvent<TabValue>) => {
               </Tabs>
             </Box>
           ) : (
-            <Select value={currentTab} onChange={handleDropdownChange}>
+            <Select value={currentTab} onChange={handleDropdownChange} className="mobile-section-dropdown">
               <MenuItem value="overview">Overview</MenuItem>
               <MenuItem value="trends">Roll Trends</MenuItem>
               <MenuItem value="roll distribution">Roll Distribution</MenuItem>
