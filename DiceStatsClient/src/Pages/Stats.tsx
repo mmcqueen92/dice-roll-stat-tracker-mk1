@@ -9,13 +9,9 @@ import {
   Paper,
   Tab,
   Tabs,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import api from "../Utils/api";
 import CharacterData from "../Interfaces/CharacterData";
 import DiceRollData from "../Interfaces/DiceRollData";
@@ -40,7 +36,6 @@ export default function StatsPage() {
   const [activeDiceRollData, setActiveDiceRollData] = useState<DiceRollData[]>(
     []
   );
-  const [accordionOpen, setAccordionOpen] = useState(false);
 
   useEffect(() => {
     api.get(`/character`).then((response) => {
@@ -63,12 +58,14 @@ export default function StatsPage() {
     }
   }, [selectedCharacter, diceRollData]);
 
-  const handleTabChange = (event: SyntheticEvent, newValue: TabValue) => {
-    setCurrentTab(newValue);
-    if (isMobile) {
-      setAccordionOpen(false); // Automatically close the accordion when a tab is selected on mobile
-    }
-  };
+const handleTabChange = (event: SyntheticEvent, newValue: TabValue) => {
+  setCurrentTab(newValue);
+};
+
+const handleDropdownChange = (event: SelectChangeEvent<TabValue>) => {
+  setCurrentTab(event.target.value as TabValue);
+};
+
 
   const handleCharacterChange = (event: SelectChangeEvent<string>) => {
     const selectedCharacterId = parseInt(event.target.value);
@@ -77,10 +74,6 @@ export default function StatsPage() {
         (character) => character.characterId === selectedCharacterId
       ) || null;
     setSelectedCharacter(selectedCharacter);
-  };
-
-  const handleAccordionToggle = () => {
-    setAccordionOpen(!accordionOpen); // Toggle accordion open/close state
   };
 
   return (
@@ -122,7 +115,6 @@ export default function StatsPage() {
 
         <Box>
           {!isMobile ? (
-            // Show regular horizontal tabs for desktop view
             <Box className="tabs-container">
               <Tabs
                 value={currentTab}
@@ -139,34 +131,12 @@ export default function StatsPage() {
               </Tabs>
             </Box>
           ) : (
-            // Accordion for mobile view
-            <Accordion
-              expanded={accordionOpen}
-              onChange={handleAccordionToggle}
-              className="accordion-container"
-            >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography>Sections</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Tabs
-                  value={currentTab}
-                  onChange={handleTabChange}
-                  orientation="vertical"
-                  variant="standard"
-                  aria-label="stats navigation tabs mobile"
-                >
-                  <Tab label="Overview" value="overview" />
-                  <Tab label="Roll Trends" value="trends" />
-                  <Tab label="Roll Distribution" value="roll distribution" />
-                  <Tab label="Roll Types" value="roll types" />
-                </Tabs>
-              </AccordionDetails>
-            </Accordion>
+            <Select value={currentTab} onChange={handleDropdownChange}>
+              <MenuItem value="overview">Overview</MenuItem>
+              <MenuItem value="trends">Roll Trends</MenuItem>
+              <MenuItem value="roll distribution">Roll Distribution</MenuItem>
+              <MenuItem value="roll types">Roll Types</MenuItem>
+            </Select>
           )}
 
           <Box>

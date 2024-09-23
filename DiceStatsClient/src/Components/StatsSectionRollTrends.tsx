@@ -13,11 +13,20 @@ import {
   Checkbox,
   FormControlLabel,
   FormGroup,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export default function StatsSectionRollTrends({
   diceRolls,
 }: StatsSectionProps) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   const [rollTrendsByDiceSize, setRollTrendsByDiceSize] = useState<{
     [key: string]: { [index: number]: number };
   }>({});
@@ -32,6 +41,7 @@ export default function StatsSectionRollTrends({
   ];
   const [selectedRollTypes, setSelectedRollTypes] =
     useState<string[]>(allRollTypes);
+  const [filterAccordionOpen, setFilterAccordionOpen] = useState(false);
 
   useEffect(() => {
     if (diceRolls.length > 0) {
@@ -113,6 +123,10 @@ export default function StatsSectionRollTrends({
     }
   }, [selectedRollTypes, selectedChart, diceRolls]);
 
+  const handleAccordionToggle = () => {
+    setFilterAccordionOpen(!filterAccordionOpen);
+  };
+
   return (
     <>
       <Box>
@@ -134,7 +148,7 @@ export default function StatsSectionRollTrends({
           </Select>
         </FormControl>
 
-        {selectedChart === 20 && (
+        {selectedChart === 20 && !isMobile && (
           <FormGroup>
             <Typography variant="subtitle1">Filter Roll Types</Typography>
             <div className="checkbox-container">
@@ -192,6 +206,82 @@ export default function StatsSectionRollTrends({
               />
             </div>
           </FormGroup>
+        )}
+
+        {selectedChart === 20 && isMobile && (
+          <Accordion
+            expanded={filterAccordionOpen}
+            onChange={handleAccordionToggle}
+            className="accordion-container"
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography>Filters</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <div className="checkbox-container">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={allRollTypes.every((type) =>
+                        selectedRollTypes.includes(type)
+                      )}
+                      onChange={handleRollTypeFilterChange}
+                      name="All"
+                    />
+                  }
+                  label="All"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={selectedRollTypes.includes("Attack")}
+                      onChange={handleRollTypeFilterChange}
+                      name="Attack"
+                    />
+                  }
+                  label="Attack"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={selectedRollTypes.includes("Saving Throw")}
+                      onChange={handleRollTypeFilterChange}
+                      name="Saving Throw"
+                    />
+                  }
+                  label="Saving Throw"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={selectedRollTypes.includes(
+                        "Ability/Skill Check"
+                      )}
+                      onChange={handleRollTypeFilterChange}
+                      name="Ability/Skill Check"
+                    />
+                  }
+                  label="Ability/Skill Check"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={selectedRollTypes.includes(
+                        "Attack/Spell Damage"
+                      )}
+                      onChange={handleRollTypeFilterChange}
+                      name="Attack/Spell Damage"
+                    />
+                  }
+                  label="Attack/Spell Damage"
+                />
+              </div>
+            </AccordionDetails>
+          </Accordion>
         )}
 
         {selectedChart && (

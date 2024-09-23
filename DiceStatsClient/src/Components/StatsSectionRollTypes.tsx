@@ -6,7 +6,10 @@ import RollTypeRatesPieChart from "./RollTypeRatesPieChart";
 import {
   Box,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
+
 export default function StatsSectionRollTypes({
   diceRolls,
 }: StatsSectionProps) {
@@ -91,12 +94,12 @@ export default function StatsSectionRollTypes({
     const d20Rolls = diceRolls.filter((roll) => roll.diceSize === 20);
 
     const rollTypeCounts: {
-      "Attack": number;
+      Attack: number;
       "Ability/Skill Check": number;
       "Saving Throw": number;
       "Attack/Spell Damage": number;
     } = {
-      "Attack": 0,
+      Attack: 0,
       "Ability/Skill Check": 0,
       "Saving Throw": 0,
       "Attack/Spell Damage": 0,
@@ -288,9 +291,7 @@ export default function StatsSectionRollTypes({
       </Box>
 
       <Box>
-        <Typography variant="h6">
-          Checks and Saves by Skill Types
-        </Typography>
+        <Typography variant="h6">Checks and Saves by Skill Types</Typography>
 
         <ul>
           {Object.entries(rollsBySkillType).map(([skillType, count], index) => (
