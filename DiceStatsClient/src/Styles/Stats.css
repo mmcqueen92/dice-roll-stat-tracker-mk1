@@ -16,7 +16,7 @@
 }
 .accordion-container {
   width: 300px;
-  margin:  0 auto;
+  margin: 0 auto;
 }
 .mobile-section-dropdown {
   margin: 10px;
@@ -27,6 +27,21 @@
 }
 .dice-size-dropdown {
   margin-bottom: 10px;
+}
+.stat-display ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin-top: 10px;
+}
+
+.stat-display li {
+  padding: 5px 0;
+  border-bottom: 1px solid #ddd;
+  font-size: 1rem;
+}
+
+.stat-display li:last-child {
+  border-bottom: none;
 }
 
 @media screen and (min-width: 1024px) {

@@ -363,7 +363,7 @@ export default function ActiveDashboard() {
               />
             )}
 
-            <Button variant="contained" color="primary" type="submit">
+            <Button variant="contained" color="primary" type="submit" className="submit-button">
               Submit
             </Button>
           </form>

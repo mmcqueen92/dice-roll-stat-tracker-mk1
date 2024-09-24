@@ -3,13 +3,17 @@
 }
 
 .form-container {
-  padding: 0 5px;
+  padding: 5px;
 }
 
 .new-diceroll-form {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.submit-button {
+  margin-bottom: 55px;
 }
 
 @media screen and (min-width: 1024px) {

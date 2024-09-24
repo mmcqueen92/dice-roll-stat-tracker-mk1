@@ -160,7 +160,7 @@ export default function StatsSectionOverview({ diceRolls }: StatsSectionProps) {
   return (
     <div className="overview-container">
       <div className="overview-stats-half">
-        <Box className="overview-stat">
+        <Box className="stat-display">
           <Typography variant="h6">Average Rolls by Dice Size</Typography>
           <ul>
             {Object.entries(averageRollsByDiceSize).map(([size, average]) => (
@@ -171,7 +171,7 @@ export default function StatsSectionOverview({ diceRolls }: StatsSectionProps) {
           </ul>
         </Box>
 
-        <Box className="overview-stat">
+        <Box className="stat-display">
           <Typography variant="h6">Total Rolls by Dice Size</Typography>
           <ul>
             {Object.entries(totalRollsByDiceSize).map(([size, total]) => (
@@ -182,7 +182,7 @@ export default function StatsSectionOverview({ diceRolls }: StatsSectionProps) {
           </ul>
         </Box>
 
-        <Box className="overview-stat">
+        <Box className="stat-display">
           <Typography variant="h6">Standard Deviation by Dice Size</Typography>
           <ul>
             {Object.entries(standardDeviationByDiceSize).map(
