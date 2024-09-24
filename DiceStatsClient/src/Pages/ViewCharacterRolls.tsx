@@ -20,10 +20,11 @@ import {
   InputLabel,
   SelectChangeEvent,
   IconButton,
-  Container
+  Container,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import CharacterData from "../Interfaces/CharacterData";
+import PageContent from "../Components/PageContent";
 
 const rollTypes = [
   "Attack",
@@ -130,18 +131,18 @@ export default function ViewCharacterRolls() {
     fetchCharacterData();
   }, [id]);
 
-const handleFilterChange = (
-  event: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>
-) => {
-  const { name, value } = event.target;
+  const handleFilterChange = (
+    event: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>
+  ) => {
+    const { name, value } = event.target;
 
-  const newVal = value === "All" ? "" : value;
+    const newVal = value === "All" ? "" : value;
 
-  setFilters((prevFilters) => ({
-    ...prevFilters,
-    [name]: newVal,
-  }));
-};
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [name]: newVal,
+    }));
+  };
 
   const handlePageChange = (event: unknown, newPage: number) => {
     setPage(newPage + 1);
@@ -175,183 +176,181 @@ const handleFilterChange = (
   };
 
   return (
-    <Container disableGutters>
-      <Paper className="page-content">
-        {characterData && characterData.name && (
-          <h1>View Rolls for {characterData.name}</h1>
-        )}
+    <PageContent>
+      {characterData && characterData.name && (
+        <h1>View Rolls for {characterData.name}</h1>
+      )}
 
-        <div>
-          <h3>Filters</h3>
-          <form>
-            <FormControl
-              style={{
-                width: "300px",
-                marginRight: "5px",
-                marginBottom: "15px",
-              }}
+      <div>
+        <h3>Filters</h3>
+        <form>
+          <FormControl
+            style={{
+              width: "300px",
+              marginRight: "5px",
+              marginBottom: "15px",
+            }}
+          >
+            <InputLabel>Roll Type</InputLabel>
+            <Select
+              name="rollType"
+              value={filters.rollType}
+              onChange={handleFilterChange}
+              label="Roll Type"
             >
-              <InputLabel>Roll Type</InputLabel>
-              <Select
-                name="rollType"
-                value={filters.rollType}
-                onChange={handleFilterChange}
-                label="Roll Type"
-              >
-                <MenuItem value="All">All</MenuItem>
-                {rollTypes.map((type) => (
+              <MenuItem value="All">All</MenuItem>
+              {rollTypes.map((type) => (
+                <MenuItem key={type} value={type}>
+                  {type}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl
+            style={{
+              width: "300px",
+              marginRight: "5px",
+              marginBottom: "15px",
+            }}
+          >
+            <InputLabel>Dice Size</InputLabel>
+            <Select
+              name="diceSize"
+              value={filters.diceSize}
+              onChange={handleFilterChange}
+              label="Dice Size"
+            >
+              <MenuItem value="All">All</MenuItem>
+              {diceSizes.map((size) => (
+                <MenuItem key={size} value={size}>
+                  {size}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl
+            style={{
+              width: "300px",
+              marginRight: "5px",
+              marginBottom: "15px",
+            }}
+          >
+            <InputLabel>Skill Type</InputLabel>
+            <Select
+              name="skillType"
+              value={filters.skillType}
+              onChange={handleFilterChange}
+              label="Skill Type"
+            >
+              <MenuItem value="All">All</MenuItem>
+              {skillTypes
+                .slice()
+                .sort((a, b) => a.localeCompare(b))
+                .map((type) => (
                   <MenuItem key={type} value={type}>
                     {type}
                   </MenuItem>
                 ))}
-              </Select>
-            </FormControl>
+            </Select>
+          </FormControl>
 
-            <FormControl
-              style={{
-                width: "300px",
-                marginRight: "5px",
-                marginBottom: "15px",
-              }}
+          <FormControl style={{ width: "300px", marginBottom: "15px" }}>
+            <InputLabel>Success</InputLabel>
+            <Select
+              name="success"
+              value={filters.success}
+              onChange={handleFilterChange}
+              label="Success"
             >
-              <InputLabel>Dice Size</InputLabel>
-              <Select
-                name="diceSize"
-                value={filters.diceSize}
-                onChange={handleFilterChange}
-                label="Dice Size"
-              >
-                <MenuItem value="All">All</MenuItem>
-                {diceSizes.map((size) => (
-                  <MenuItem key={size} value={size}>
-                    {size}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+              <MenuItem value="All">All</MenuItem>
+              <MenuItem value="true">Success</MenuItem>
+              <MenuItem value="false">Failure</MenuItem>
+            </Select>
+          </FormControl>
+        </form>
+      </div>
 
-            <FormControl
-              style={{
-                width: "300px",
-                marginRight: "5px",
-                marginBottom: "15px",
-              }}
-            >
-              <InputLabel>Skill Type</InputLabel>
-              <Select
-                name="skillType"
-                value={filters.skillType}
-                onChange={handleFilterChange}
-                label="Skill Type"
-              >
-                <MenuItem value="All">All</MenuItem>
-                {skillTypes
-                  .slice()
-                  .sort((a, b) => a.localeCompare(b))
-                  .map((type) => (
-                    <MenuItem key={type} value={type}>
-                      {type}
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
-
-            <FormControl style={{ width: "300px", marginBottom: "15px" }}>
-              <InputLabel>Success</InputLabel>
-              <Select
-                name="success"
-                value={filters.success}
-                onChange={handleFilterChange}
-                label="Success"
-              >
-                <MenuItem value="All">All</MenuItem>
-                <MenuItem value="true">Success</MenuItem>
-                <MenuItem value="false">Failure</MenuItem>
-              </Select>
-            </FormControl>
-          </form>
-        </div>
-
-        <TableContainer component={Paper} className="table-container">
-          <Table>
-            <TableHead>
+      <TableContainer component={Paper} className="table-container">
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>
+                <h4>Roll Type</h4>
+              </TableCell>
+              <TableCell>
+                <h4>Skill Type</h4>
+              </TableCell>
+              <TableCell>
+                <h4>Dice Size</h4>
+              </TableCell>
+              <TableCell>
+                <h4>Roll Value</h4>
+              </TableCell>
+              <TableCell>
+                <h4>Success</h4>
+              </TableCell>
+              <TableCell>
+                <h4>Actions</h4>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {loading && (
               <TableRow>
-                <TableCell>
-                  <h4>Roll Type</h4>
-                </TableCell>
-                <TableCell>
-                  <h4>Skill Type</h4>
-                </TableCell>
-                <TableCell>
-                  <h4>Dice Size</h4>
-                </TableCell>
-                <TableCell>
-                  <h4>Roll Value</h4>
-                </TableCell>
-                <TableCell>
-                  <h4>Success</h4>
-                </TableCell>
-                <TableCell>
-                  <h4>Actions</h4>
-                </TableCell>
+                <TableCell colSpan={6}>Loading rolls...</TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {loading && (
-                <TableRow>
-                  <TableCell colSpan={6}>Loading rolls...</TableCell>
+            )}
+            {error && (
+              <TableRow>
+                <TableCell colSpan={6}>{error}</TableCell>
+              </TableRow>
+            )}
+            {!loading && !error && rolls.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={6}>No rolls found.</TableCell>
+              </TableRow>
+            )}
+            {!loading &&
+              !error &&
+              rolls.map((roll) => (
+                <TableRow key={roll.diceRollId}>
+                  <TableCell>{roll.rollType}</TableCell>
+                  <TableCell>{roll.skillType}</TableCell>
+                  <TableCell>{roll.diceSize}</TableCell>
+                  <TableCell>{roll.rollValue}</TableCell>
+                  <TableCell>{roll.success ? "Success" : "Fail"}</TableCell>
+                  <TableCell>
+                    <IconButton onClick={() => handleEditClick(roll)}>
+                      <EditIcon />
+                    </IconButton>
+                  </TableCell>
                 </TableRow>
-              )}
-              {error && (
-                <TableRow>
-                  <TableCell colSpan={6}>{error}</TableCell>
-                </TableRow>
-              )}
-              {!loading && !error && rolls.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={6}>No rolls found.</TableCell>
-                </TableRow>
-              )}
-              {!loading &&
-                !error &&
-                rolls.map((roll) => (
-                  <TableRow key={roll.diceRollId}>
-                    <TableCell>{roll.rollType}</TableCell>
-                    <TableCell>{roll.skillType}</TableCell>
-                    <TableCell>{roll.diceSize}</TableCell>
-                    <TableCell>{roll.rollValue}</TableCell>
-                    <TableCell>{roll.success ? "Success" : "Fail"}</TableCell>
-                    <TableCell>
-                      <IconButton onClick={() => handleEditClick(roll)}>
-                        <EditIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
+              ))}
+          </TableBody>
+        </Table>
 
-          <TablePagination
-            component="div"
-            count={totalRecords}
-            page={page - 1}
-            onPageChange={handlePageChange}
-            rowsPerPage={pageSize}
-            onRowsPerPageChange={handlePageSizeChange}
-            rowsPerPageOptions={[5, 10, 25, 50]}
+        <TablePagination
+          component="div"
+          count={totalRecords}
+          page={page - 1}
+          onPageChange={handlePageChange}
+          rowsPerPage={pageSize}
+          onRowsPerPageChange={handlePageSizeChange}
+          rowsPerPageOptions={[5, 10, 25, 50]}
+        />
+      </TableContainer>
+
+      {editRoll && (
+        <Dialog open={Boolean(editRoll)} onClose={handleCancelEdit}>
+          <EditDiceRollForm
+            roll={editRoll}
+            onSave={handleSaveEdit}
+            onCancel={handleCancelEdit}
           />
-        </TableContainer>
-
-        {editRoll && (
-          <Dialog open={Boolean(editRoll)} onClose={handleCancelEdit}>
-            <EditDiceRollForm
-              roll={editRoll}
-              onSave={handleSaveEdit}
-              onCancel={handleCancelEdit}
-            />
-          </Dialog>
-        )}
-      </Paper>
-    </Container>
+        </Dialog>
+      )}
+    </PageContent>
   );
 }

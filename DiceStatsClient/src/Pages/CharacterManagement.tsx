@@ -7,6 +7,7 @@ import CharacterData from "../Interfaces/CharacterData";
 import api from "../Utils/api";
 
 import "../Styles/CharacterManagement.css";
+import PageContent from "../Components/PageContent";
 
 export default function CharacterManagement() {
   const [characters, setCharacters] = useState<CharacterData[]>([]);
@@ -67,71 +68,69 @@ export default function CharacterManagement() {
   };
 
   return (
-    <Container disableGutters>
-      <Paper className="page-content">
-        <h3>Manage Characters</h3>
-        <CharacterList
-          characters={characters}
-          onEdit={handleEdit}
-          onCreate={handleCreate}
+    <PageContent>
+      <h3>Manage Characters</h3>
+      <CharacterList
+        characters={characters}
+        onEdit={handleEdit}
+        onCreate={handleCreate}
+      />
+      <Dialog open={newChar} onClose={handleCancelCreate}>
+        <DialogTitle>
+          <span>Create New Character</span>
+          <IconButton
+            aria-label="close"
+            onClick={handleCancelCreate}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <CharacterForm
+          initialData={{
+            characterId: 0,
+            name: "",
+            class: "",
+            secondaryClass: "",
+          }}
+          onSave={handleSave}
+          onCancel={handleCancelCreate}
         />
-        <Dialog open={newChar} onClose={handleCancelCreate}>
-          <DialogTitle>
-            <span>Create New Character</span>
-            <IconButton
-              aria-label="close"
-              onClick={handleCancelCreate}
-              sx={{
-                position: "absolute",
-                right: 8,
-                top: 8,
-                color: (theme) => theme.palette.grey[500],
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
-          </DialogTitle>
-          <CharacterForm
-            initialData={{
+      </Dialog>
+      <Dialog open={editChar} onClose={handleCancelEdit}>
+        <DialogTitle>
+          <span>Edit Character</span>
+          <IconButton
+            aria-label="close"
+            onClick={handleCancelEdit}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <CharacterForm
+          initialData={
+            selectedCharacter || {
               characterId: 0,
               name: "",
               class: "",
               secondaryClass: "",
-            }}
-            onSave={handleSave}
-            onCancel={handleCancelCreate}
-          />
-        </Dialog>
-        <Dialog open={editChar} onClose={handleCancelEdit}>
-          <DialogTitle>
-            <span>Edit Character</span>
-            <IconButton
-              aria-label="close"
-              onClick={handleCancelEdit}
-              sx={{
-                position: "absolute",
-                right: 8,
-                top: 8,
-                color: (theme) => theme.palette.grey[500],
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
-          </DialogTitle>
-          <CharacterForm
-            initialData={
-              selectedCharacter || {
-                characterId: 0,
-                name: "",
-                class: "",
-                secondaryClass: "",
-              }
             }
-            onSave={handleSave}
-            onCancel={handleCancelEdit}
-          />
-        </Dialog>
-      </Paper>
-    </Container>
+          }
+          onSave={handleSave}
+          onCancel={handleCancelEdit}
+        />
+      </Dialog>
+    </PageContent>
   );
 }

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
+import PageContent from "../Components/PageContent";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -28,7 +29,7 @@ export default function Login() {
   };
 
   return (
-    <div>
+    <PageContent>
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <input
@@ -49,6 +50,6 @@ export default function Login() {
         />
         <button type="submit">Login</button>
       </form>
-    </div>
+    </PageContent>
   );
-};
+}

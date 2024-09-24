@@ -21,6 +21,7 @@ import StatsSectionRollTypes from "../Components/StatsSectionRollTypes";
 import StatsSectionOverview from "../Components/StatsSectionOverview";
 
 import "../Styles/Stats.css";
+import PageContent from "../Components/PageContent";
 
 type TabValue = "overview" | "trends" | "roll distribution" | "roll types";
 
@@ -58,14 +59,13 @@ export default function StatsPage() {
     }
   }, [selectedCharacter, diceRollData]);
 
-const handleTabChange = (event: SyntheticEvent, newValue: TabValue) => {
-  setCurrentTab(newValue);
-};
+  const handleTabChange = (event: SyntheticEvent, newValue: TabValue) => {
+    setCurrentTab(newValue);
+  };
 
-const handleDropdownChange = (event: SelectChangeEvent<TabValue>) => {
-  setCurrentTab(event.target.value as TabValue);
-};
-
+  const handleDropdownChange = (event: SelectChangeEvent<TabValue>) => {
+    setCurrentTab(event.target.value as TabValue);
+  };
 
   const handleCharacterChange = (event: SelectChangeEvent<string>) => {
     const selectedCharacterId = parseInt(event.target.value);
@@ -77,88 +77,90 @@ const handleDropdownChange = (event: SelectChangeEvent<TabValue>) => {
   };
 
   return (
-    <Container disableGutters>
-      <Paper className="page-content">
-        <Typography variant="h5">Statistics</Typography>
-        <Box>
-          <Select
+    <PageContent>
+      <Typography variant="h5">Statistics</Typography>
+      <Box>
+        <Select
           className="character-select"
-            value={
-              selectedCharacter?.characterId
-                ? String(selectedCharacter.characterId)
-                : ""
+          value={
+            selectedCharacter?.characterId
+              ? String(selectedCharacter.characterId)
+              : ""
+          }
+          onChange={handleCharacterChange}
+          displayEmpty
+          renderValue={(value) => {
+            if (value === "") {
+              return <em>Select a Character</em>;
             }
-            onChange={handleCharacterChange}
-            displayEmpty
-            renderValue={(value) => {
-              if (value === "") {
-                return <em>Select a Character</em>;
-              }
-              const selectedCharacter = characters.find(
-                (character) => String(character.characterId) === value
-              );
-              return selectedCharacter ? selectedCharacter.name : "";
-            }}
-          >
-            <MenuItem value="">
-              <em>All Characters</em>
+            const selectedCharacter = characters.find(
+              (character) => String(character.characterId) === value
+            );
+            return selectedCharacter ? selectedCharacter.name : "";
+          }}
+        >
+          <MenuItem value="">
+            <em>All Characters</em>
+          </MenuItem>
+          {characters.map((character) => (
+            <MenuItem
+              key={character.characterId}
+              value={String(character.characterId)}
+            >
+              {character.name}
             </MenuItem>
-            {characters.map((character) => (
-              <MenuItem
-                key={character.characterId}
-                value={String(character.characterId)}
-              >
-                {character.name}
-              </MenuItem>
-            ))}
+          ))}
+        </Select>
+      </Box>
+
+      <Box>
+        {!isMobile ? (
+          <Box className="tabs-container">
+            <Tabs
+              value={currentTab}
+              onChange={handleTabChange}
+              aria-label="stats navigation tabs"
+              centered
+              variant="scrollable"
+              scrollButtons="auto"
+            >
+              <Tab label="Overview" value="overview" />
+              <Tab label="Roll Trends" value="trends" />
+              <Tab label="Roll Distribution" value="roll distribution" />
+              <Tab label="Roll Types" value="roll types" />
+            </Tabs>
+          </Box>
+        ) : (
+          <Select
+            value={currentTab}
+            onChange={handleDropdownChange}
+            className="mobile-section-dropdown"
+          >
+            <MenuItem value="overview">Overview</MenuItem>
+            <MenuItem value="trends">Roll Trends</MenuItem>
+            <MenuItem value="roll distribution">Roll Distribution</MenuItem>
+            <MenuItem value="roll types">Roll Types</MenuItem>
           </Select>
-        </Box>
+        )}
 
         <Box>
-          {!isMobile ? (
-            <Box className="tabs-container">
-              <Tabs
-                value={currentTab}
-                onChange={handleTabChange}
-                aria-label="stats navigation tabs"
-                centered
-                variant="scrollable"
-                scrollButtons="auto"
-              >
-                <Tab label="Overview" value="overview" />
-                <Tab label="Roll Trends" value="trends" />
-                <Tab label="Roll Distribution" value="roll distribution" />
-                <Tab label="Roll Types" value="roll types" />
-              </Tabs>
-            </Box>
-          ) : (
-            <Select value={currentTab} onChange={handleDropdownChange} className="mobile-section-dropdown">
-              <MenuItem value="overview">Overview</MenuItem>
-              <MenuItem value="trends">Roll Trends</MenuItem>
-              <MenuItem value="roll distribution">Roll Distribution</MenuItem>
-              <MenuItem value="roll types">Roll Types</MenuItem>
-            </Select>
+          {currentTab === "overview" && (
+            <StatsSectionOverview diceRolls={activeDiceRollData} />
           )}
 
-          <Box>
-            {currentTab === "overview" && (
-              <StatsSectionOverview diceRolls={activeDiceRollData} />
-            )}
+          {currentTab === "trends" && (
+            <StatsSectionRollTrends diceRolls={activeDiceRollData} />
+          )}
 
-            {currentTab === "trends" && (
-              <StatsSectionRollTrends diceRolls={activeDiceRollData} />
-            )}
+          {currentTab === "roll distribution" && (
+            <StatsSectionRollDistribution diceRolls={activeDiceRollData} />
+          )}
 
-            {currentTab === "roll distribution" && (
-              <StatsSectionRollDistribution diceRolls={activeDiceRollData} />
-            )}
-
-            {currentTab === "roll types" && (
-              <StatsSectionRollTypes diceRolls={activeDiceRollData} />
-            )}
-          </Box>
+          {currentTab === "roll types" && (
+            <StatsSectionRollTypes diceRolls={activeDiceRollData} />
+          )}
         </Box>
-      </Paper>
-    </Container>
+      </Box>
+    </PageContent>
   );
 }

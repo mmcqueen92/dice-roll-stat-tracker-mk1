@@ -19,12 +19,12 @@ import {
   TableRow,
   Paper,
   TablePagination,
-  Container,
 } from "@mui/material";
 
 import "../Styles/ActiveDashboard.css";
 
 import DiceRollData from "../Interfaces/DiceRollData";
+import PageContent from "../Components/PageContent";
 
 const skills = [
   "Acrobatics",
@@ -212,218 +212,221 @@ export default function ActiveDashboard() {
   };
 
   return (
-    <Container disableGutters>
-      <Paper className="page-content">
-        <h3>{character.name}</h3>
-        <Paper className="form-container">
-          <h4>Create New Roll</h4>
-          <form onSubmit={handleSubmit} className="new-diceroll-form">
+    <PageContent>
+      <h3>{character.name}</h3>
+      <Paper className="form-container">
+        <h4>Create New Roll</h4>
+        <form onSubmit={handleSubmit} className="new-diceroll-form">
+          <FormControl
+            style={{ width: "300px" }}
+            margin="normal"
+            className="new-diceroll-form-control"
+          >
+            <InputLabel id="dice-size-label">Dice Size</InputLabel>
+            <Select
+              labelId="dice-size-label"
+              name="diceSize"
+              value={formData.diceSize}
+              onChange={handleChange}
+              required
+              className="new-diceroll-form-select"
+              label="Dice Size"
+            >
+              {diceSizes.map((size) => (
+                <MenuItem key={size} value={size}>
+                  {size}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl
+            style={{ width: "300px" }}
+            margin="normal"
+            className="new-diceroll-form-control"
+          >
+            <InputLabel id="roll-type-label">Roll Type</InputLabel>
+            <Select
+              labelId="roll-type-label"
+              name="rollType"
+              value={formData.rollType}
+              onChange={handleChange}
+              className="new-diceroll-form-select"
+              label="Roll Type"
+              required
+            >
+              <MenuItem value="">Select Roll Type</MenuItem>
+              <MenuItem value="Attack">Attack</MenuItem>
+              <MenuItem value="Ability/Skill Check">
+                Ability/Skill Check
+              </MenuItem>
+              <MenuItem value="Saving Throw">Saving Throw</MenuItem>
+              <MenuItem value="Attack/Spell Damage">
+                Attack/Spell Damage
+              </MenuItem>
+            </Select>
+          </FormControl>
+
+          {formData.rollType === "Ability/Skill Check" && (
             <FormControl
               style={{ width: "300px" }}
               margin="normal"
               className="new-diceroll-form-control"
             >
-              <InputLabel id="dice-size-label">Dice Size</InputLabel>
+              <InputLabel id="skill-type-label">Skill Type</InputLabel>
               <Select
-                labelId="dice-size-label"
-                name="diceSize"
-                value={formData.diceSize}
+                labelId="skill-type-label"
+                label="Skill Type"
+                name="skillType"
+                value={formData.skillType}
                 onChange={handleChange}
-                required
                 className="new-diceroll-form-select"
-                label="Dice Size"
               >
-                {diceSizes.map((size) => (
-                  <MenuItem key={size} value={size}>
-                    {size}
+                <MenuItem value="">Select Skill Type</MenuItem>
+                {skillsAndAbilities.map((skill) => (
+                  <MenuItem key={skill} value={skill}>
+                    {skill}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
+          )}
 
+          {formData.rollType === "Saving Throw" && (
             <FormControl
               style={{ width: "300px" }}
               margin="normal"
               className="new-diceroll-form-control"
             >
-              <InputLabel id="roll-type-label">Roll Type</InputLabel>
+              <InputLabel id="saving-attribute-label">
+                Saving Attribute
+              </InputLabel>
               <Select
-                labelId="roll-type-label"
-                name="rollType"
-                value={formData.rollType}
+                labelId="saving-attribute-label"
+                label="Saving Attribute"
+                name="skillType"
+                value={formData.skillType}
                 onChange={handleChange}
                 className="new-diceroll-form-select"
-                label="Roll Type"
-                required
               >
-                <MenuItem value="">Select Roll Type</MenuItem>
-                <MenuItem value="Attack">Attack</MenuItem>
-                <MenuItem value="Ability/Skill Check">
-                  Ability/Skill Check
-                </MenuItem>
-                <MenuItem value="Saving Throw">Saving Throw</MenuItem>
-                <MenuItem value="Attack/Spell Damage">
-                  Attack/Spell Damage
-                </MenuItem>
-              </Select>
-            </FormControl>
-
-            {formData.rollType === "Ability/Skill Check" && (
-              <FormControl
-                style={{ width: "300px" }}
-                margin="normal"
-                className="new-diceroll-form-control"
-              >
-                <InputLabel id="skill-type-label">Skill Type</InputLabel>
-                <Select
-                  labelId="skill-type-label"
-                  label="Skill Type"
-                  name="skillType"
-                  value={formData.skillType}
-                  onChange={handleChange}
-                  className="new-diceroll-form-select"
-                >
-                  <MenuItem value="">Select Skill Type</MenuItem>
-                  {skillsAndAbilities.map((skill) => (
-                    <MenuItem key={skill} value={skill}>
-                      {skill}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            )}
-
-            {formData.rollType === "Saving Throw" && (
-              <FormControl
-                style={{ width: "300px" }}
-                margin="normal"
-                className="new-diceroll-form-control"
-              >
-                <InputLabel id="saving-attribute-label">
-                  Saving Attribute
-                </InputLabel>
-                <Select
-                  labelId="saving-attribute-label"
-                  label="Saving Attribute"
-                  name="skillType"
-                  value={formData.skillType}
-                  onChange={handleChange}
-                  className="new-diceroll-form-select"
-                >
-                  <MenuItem value="">Select Saving Attribute</MenuItem>
-                  {abilities.map((throwType) => (
-                    <MenuItem key={throwType} value={throwType}>
-                      {throwType}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            )}
-
-            <FormControl
-              style={{ width: "300px" }}
-              margin="normal"
-              className="new-diceroll-form-control"
-            >
-              <InputLabel id="roll-value-label">Roll Value</InputLabel>
-              <Select
-                labelId="roll-value-label"
-                name="rollValue"
-                value={formData.rollValue}
-                onChange={handleChange}
-                className="new-diceroll-form-select"
-                required
-                label="Roll Value"
-              >
-                <MenuItem value="">Select Roll Value</MenuItem>
-                {rollValues.map((value) => (
-                  <MenuItem key={value} value={value}>
-                    {value}
+                <MenuItem value="">Select Saving Attribute</MenuItem>
+                {abilities.map((throwType) => (
+                  <MenuItem key={throwType} value={throwType}>
+                    {throwType}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
+          )}
 
-            {formData.rollType !== "Attack/Spell Damage" && (
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="success"
-                    checked={formData.success || false}
-                    onChange={() =>
-                      setFormData((prevData) => ({
-                        ...prevData,
-                        success:
-                          prevData.success === null ? false : !prevData.success,
-                      }))
-                    }
-                  />
-                }
-                label="Success"
-              />
-            )}
+          <FormControl
+            style={{ width: "300px" }}
+            margin="normal"
+            className="new-diceroll-form-control"
+          >
+            <InputLabel id="roll-value-label">Roll Value</InputLabel>
+            <Select
+              labelId="roll-value-label"
+              name="rollValue"
+              value={formData.rollValue}
+              onChange={handleChange}
+              className="new-diceroll-form-select"
+              required
+              label="Roll Value"
+            >
+              <MenuItem value="">Select Roll Value</MenuItem>
+              {rollValues.map((value) => (
+                <MenuItem key={value} value={value}>
+                  {value}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
-            <Button variant="contained" color="primary" type="submit" className="submit-button">
-              Submit
-            </Button>
-          </form>
-        </Paper>
-        <h3>Recent Rolls</h3>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
+          {formData.rollType !== "Attack/Spell Damage" && (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name="success"
+                  checked={formData.success || false}
+                  onChange={() =>
+                    setFormData((prevData) => ({
+                      ...prevData,
+                      success:
+                        prevData.success === null ? false : !prevData.success,
+                    }))
+                  }
+                />
+              }
+              label="Success"
+            />
+          )}
+
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            className="submit-button"
+          >
+            Submit
+          </Button>
+        </form>
+      </Paper>
+      <h3>Recent Rolls</h3>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>
+                <h4>Roll Type</h4>
+              </TableCell>
+              <TableCell>
+                <h4>Skill/Ability</h4>
+              </TableCell>
+              <TableCell>
+                <h4>Roll Value</h4>
+              </TableCell>
+              <TableCell>
+                <h4>Dice Size</h4>
+              </TableCell>
+              <TableCell>
+                <h4>Success</h4>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {diceRolls.map((roll) => (
+              <TableRow key={roll.diceRollId}>
+                <TableCell>{roll.rollType}</TableCell>
                 <TableCell>
-                  <h4>Roll Type</h4>
+                  {(roll.rollType === "Ability/Skill Check" ||
+                    roll.rollType === "Saving Throw") &&
+                    roll.skillType}
                 </TableCell>
+                <TableCell>{roll.rollValue}</TableCell>
+                <TableCell>{roll.diceSize}</TableCell>
                 <TableCell>
-                  <h4>Skill/Ability</h4>
-                </TableCell>
-                <TableCell>
-                  <h4>Roll Value</h4>
-                </TableCell>
-                <TableCell>
-                  <h4>Dice Size</h4>
-                </TableCell>
-                <TableCell>
-                  <h4>Success</h4>
+                  {roll.success === true
+                    ? "Success"
+                    : roll.success === false
+                    ? "Fail"
+                    : "N/A"}
                 </TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {diceRolls.map((roll) => (
-                <TableRow key={roll.diceRollId}>
-                  <TableCell>{roll.rollType}</TableCell>
-                  <TableCell>
-                    {(roll.rollType === "Ability/Skill Check" ||
-                      roll.rollType === "Saving Throw") &&
-                      roll.skillType}
-                  </TableCell>
-                  <TableCell>{roll.rollValue}</TableCell>
-                  <TableCell>{roll.diceSize}</TableCell>
-                  <TableCell>
-                    {roll.success === true
-                      ? "Success"
-                      : roll.success === false
-                      ? "Fail"
-                      : "N/A"}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+            ))}
+          </TableBody>
+        </Table>
 
-          <TablePagination
-            component="div"
-            count={totalRecords}
-            page={page - 1}
-            onPageChange={handlePageChange}
-            rowsPerPage={pageSize}
-            onRowsPerPageChange={handlePageSizeChange}
-            rowsPerPageOptions={[5, 10, 25, 50]}
-          />
-        </TableContainer>
-      </Paper>
-    </Container>
+        <TablePagination
+          component="div"
+          count={totalRecords}
+          page={page - 1}
+          onPageChange={handlePageChange}
+          rowsPerPage={pageSize}
+          onRowsPerPageChange={handlePageSizeChange}
+          rowsPerPageOptions={[5, 10, 25, 50]}
+        />
+      </TableContainer>
+    </PageContent>
   );
 }

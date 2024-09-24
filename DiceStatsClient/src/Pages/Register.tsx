@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import PageContent from "../Components/PageContent";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -45,7 +46,7 @@ export default function Register() {
   };
 
   return (
-    <div>
+    <PageContent>
       <h2>Register</h2>
       <form onSubmit={handleSubmit}>
         <input
@@ -82,6 +83,6 @@ export default function Register() {
         />
         <button type="submit">Register</button>
       </form>
-    </div>
+    </PageContent>
   );
-};
+}

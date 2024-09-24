@@ -16,10 +16,10 @@ import {
   TableRow,
   Paper,
   Button,
-  Container,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CharacterForm from "../Components/CharacterForm";
+import PageContent from "../Components/PageContent";
 
 export default function UserDashboard() {
   const [characters, setCharacters] = useState<CharacterData[]>([]);
@@ -94,124 +94,116 @@ export default function UserDashboard() {
   };
 
   return (
-    <Container disableGutters>
-      <Paper className="page-content">
-        <h2>User Dashboard</h2>
-        {loading && <p>Loading characters...</p>}
-        {error && <p>{error}</p>}
-        {characters.length === 0 && !loading && !error && (
-          <p>No characters found.</p>
-        )}
-        {characters.length > 0 && (
-          <TableContainer component={Paper} className="table-container">
-            <Table>
-              <TableHead>
-                <TableRow>
+    <PageContent>
+      <h2>User Dashboard</h2>
+      {loading && <p>Loading characters...</p>}
+      {error && <p>{error}</p>}
+      {characters.length === 0 && !loading && !error && (
+        <p>No characters found.</p>
+      )}
+      {characters.length > 0 && (
+        <TableContainer component={Paper} className="table-container">
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>
+                  <h4>Character Name</h4>
+                </TableCell>
+                <TableCell>
+                  <h4>Class</h4>
+                </TableCell>
+                <TableCell>
+                  <h4>Active</h4>
+                </TableCell>
+                <TableCell>
+                  <h4>Actions</h4>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {characters.map((character) => (
+                <TableRow key={character.characterId}>
+                  <TableCell>{character.name}</TableCell>
                   <TableCell>
-                    <h4>Character Name</h4>
+                    {character.class}
+                    {character.secondaryClass
+                      ? `/${character.secondaryClass}`
+                      : ""}
                   </TableCell>
-                  <TableCell>
-                    <h4>Class</h4>
+                  <TableCell align="center">
+                    {character.characterId === activeCharacterId ? (
+                      <h4>Active</h4>
+                    ) : (
+                      <Button
+                        variant="outlined"
+                        onClick={() =>
+                          handleSetActiveCharacter(character.characterId)
+                        }
+                      >
+                        Set Active
+                      </Button>
+                    )}
                   </TableCell>
-                  <TableCell>
-                    <h4>Active</h4>
-                  </TableCell>
-                  <TableCell>
-                    <h4>Actions</h4>
+                  <TableCell align="center">
+                    <Button
+                      variant="contained"
+                      component={Link}
+                      to={`/character-rolls/${character.characterId}`}
+                    >
+                      View Rolls
+                    </Button>
                   </TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {characters.map((character) => (
-                  <TableRow key={character.characterId}>
-                    <TableCell>{character.name}</TableCell>
-                    <TableCell>
-                      {character.class}
-                      {character.secondaryClass
-                        ? `/${character.secondaryClass}`
-                        : ""}
-                    </TableCell>
-                    <TableCell align="center">
-                      {character.characterId === activeCharacterId ? (
-                        <h4>Active</h4>
-                      ) : (
-                        <Button
-                          variant="outlined"
-                          onClick={() =>
-                            handleSetActiveCharacter(character.characterId)
-                          }
-                        >
-                          Set Active
-                        </Button>
-                      )}
-                    </TableCell>
-                    <TableCell align="center">
-                      <Button
-                        variant="contained"
-                        component={Link}
-                        to={`/character-rolls/${character.characterId}`}
-                      >
-                        View Rolls
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        )}
-        <div
-          className="button-container"
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
+      <div className="button-container">
+        <Button variant="contained" color="primary" onClick={handleCreate}>
+          Create New Character
+        </Button>
+        <Button
+          variant="contained"
+          component={Link}
+          to={`/active-dashboard/${activeCharacterId}`}
         >
-          <Button variant="contained" color="primary" onClick={handleCreate}>
-            Create New Character
-          </Button>
-          <Button
-            variant="contained"
-            component={Link}
-            to={`/active-dashboard/${activeCharacterId}`}
-          >
-            Start Rolling
-          </Button>
-          <Button
-            variant="outlined"
-            component={Link}
-            to="/character-management"
-          >
-            Manage Characters
-          </Button>
-          <Button variant="outlined" component={Link} to="/stats">
-            View Stats
-          </Button>
-        </div>
-        <Dialog open={isModalOpen} onClose={handleCancel}>
-          <DialogTitle>
-            <span>Create New Character</span>
-            <IconButton
-              aria-label="close"
-              onClick={handleCancel}
-              sx={{
-                position: "absolute",
-                right: 8,
-                top: 8,
-                color: (theme) => theme.palette.grey[500],
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
-          </DialogTitle>
-          <CharacterForm
-            initialData={{
-              characterId: 0,
-              name: "",
-              class: "",
-              secondaryClass: "",
+          Start Rolling
+        </Button>
+        <Button variant="outlined" component={Link} to="/character-management">
+          Manage Characters
+        </Button>
+        <Button variant="outlined" component={Link} to="/stats">
+          View Stats
+        </Button>
+      </div>
+      <Dialog open={isModalOpen} onClose={handleCancel}>
+        <DialogTitle>
+          <span>Create New Character</span>
+          <IconButton
+            aria-label="close"
+            onClick={handleCancel}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
             }}
-            onSave={handleSave}
-            onCancel={handleCancel}
-          />
-        </Dialog>
-      </Paper>
-    </Container>
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <CharacterForm
+          initialData={{
+            characterId: 0,
+            name: "",
+            class: "",
+            secondaryClass: "",
+          }}
+          onSave={handleSave}
+          onCancel={handleCancel}
+        />
+      </Dialog>
+    </PageContent>
   );
 }
