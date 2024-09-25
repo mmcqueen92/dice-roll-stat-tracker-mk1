@@ -1,11 +1,23 @@
 import React from "react";
-import PageContent from "../Components/PageContent";
+import SmallContent from "../Components/SmallContent";
+import { Box, Button } from "@mui/material";
 
 export default function Home() {
   return (
-    <PageContent>
-      <a href="/login">Login</a>
-      <a href="/register">Register</a>
-    </PageContent>
+    <SmallContent>
+      <Box
+        display="flex"
+        flexDirection={"column"}
+        justifyContent="space-between"
+        sx={{ gap: "16px" }}
+      >
+        <Button variant="contained" color="primary" href="/login">
+          Login
+        </Button>
+        <Button variant="contained" color="primary" href="/register">
+          Register
+        </Button>
+      </Box>
+    </SmallContent>
   );
 }

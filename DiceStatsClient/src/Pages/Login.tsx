@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
-import PageContent from "../Components/PageContent";
+import SmallContent from "../Components/SmallContent";
+import { TextField, Button } from "@mui/material";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -29,27 +30,38 @@ export default function Login() {
   };
 
   return (
-    <PageContent>
+    <SmallContent>
       <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <input
+      <form
+        onSubmit={handleSubmit}
+        style={{ display: "flex", flexDirection: "column", gap: "16px" }}
+      >
+        <TextField
           type="email"
           name="email"
           value={formData.email}
           onChange={handleChange}
-          placeholder="Email"
+          label="Email"
+          variant="filled"
+          fullWidth
           required
+          sx={{ backgroundColor: "#e0e0e0" }}
         />
-        <input
+        <TextField
           type="password"
           name="password"
           value={formData.password}
           onChange={handleChange}
-          placeholder="Password"
+          label="Password"
+          variant="filled"
+          fullWidth
           required
+          sx={{ backgroundColor: "#e0e0e0" }}
         />
-        <button type="submit">Login</button>
+        <Button type="submit" variant="contained" color="primary" fullWidth>
+          Login
+        </Button>
       </form>
-    </PageContent>
+    </SmallContent>
   );
 }
