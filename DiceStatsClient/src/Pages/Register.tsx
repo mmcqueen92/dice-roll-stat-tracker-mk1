@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import PageContent from "../Components/PageContent";
+import SmallContent from "../Components/SmallContent";
+import { TextField, Button } from "@mui/material";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -46,43 +48,60 @@ export default function Register() {
   };
 
   return (
-    <PageContent>
+    <SmallContent>
       <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <input
+      <form
+        onSubmit={handleSubmit}
+        style={{ display: "flex", flexDirection: "column", gap: "16px" }}
+      >
+        <TextField
           type="text"
           name="username"
           value={formData.username}
           onChange={handleChange}
-          placeholder="Username"
+          label="Username"
+          variant="filled"
+          sx={{ backgroundColor: "#e0e0e0" }}
+          fullWidth
           required
         />
-        <input
+        <TextField
           type="email"
           name="email"
           value={formData.email}
           onChange={handleChange}
-          placeholder="Email"
+          label="Email"
+          variant="filled"
+          sx={{ backgroundColor: "#e0e0e0" }}
+          fullWidth
           required
         />
-        <input
+        <TextField
           type="password"
           name="password"
           value={formData.password}
           onChange={handleChange}
-          placeholder="Password"
+          label="Password"
+          variant="filled"
+          sx={{ backgroundColor: "#e0e0e0" }}
+          fullWidth
           required
         />
-        <input
+        <TextField
           type="password"
           name="confirmPassword"
           value={formData.confirmPassword}
           onChange={handleChange}
-          placeholder="Confirm Password"
+          label="Confirm Password"
+          variant="filled"
+          sx={{ backgroundColor: "#e0e0e0" }}
+          fullWidth
           required
         />
-        <button type="submit">Register</button>
+        <Button type="submit" variant="contained" color="primary" fullWidth>
+          Register
+        </Button>
       </form>
-    </PageContent>
+    </SmallContent>
   );
 }

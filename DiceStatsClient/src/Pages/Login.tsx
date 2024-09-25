@@ -42,9 +42,9 @@ export default function Login() {
           value={formData.email}
           onChange={handleChange}
           label="Email"
-          variant="filled"
           fullWidth
           required
+          variant="filled"
           sx={{ backgroundColor: "#e0e0e0" }}
         />
         <TextField
