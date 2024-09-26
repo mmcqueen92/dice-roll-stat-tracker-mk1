@@ -181,11 +181,11 @@ export default function ViewCharacterRolls() {
         <h1>View Rolls for {characterData.name}</h1>
       )}
 
-      <div>
+      <Paper sx={{marginBottom: "5px"}}>
         <h3>Filters</h3>
         <form>
           <FormControl
-            style={{
+            sx={{
               width: "300px",
               marginRight: "5px",
               marginBottom: "15px",
@@ -270,7 +270,7 @@ export default function ViewCharacterRolls() {
             </Select>
           </FormControl>
         </form>
-      </div>
+      </Paper>
 
       <TableContainer component={Paper} className="table-container">
         <Table>
@@ -320,7 +320,13 @@ export default function ViewCharacterRolls() {
                   <TableCell>{roll.skillType}</TableCell>
                   <TableCell>{roll.diceSize}</TableCell>
                   <TableCell>{roll.rollValue}</TableCell>
-                  <TableCell>{roll.success ? "Success" : "Fail"}</TableCell>
+                  <TableCell>
+                    {roll.success === true
+                      ? "Success"
+                      : roll.success === false
+                      ? "Fail"
+                      : "N/A"}
+                  </TableCell>
                   <TableCell>
                     <IconButton onClick={() => handleEditClick(roll)}>
                       <EditIcon />

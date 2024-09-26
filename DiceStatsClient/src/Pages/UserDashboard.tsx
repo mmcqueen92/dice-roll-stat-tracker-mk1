@@ -160,7 +160,7 @@ export default function UserDashboard() {
         </TableContainer>
       )}
       <div className="button-container">
-        <Button variant="contained" color="primary" onClick={handleCreate}>
+        <Button variant="contained" onClick={handleCreate}>
           Create New Character
         </Button>
         <Button
@@ -170,10 +170,10 @@ export default function UserDashboard() {
         >
           Start Rolling
         </Button>
-        <Button variant="outlined" component={Link} to="/character-management">
+        <Button variant="contained" component={Link} to="/character-management">
           Manage Characters
         </Button>
-        <Button variant="outlined" component={Link} to="/stats">
+        <Button variant="contained" component={Link} to="/stats">
           View Stats
         </Button>
       </div>

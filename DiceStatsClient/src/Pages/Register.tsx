@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import PageContent from "../Components/PageContent";
 import SmallContent from "../Components/SmallContent";
 import { TextField, Button } from "@mui/material";
 

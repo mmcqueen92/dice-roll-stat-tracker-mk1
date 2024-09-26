@@ -123,6 +123,10 @@ export default function StatsPage() {
               centered
               variant="scrollable"
               scrollButtons="auto"
+              sx={{
+                ".MuiTab-root": { color: "#e0e0e0" }, // Off-white text color for unselected tabs
+                ".Mui-selected": { color: "#ffffff" }, // Brighter white for the selected tab
+              }}
             >
               <Tab label="Overview" value="overview" />
               <Tab label="Roll Trends" value="trends" />

@@ -129,7 +129,14 @@ export default function StatsSectionRollTrends({
 
   return (
     <>
-      <Box>
+      <Box
+        sx={{
+          backgroundColor: "#e0e0e0",
+          padding: "15px",
+          borderRadius: "5px",
+          color: "#333333"
+        }}
+      >
         {/* <Typography variant="h6">Select Chart</Typography> */}
         <FormControl style={{ width: "150px" }}>
           <InputLabel id="dice-size-select-label">Dice Size</InputLabel>
@@ -151,7 +158,7 @@ export default function StatsSectionRollTrends({
 
         {selectedChart === 20 && !isMobile && (
           <FormGroup>
-            <Typography variant="subtitle1">Filter Roll Types</Typography>
+            {/* <Typography variant="subtitle1">Filter Roll Types</Typography> */}
             <div className="checkbox-container">
               <FormControlLabel
                 control={
