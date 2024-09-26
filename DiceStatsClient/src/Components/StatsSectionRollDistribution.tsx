@@ -130,33 +130,46 @@ export default function StatsSectionRollDistribution({
   return (
     <>
       {/* <Grid item xs={12} md={6}> */}
-        <Box sx={{backgroundColor: "#e0e0e0", padding: "15px", borderRadius: "5px"}}>
-          {/* <Typography variant="h6">Roll Distribution by Dice Size</Typography> */}
+      <Box
+        sx={{
+          backgroundColor: "#e0e0e0",
+          padding: "15px",
+          borderRadius: "5px",
+        }}
+      >
+        {/* <Typography variant="h6">Roll Distribution by Dice Size</Typography> */}
 
-          <FormControl style={{ width: "150px" }}>
-            <InputLabel id="dice-size-select-label">Dice Size</InputLabel>
-            <Select
-              labelId="dice-size-select-label"
-              value={selectedDiceSize}
-              onChange={handleDiceSizeChange}
-              label="Dice Size"
-            >
-              <MenuItem value="20">D-20</MenuItem>
-              <MenuItem value="12">D-12</MenuItem>
-              <MenuItem value="10">D-10</MenuItem>
-              <MenuItem value="8">D-8</MenuItem>
-              <MenuItem value="6">D-6</MenuItem>
-              <MenuItem value="4">D-4</MenuItem>
-            </Select>
-          </FormControl>
+        <FormControl style={{ width: "150px" }}>
+          <InputLabel id="dice-size-select-label">Dice Size</InputLabel>
+          <Select
+            labelId="dice-size-select-label"
+            value={selectedDiceSize}
+            onChange={handleDiceSizeChange}
+            label="Dice Size"
+            MenuProps={{
+              PaperProps: {
+                sx: {
+                  backgroundColor: "#e0e0e0",
+                },
+              },
+            }}
+          >
+            <MenuItem value="20">D-20</MenuItem>
+            <MenuItem value="12">D-12</MenuItem>
+            <MenuItem value="10">D-10</MenuItem>
+            <MenuItem value="8">D-8</MenuItem>
+            <MenuItem value="6">D-6</MenuItem>
+            <MenuItem value="4">D-4</MenuItem>
+          </Select>
+        </FormControl>
 
-          {rollDistributionByDiceSize && (
-            <RollDistributionChart
-              data={rollDistributionByDiceSize[selectedDiceSize]}
-              title={`D${selectedDiceSize} Roll Distribution`}
-            />
-          )}
-        </Box>
+        {rollDistributionByDiceSize && (
+          <RollDistributionChart
+            data={rollDistributionByDiceSize[selectedDiceSize]}
+            title={`D${selectedDiceSize} Roll Distribution`}
+          />
+        )}
+      </Box>
       {/* </Grid> */}
     </>
   );

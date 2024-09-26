@@ -181,7 +181,7 @@ export default function ViewCharacterRolls() {
         <h1>View Rolls for {characterData.name}</h1>
       )}
 
-      <Paper sx={{marginBottom: "5px"}}>
+      <Paper sx={{ marginBottom: "5px" }}>
         <h3>Filters</h3>
         <form>
           <FormControl
@@ -197,6 +197,13 @@ export default function ViewCharacterRolls() {
               value={filters.rollType}
               onChange={handleFilterChange}
               label="Roll Type"
+              MenuProps={{
+                PaperProps: {
+                  sx: {
+                    backgroundColor: "#e0e0e0",
+                  },
+                },
+              }}
             >
               <MenuItem value="All">All</MenuItem>
               {rollTypes.map((type) => (
@@ -220,6 +227,13 @@ export default function ViewCharacterRolls() {
               value={filters.diceSize}
               onChange={handleFilterChange}
               label="Dice Size"
+              MenuProps={{
+                PaperProps: {
+                  sx: {
+                    backgroundColor: "#e0e0e0",
+                  },
+                },
+              }}
             >
               <MenuItem value="All">All</MenuItem>
               {diceSizes.map((size) => (
@@ -243,6 +257,13 @@ export default function ViewCharacterRolls() {
               value={filters.skillType}
               onChange={handleFilterChange}
               label="Skill Type"
+              MenuProps={{
+                PaperProps: {
+                  sx: {
+                    backgroundColor: "#e0e0e0",
+                  },
+                },
+              }}
             >
               <MenuItem value="All">All</MenuItem>
               {skillTypes
@@ -263,6 +284,13 @@ export default function ViewCharacterRolls() {
               value={filters.success}
               onChange={handleFilterChange}
               label="Success"
+              MenuProps={{
+                PaperProps: {
+                  sx: {
+                    backgroundColor: "#e0e0e0",
+                  },
+                },
+              }}
             >
               <MenuItem value="All">All</MenuItem>
               <MenuItem value="true">Success</MenuItem>
@@ -272,7 +300,10 @@ export default function ViewCharacterRolls() {
         </form>
       </Paper>
 
-      <TableContainer component={Paper} className="table-container">
+      <TableContainer
+        component={Paper}
+        className="table-container"
+      >
         <Table>
           <TableHead>
             <TableRow>

@@ -98,6 +98,13 @@ export default function StatsPage() {
             );
             return selectedCharacter ? selectedCharacter.name : "";
           }}
+          MenuProps={{
+            PaperProps: {
+              sx: {
+                backgroundColor: "#e0e0e0",
+              },
+            },
+          }}
         >
           <MenuItem value="">
             <em>All Characters</em>

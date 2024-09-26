@@ -134,7 +134,7 @@ export default function StatsSectionRollTrends({
           backgroundColor: "#e0e0e0",
           padding: "15px",
           borderRadius: "5px",
-          color: "#333333"
+          color: "#333333",
         }}
       >
         {/* <Typography variant="h6">Select Chart</Typography> */}
@@ -146,6 +146,13 @@ export default function StatsSectionRollTrends({
             value={selectedChart || ""}
             onChange={handleChartSelect}
             className="dice-size-dropdown"
+            MenuProps={{
+              PaperProps: {
+                sx: {
+                  backgroundColor: "#e0e0e0",
+                },
+              },
+            }}
           >
             <MenuItem value={20}>D-20</MenuItem>
             <MenuItem value={12}>D-12</MenuItem>
