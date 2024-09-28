@@ -1,12 +1,10 @@
 import React, { useState, useEffect, SyntheticEvent } from "react";
 import {
-  Container,
   Box,
   Typography,
   MenuItem,
   Select,
   SelectChangeEvent,
-  Paper,
   Tab,
   Tabs,
   useMediaQuery,

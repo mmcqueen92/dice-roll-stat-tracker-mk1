@@ -20,7 +20,6 @@ import {
   InputLabel,
   SelectChangeEvent,
   IconButton,
-  Container,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import CharacterData from "../Interfaces/CharacterData";

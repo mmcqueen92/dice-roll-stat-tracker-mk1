@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import DiceRollData from "../Interfaces/DiceRollData";
 import StatsSectionProps from "../Interfaces/StatsSectionProps";
 import { Box, Typography } from "@mui/material";
-
+import IDiceRollsVsAverage from "../Interfaces/IDiceRollsVsAverage";
 export default function StatsSectionOverview({ diceRolls }: StatsSectionProps) {
-
   const [averageRollsByDiceSize, setAverageRollsByDiceSize] = useState<{
     [key: string]: number;
   }>({});
@@ -15,6 +14,16 @@ export default function StatsSectionOverview({ diceRolls }: StatsSectionProps) {
 
   const [standardDeviationByDiceSize, setStandardDeviationByDiceSize] =
     useState<{ [key: string]: number }>({});
+
+  const [diceRollsVsAverage, setDiceRollsVsAverage] =
+    useState<IDiceRollsVsAverage>({
+      20: { above: 0, below: 0 },
+      12: { above: 0, below: 0 },
+      10: { above: 0, below: 0 },
+      8: { above: 0, below: 0 },
+      6: { above: 0, below: 0 },
+      4: { above: 0, below: 0 },
+    });
 
   const [streakRecords, setStreakRecords] = useState<{
     successStreak: number;
@@ -43,6 +52,8 @@ export default function StatsSectionOverview({ diceRolls }: StatsSectionProps) {
 
       const critAndFumbleRates = calculateCritAndFumbleRates(diceRolls);
       setCritAndFumbleRates(critAndFumbleRates);
+
+      setDiceRollsVsAverage(calculateDiceRollsVsAverage(diceRolls));
     } else {
       setAverageRollsByDiceSize({});
       setTotalRollsByDiceSize({});
@@ -106,6 +117,85 @@ export default function StatsSectionOverview({ diceRolls }: StatsSectionProps) {
     });
 
     return standardDeviationByDiceSize;
+  };
+
+  const calculateDiceRollsVsAverage = (
+    diceRolls: DiceRollData[]
+  ): IDiceRollsVsAverage => {
+    const result: IDiceRollsVsAverage = {
+      20: { above: 0, below: 0 },
+      12: { above: 0, below: 0 },
+      10: { above: 0, below: 0 },
+      8: { above: 0, below: 0 },
+      6: { above: 0, below: 0 },
+      4: { above: 0, below: 0 },
+    };
+
+    diceRolls.forEach((roll) => {
+      const { diceSize, rollValue } = roll;
+      let average: number;
+
+      switch (diceSize) {
+        case 20:
+          average = 10.5;
+          if (rollValue > average) {
+            result[20].above++;
+          } else {
+            result[20].below++;
+          }
+          break;
+
+        case 12:
+          average = 6.5;
+          if (rollValue > average) {
+            result[12].above++;
+          } else {
+            result[12].below++;
+          }
+          break;
+
+        case 10:
+          average = 5.5;
+          if (rollValue > average) {
+            result[10].above++;
+          } else {
+            result[10].below++;
+          }
+          break;
+
+        case 8:
+          average = 4.5;
+          if (rollValue > average) {
+            result[8].above++;
+          } else {
+            result[8].below++;
+          }
+          break;
+
+        case 6:
+          average = 3.5;
+          if (rollValue > average) {
+            result[6].above++;
+          } else {
+            result[6].below++;
+          }
+          break;
+
+        case 4:
+          average = 2.5;
+          if (rollValue > average) {
+            result[4].above++;
+          } else {
+            result[4].below++;
+          }
+          break;
+
+        default:
+          break;
+      }
+    });
+
+    return result;
   };
 
   const calculateRollingStreaks = (diceRolls: DiceRollData[]) => {
@@ -192,6 +282,17 @@ export default function StatsSectionOverview({ diceRolls }: StatsSectionProps) {
                 </li>
               )
             )}
+          </ul>
+        </Box>
+
+        <Box className="stat-display">
+          <Typography variant="h6">Dice Rolls Above/Below Average</Typography>
+          <ul>
+            {Object.entries(diceRollsVsAverage).map(([size, count]) => (
+              <li key={size}>
+                Dice Size {size}: Above: {count.above} Below: {count.below}
+              </li>
+            ))}
           </ul>
         </Box>
       </div>
