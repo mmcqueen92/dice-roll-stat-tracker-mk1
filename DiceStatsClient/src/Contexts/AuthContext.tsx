@@ -1,5 +1,11 @@
 // src/contexts/AuthContext.tsx
-import React, { createContext, useState, useContext, ReactNode } from "react";
+import React, {
+  createContext,
+  useState,
+  useContext,
+  ReactNode,
+  useEffect,
+} from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { decodeToken } from "../Utils/jwt";
@@ -26,25 +32,36 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [authState, setAuthState] = useState<AuthState>(initialAuthState);
   const navigate = useNavigate();
-    const login = async (email: string, password: string) => {
-      try {
-        const response = await axios.post(
-          "http://localhost:5050/api/user/login",
-          { email, password }
-        );
-        decodeToken(response.data.token);
-        const token = response.data.token;
-        localStorage.setItem("DiceStatsToken", token);
-        setAuthState({
-          isAuthenticated: true,
-          token,
-        });
-        navigate("/user-dashboard"); // Redirect after successful login
-      } catch (error) {
-        console.error("Login failed", error);
-        // Handle error appropriately
-      }
-    };
+
+  useEffect(() => {
+    const token = localStorage.getItem("DiceStatsToken");
+    if (token) {
+      setAuthState({
+        isAuthenticated: true,
+        token,
+      });
+    }
+  }, []);
+  
+  const login = async (email: string, password: string) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5050/api/user/login",
+        { email, password }
+      );
+      decodeToken(response.data.token);
+      const token = response.data.token;
+      localStorage.setItem("DiceStatsToken", token);
+      setAuthState({
+        isAuthenticated: true,
+        token,
+      });
+      navigate("/user-dashboard"); // Redirect after successful login
+    } catch (error) {
+      console.error("Login failed", error);
+      // Handle error appropriately
+    }
+  };
 
   const logout = () => {
     localStorage.removeItem("DiceStatsToken");

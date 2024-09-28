@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
 import SmallContent from "../Components/SmallContent";
 import { TextField, Button } from "@mui/material";
+import { useRedirectIfAuthenticated } from "../Hooks/useRedirectIfAuthenticated";
 
 export default function Login() {
+  useRedirectIfAuthenticated();
   const [formData, setFormData] = useState({
     email: "",
     password: "",

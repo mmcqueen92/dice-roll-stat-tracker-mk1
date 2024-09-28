@@ -3,8 +3,10 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import SmallContent from "../Components/SmallContent";
 import { TextField, Button } from "@mui/material";
+import { useRedirectIfAuthenticated } from "../Hooks/useRedirectIfAuthenticated";
 
 export default function Register() {
+  useRedirectIfAuthenticated();
   const [formData, setFormData] = useState({
     username: "",
     email: "",

@@ -1,8 +1,10 @@
 import React from "react";
 import SmallContent from "../Components/SmallContent";
 import { Box, Button } from "@mui/material";
+import { useRedirectIfAuthenticated } from "../Hooks/useRedirectIfAuthenticated";
 
 export default function Home() {
+  useRedirectIfAuthenticated();
   return (
     <SmallContent>
       <Box
