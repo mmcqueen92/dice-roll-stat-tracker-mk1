@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Dialog, DialogTitle, IconButton, Paper, Container } from "@mui/material";
+import { Dialog, DialogTitle, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CharacterList from "../Components/CharacterList";
 import CharacterForm from "../Components/CharacterForm";
@@ -8,6 +8,7 @@ import api from "../Utils/api";
 
 import "../Styles/CharacterManagement.css";
 import PageContent from "../Components/PageContent";
+import BackButtonContainer from "../Components/BackButtonContainer";
 
 export default function CharacterManagement() {
   const [characters, setCharacters] = useState<CharacterData[]>([]);
@@ -69,6 +70,7 @@ export default function CharacterManagement() {
 
   return (
     <PageContent>
+      <BackButtonContainer route="/user-dashboard"></BackButtonContainer>
       <h3>Manage Characters</h3>
       <CharacterList
         characters={characters}

@@ -20,6 +20,7 @@ import StatsSectionOverview from "../Components/StatsSectionOverview";
 
 import "../Styles/Stats.css";
 import PageContent from "../Components/PageContent";
+import BackButtonContainer from "../Components/BackButtonContainer";
 
 type TabValue = "overview" | "trends" | "roll distribution" | "roll types";
 
@@ -76,6 +77,7 @@ export default function StatsPage() {
 
   return (
     <PageContent>
+      <BackButtonContainer route="/user-dashboard"></BackButtonContainer>
       <Typography variant="h5">Statistics</Typography>
       <Box>
         <Select

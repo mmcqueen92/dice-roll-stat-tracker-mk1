@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CharacterData from "../Interfaces/CharacterData";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import api from "../Utils/api";
 import {
   FormControl,
@@ -19,9 +19,7 @@ import {
   TableRow,
   Paper,
   TablePagination,
-  IconButton,
 } from "@mui/material";
-import ArrowBack from "@mui/icons-material/ArrowBack";
 
 import "../Styles/ActiveDashboard.css";
 
@@ -89,8 +87,6 @@ export default function ActiveDashboard() {
   const [totalRecords, setTotalRecords] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(5);
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (!activeCharacterId) return;
