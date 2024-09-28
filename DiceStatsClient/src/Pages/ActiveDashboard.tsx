@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CharacterData from "../Interfaces/CharacterData";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import api from "../Utils/api";
 import {
   FormControl,
@@ -19,12 +19,15 @@ import {
   TableRow,
   Paper,
   TablePagination,
+  IconButton,
 } from "@mui/material";
+import ArrowBack from "@mui/icons-material/ArrowBack";
 
 import "../Styles/ActiveDashboard.css";
 
 import DiceRollData from "../Interfaces/DiceRollData";
 import PageContent from "../Components/PageContent";
+import BackButtonContainer from "../Components/BackButtonContainer";
 
 const skills = [
   "Acrobatics",
@@ -86,6 +89,8 @@ export default function ActiveDashboard() {
   const [totalRecords, setTotalRecords] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(5);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!activeCharacterId) return;
@@ -213,6 +218,8 @@ export default function ActiveDashboard() {
 
   return (
     <PageContent>
+      <BackButtonContainer route="/user-dashboard"></BackButtonContainer>
+
       <h3>{character.name}</h3>
       <Paper className="form-container">
         <h4>Create New Roll</h4>
