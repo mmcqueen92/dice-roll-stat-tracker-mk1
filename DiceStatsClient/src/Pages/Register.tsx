@@ -39,12 +39,10 @@ export default function Register() {
         }
       );
       const { token } = response.data;
-      localStorage.setItem("DiceStatsToken", token); // Save token to local storage
+      localStorage.setItem("DiceStatsToken", token);
       navigate("/user-dashboard");
-      // Redirect or show success message
     } catch (error) {
       console.error(error);
-      // Handle error
     }
   };
 
