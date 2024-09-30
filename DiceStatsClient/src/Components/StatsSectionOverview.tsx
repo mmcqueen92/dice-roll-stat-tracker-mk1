@@ -1,8 +1,25 @@
 import React, { useState, useEffect } from "react";
 import DiceRollData from "../Interfaces/DiceRollData";
 import StatsSectionProps from "../Interfaces/StatsSectionProps";
-import { Box, Typography } from "@mui/material";
+import { Box, Card, Typography } from "@mui/material";
 import IDiceRollsVsAverage from "../Interfaces/IDiceRollsVsAverage";
+import { ReactComponent as D4Icon } from "../Assets/d4icon.svg";
+import { ReactComponent as D6Icon } from "../Assets/d6icon.svg";
+import { ReactComponent as D8Icon } from "../Assets/d8icon.svg";
+import { ReactComponent as D10Icon } from "../Assets/d10icon.svg";
+import { ReactComponent as D12Icon } from "../Assets/d12icon.svg";
+import { ReactComponent as D20Icon } from "../Assets/d20icon.svg";
+import {ReactComponent as ArrowIcon} from "../Assets/arrowicon.svg"
+import StatDisplay from "./StatDisplay";
+const diceIcons = {
+  "4": D4Icon,
+  "6": D6Icon,
+  "8": D8Icon,
+  "10": D10Icon,
+  "12": D12Icon,
+  "20": D20Icon,
+};
+
 export default function StatsSectionOverview({ diceRolls }: StatsSectionProps) {
   const [averageRollsByDiceSize, setAverageRollsByDiceSize] = useState<{
     [key: string]: number;
@@ -11,9 +28,6 @@ export default function StatsSectionOverview({ diceRolls }: StatsSectionProps) {
   const [totalRollsByDiceSize, setTotalRollsByDiceSize] = useState<{
     [key: string]: number;
   }>({});
-
-  const [standardDeviationByDiceSize, setStandardDeviationByDiceSize] =
-    useState<{ [key: string]: number }>({});
 
   const [diceRollsVsAverage, setDiceRollsVsAverage] =
     useState<IDiceRollsVsAverage>({
@@ -43,10 +57,6 @@ export default function StatsSectionOverview({ diceRolls }: StatsSectionProps) {
       const totalRollsData = calculateTotalRollsByDiceSize(diceRolls);
       setTotalRollsByDiceSize(totalRollsData);
 
-      const standardDeviationData =
-        calculateStandardDeviationByDiceSize(diceRolls);
-      setStandardDeviationByDiceSize(standardDeviationData);
-
       const streakData = calculateRollingStreaks(diceRolls);
       setStreakRecords(streakData);
 
@@ -57,7 +67,6 @@ export default function StatsSectionOverview({ diceRolls }: StatsSectionProps) {
     } else {
       setAverageRollsByDiceSize({});
       setTotalRollsByDiceSize({});
-      setStandardDeviationByDiceSize({});
       setStreakRecords({ successStreak: 0, failStreak: 0 });
       setCritAndFumbleRates({ critRate: 0, fumbleRate: 0 });
     }
@@ -92,31 +101,6 @@ export default function StatsSectionOverview({ diceRolls }: StatsSectionProps) {
     });
 
     return totalRollsByDiceSize;
-  };
-
-  const calculateStandardDeviationByDiceSize = (diceRolls: DiceRollData[]) => {
-    const diceSizes = Array.from(
-      new Set(diceRolls.map((roll) => roll.diceSize))
-    );
-    const standardDeviationByDiceSize: { [key: string]: number } = {};
-
-    diceSizes.forEach((size) => {
-      const rollsOfSize = diceRolls.filter((roll) => roll.diceSize === size);
-      const average =
-        rollsOfSize.reduce((sum, roll) => sum + roll.rollValue, 0) /
-        rollsOfSize.length;
-
-      const variance =
-        rollsOfSize.reduce(
-          (sum, roll) => sum + Math.pow(roll.rollValue - average, 2),
-          0
-        ) / rollsOfSize.length;
-
-      const standardDeviation = Math.sqrt(variance);
-      standardDeviationByDiceSize[size] = standardDeviation;
-    });
-
-    return standardDeviationByDiceSize;
   };
 
   const calculateDiceRollsVsAverage = (
@@ -247,70 +231,124 @@ export default function StatsSectionOverview({ diceRolls }: StatsSectionProps) {
     return rates;
   };
 
+  const isDiceSize = (size: string): size is keyof typeof diceIcons => {
+    return size in diceIcons;
+  };
+
   return (
     <div className="overview-container">
       <div className="overview-stats-half">
-        <Box className="stat-display">
+        <StatDisplay>
           <Typography variant="h6">Average Rolls by Dice Size</Typography>
           <ul>
-            {Object.entries(averageRollsByDiceSize).map(([size, average]) => (
-              <li key={size}>
-                Dice Size {size}: {average.toFixed(2)}
-              </li>
-            ))}
-          </ul>
-        </Box>
+            {Object.entries(averageRollsByDiceSize).map(([size, average]) => {
+              if (isDiceSize(size)) {
+                const DiceIcon = diceIcons[size]; // No more TypeScript error here
 
-        <Box className="stat-display">
+                return (
+                  <li key={size}>
+                    <DiceIcon
+                      width="30"
+                      height="30"
+                      style={{ marginRight: "10px" }}
+                    />
+                    <span>{average.toFixed(2)}</span>
+                  </li>
+                );
+              }
+
+              return (
+                <li key={size}>
+                  Dice Size {size}: {average.toFixed(2)}
+                </li>
+              );
+            })}
+          </ul>
+        </StatDisplay>
+
+        <StatDisplay>
           <Typography variant="h6">Total Rolls by Dice Size</Typography>
           <ul>
-            {Object.entries(totalRollsByDiceSize).map(([size, total]) => (
-              <li key={size}>
-                Dice Size {size}: {total}
-              </li>
-            ))}
-          </ul>
-        </Box>
+            {Object.entries(totalRollsByDiceSize).map(([size, total]) => {
+              if (isDiceSize(size)) {
+                const DiceIcon = diceIcons[size];
 
-        <Box className="stat-display">
-          <Typography variant="h6">Standard Deviation by Dice Size</Typography>
-          <ul>
-            {Object.entries(standardDeviationByDiceSize).map(
-              ([size, stdDev]) => (
+                return (
+                  <li key={size}>
+                    <DiceIcon
+                      width="30"
+                      height="30"
+                      style={{ marginRight: "10px" }}
+                    />
+                    <span>{total}</span>
+                  </li>
+                );
+              }
+
+              return (
                 <li key={size}>
-                  Dice Size {size}: {stdDev.toFixed(2)}
+                  Dice Size {size}: {total}
                 </li>
-              )
-            )}
+              );
+            })}
           </ul>
-        </Box>
+        </StatDisplay>
 
-        <Box className="stat-display">
+        <StatDisplay>
           <Typography variant="h6">Dice Rolls Above/Below Average</Typography>
           <ul>
-            {Object.entries(diceRollsVsAverage).map(([size, count]) => (
-              <li key={size}>
-                Dice Size {size}: Above: {count.above} Below: {count.below}
-              </li>
-            ))}
+            {Object.entries(diceRollsVsAverage).map(([size, count]) => {
+              if (isDiceSize(size)) {
+                const DiceIcon = diceIcons[size];
+
+                return (
+                  <li key={size}>
+                    <DiceIcon
+                      width="30"
+                      height="30"
+                      style={{ marginRight: "10px" }}
+                    />
+                    <span style={{ color: "green", marginRight: "10px" }}>
+                      <ArrowIcon width="30" height="30" />
+                      {count.above}
+                    </span>
+                    <span style={{ color: "red" }}>
+                      <ArrowIcon
+                        width="30"
+                        height="30"
+                        style={{ transform: "rotate(180deg)" }}
+                      />
+                      {count.below}
+                    </span>
+                  </li>
+                );
+              }
+
+              return (
+                <li key={size}>
+                  Dice Size {size}: <span>+: {count.above}</span>
+                  <span> -: {count.below}</span>
+                </li>
+              );
+            })}
           </ul>
-        </Box>
+        </StatDisplay>
       </div>
 
       <div className="overview-stats-half">
-        <Box className="overview-stat">
+        <Card className="overview-stat" sx={{ backgroundColor: "#e0e0e0" }}>
           <Typography variant="h6">Rolling Streak Records</Typography>
           <p>Longest Success Streak: {streakRecords.successStreak}</p>
           <p>Longest Fail Streak: {streakRecords.failStreak}</p>
-        </Box>
+        </Card>
 
-        <Box className="overview-stat">
+        <Card className="overview-stat" sx={{ backgroundColor: "#e0e0e0" }}>
           <Typography variant="h6">Crit/Fumble Rates</Typography>
           <p>Crit rate: {(critAndFumbleRates.critRate * 100).toFixed(2)}%</p>
           <p>
             Fumble rate: {(critAndFumbleRates.fumbleRate * 100).toFixed(2)}%
           </p>
-        </Box>
+        </Card>
       </div>
     </div>
   );

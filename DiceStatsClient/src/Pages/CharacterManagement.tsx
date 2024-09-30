@@ -9,8 +9,11 @@ import api from "../Utils/api";
 import "../Styles/CharacterManagement.css";
 import PageContent from "../Components/PageContent";
 import BackButtonContainer from "../Components/BackButtonContainer";
+import { useRedirectIfUnauthenticated } from "../Hooks/useRedirectIfUnauthenticated";
 
 export default function CharacterManagement() {
+  useRedirectIfUnauthenticated();
+  
   const [characters, setCharacters] = useState<CharacterData[]>([]);
   const [selectedCharacter, setSelectedCharacter] =
     useState<CharacterData | null>(null);

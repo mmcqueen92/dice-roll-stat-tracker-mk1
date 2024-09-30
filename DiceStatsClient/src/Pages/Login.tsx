@@ -24,10 +24,8 @@ export default function Login() {
     e.preventDefault();
     try {
       await login(formData.email, formData.password);
-      // Redirect or show success message
     } catch (error) {
       console.error("Login failed", error);
-      // Handle error
     }
   };
 

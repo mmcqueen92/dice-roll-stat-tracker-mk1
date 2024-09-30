@@ -137,7 +137,6 @@ export default function StatsSectionRollTrends({
           color: "#333333",
         }}
       >
-        {/* <Typography variant="h6">Select Chart</Typography> */}
         <FormControl style={{ width: "150px" }}>
           <InputLabel id="dice-size-select-label">Dice Size</InputLabel>
           <Select
@@ -165,7 +164,6 @@ export default function StatsSectionRollTrends({
 
         {selectedChart === 20 && !isMobile && (
           <FormGroup>
-            {/* <Typography variant="subtitle1">Filter Roll Types</Typography> */}
             <div className="checkbox-container">
               <FormControlLabel
                 control={
@@ -228,6 +226,7 @@ export default function StatsSectionRollTrends({
             expanded={filterAccordionOpen}
             onChange={handleAccordionToggle}
             className="accordion-container"
+            sx={{backgroundColor: "#e0e0e0"}}
           >
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}

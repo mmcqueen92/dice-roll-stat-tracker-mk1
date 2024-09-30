@@ -24,6 +24,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import CharacterData from "../Interfaces/CharacterData";
 import PageContent from "../Components/PageContent";
+import { useRedirectIfUnauthenticated } from "../Hooks/useRedirectIfUnauthenticated";
 
 const rollTypes = [
   "Attack",
@@ -60,6 +61,7 @@ const skillTypes = [
 ];
 
 export default function ViewCharacterRolls() {
+  useRedirectIfUnauthenticated();
   const { id } = useParams<{ id: string }>();
   const [characterData, setCharacterData] = useState<CharacterData | null>(
     null

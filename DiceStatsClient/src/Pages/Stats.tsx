@@ -17,6 +17,7 @@ import StatsSectionRollTrends from "../Components/StatsSectionRollTrends";
 import StatsSectionRollDistribution from "../Components/StatsSectionRollDistribution";
 import StatsSectionRollTypes from "../Components/StatsSectionRollTypes";
 import StatsSectionOverview from "../Components/StatsSectionOverview";
+import { useRedirectIfUnauthenticated } from "../Hooks/useRedirectIfUnauthenticated";
 
 import "../Styles/Stats.css";
 import PageContent from "../Components/PageContent";
@@ -25,6 +26,7 @@ import BackButtonContainer from "../Components/BackButtonContainer";
 type TabValue = "overview" | "trends" | "roll distribution" | "roll types";
 
 export default function StatsPage() {
+  useRedirectIfUnauthenticated();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 

@@ -21,6 +21,7 @@
 .mobile-section-dropdown {
   margin: 10px;
   width: 200px;
+  background-color: #e0e0e0;
 }
 .character-select {
   width: 200px;
@@ -29,6 +30,11 @@
 .dice-size-dropdown {
   margin-bottom: 10px;
 }
+
+.stat-display {
+  padding: 5px;
+  margin: 5px;
+}
 .stat-display ul {
   list-style-type: none;
   padding-left: 0;
@@ -36,6 +42,10 @@
 }
 
 .stat-display li {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
   padding: 5px 0;
   border-bottom: 1px solid #ddd;
   font-size: 1rem;
@@ -43,6 +53,10 @@
 
 .stat-display li:last-child {
   border-bottom: none;
+}
+
+.overview-stat {
+  margin: 0 5px 5px 5px; /* top, right, bottom, left */
 }
 
 @media screen and (min-width: 1024px) {
@@ -60,7 +74,8 @@
     justify-content: space-evenly;
   }
   .overview-stat {
-    margin: 20px;
+    margin: 10px;
+    padding: 5px;
   }
   .tabs-container {
     display: flex;

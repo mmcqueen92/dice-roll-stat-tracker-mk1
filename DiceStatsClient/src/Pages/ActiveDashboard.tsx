@@ -26,6 +26,7 @@ import "../Styles/ActiveDashboard.css";
 import DiceRollData from "../Interfaces/DiceRollData";
 import PageContent from "../Components/PageContent";
 import BackButtonContainer from "../Components/BackButtonContainer";
+import { useRedirectIfUnauthenticated } from "../Hooks/useRedirectIfUnauthenticated";
 
 const skills = [
   "Acrobatics",
@@ -78,6 +79,8 @@ const initialFormData: FormData = {
 };
 
 export default function ActiveDashboard() {
+  useRedirectIfUnauthenticated();
+
   const { id } = useParams<{ id: string }>();
   const activeCharacterId = parseInt(id || "0", 10);
   const [character, setCharacter] = useState<CharacterData | null>(null);

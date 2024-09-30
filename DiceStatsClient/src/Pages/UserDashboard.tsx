@@ -20,8 +20,10 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import CharacterForm from "../Components/CharacterForm";
 import PageContent from "../Components/PageContent";
+import { useRedirectIfUnauthenticated } from "../Hooks/useRedirectIfUnauthenticated";
 
 export default function UserDashboard() {
+  useRedirectIfUnauthenticated();
   const [characters, setCharacters] = useState<CharacterData[]>([]);
   const [activeCharacterId, setActiveCharacterId] = useState<number | null>(
     null
@@ -102,11 +104,7 @@ export default function UserDashboard() {
         <p>No characters found.</p>
       )}
       {characters.length > 0 && (
-        <TableContainer
-          component={Paper}
-          className="table-container"
-          
-        >
+        <TableContainer component={Paper} className="table-container">
           <Table>
             <TableHead>
               <TableRow>
@@ -134,7 +132,7 @@ export default function UserDashboard() {
                       ? `/${character.secondaryClass}`
                       : ""}
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell>
                     {character.characterId === activeCharacterId ? (
                       <h4>Active</h4>
                     ) : (
@@ -148,7 +146,7 @@ export default function UserDashboard() {
                       </Button>
                     )}
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell>
                     <Button
                       variant="contained"
                       component={Link}

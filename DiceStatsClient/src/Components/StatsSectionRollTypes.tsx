@@ -2,8 +2,16 @@ import React, { useState, useEffect } from "react";
 import StatsSectionProps from "../Interfaces/StatsSectionProps";
 import DiceRollData from "../Interfaces/DiceRollData";
 import RollTypeRatesPieChart from "./RollTypeRatesPieChart";
+import StatDisplay from "./StatDisplay";
 
-import { Box, Grid2, Typography, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Box,
+  Grid2,
+  Typography,
+  useMediaQuery,
+  useTheme,
+  Card,
+} from "@mui/material";
 
 export default function StatsSectionRollTypes({
   diceRolls,
@@ -257,13 +265,13 @@ export default function StatsSectionRollTypes({
   return (
     <Grid2
       container
-      spacing={5}
+      spacing={{ xs: 0, md: 5 }}
       direction={{ xs: "column", md: "row" }}
       className="roll-types-section-container"
     >
       <Box className="subsection-container">
         <Box className="subsection">
-          <Box className="stat-display">
+          <StatDisplay style={{ width: "100%" }}>
             <Typography variant="subtitle1">
               Average Roll by Category (d20)
             </Typography>
@@ -276,9 +284,9 @@ export default function StatsSectionRollTypes({
                 )
               )}
             </ul>
-          </Box>
+          </StatDisplay>
 
-          <Box className="stat-display">
+          <StatDisplay>
             <Typography variant="subtitle1">
               Total Rolls by Category (d20)
             </Typography>
@@ -289,11 +297,11 @@ export default function StatsSectionRollTypes({
                 </li>
               ))}
             </ul>
-          </Box>
+          </StatDisplay>
         </Box>
 
         <Box className="subsection">
-          <Box className="stat-display">
+          <StatDisplay>
             <Typography variant="subtitle1">
               Checks and Saves by Skill Types
             </Typography>
@@ -307,9 +315,9 @@ export default function StatsSectionRollTypes({
                 )
               )}
             </ul>
-          </Box>
+          </StatDisplay>
 
-          <Box className="stat-display">
+          <StatDisplay>
             <Typography variant="subtitle1">
               Success Rates by Skill Types
             </Typography>
@@ -331,14 +339,16 @@ export default function StatsSectionRollTypes({
                 )
               )}
             </ul>
-          </Box>
+          </StatDisplay>
         </Box>
       </Box>
 
       <Box className="pie-chart-container">
-        <Typography variant="subtitle1">D20 Roll Type Rates</Typography>
+        <Card sx={{ backgroundColor: "#e0e0e0", margin: "0 5px 5px 5px" }}>
+          <Typography variant="subtitle1">D20 Roll Type Rates</Typography>
 
-        <RollTypeRatesPieChart data={rollTypeRates} />
+          <RollTypeRatesPieChart data={rollTypeRates} />
+        </Card>
       </Box>
     </Grid2>
   );
