@@ -8,7 +8,8 @@ export const useRedirectIfAuthenticated = () => {
 
   useEffect(() => {
     if (authState.isAuthenticated) {
-      navigate("/user-dashboard"); // Redirect to dashboard if already logged in
+      console.log("AUTHENTICATED")
+      navigate("/user-dashboard");
     }
   }, [authState.isAuthenticated, navigate]);
 };

@@ -52,7 +52,6 @@ export default function StatsPage() {
 
     api.get("/diceroll").then((response) => {
       setDiceRollData(response.data);
-      console.log("DATA: ", response.data);
     });
   }, []);
 
@@ -65,7 +64,6 @@ export default function StatsPage() {
       );
     }
 
-    // Filter by date range if both startDate and endDate are set
     if (startDate && endDate) {
       filteredData = filteredData.filter((roll) => {
         const rollDate = dayjs(roll.timestamp);

@@ -8,6 +8,7 @@ export const useRedirectIfUnauthenticated = () => {
 
   useEffect(() => {
     if (!authState.isAuthenticated) {
+      console.log("UNAUTHENTICATED")
       navigate("/");
     }
   }, [authState.isAuthenticated, navigate]);

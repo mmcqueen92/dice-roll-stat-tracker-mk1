@@ -31,6 +31,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [authState, setAuthState] = useState<AuthState>(initialAuthState);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,8 +42,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         token,
       });
     }
+    setLoading(false);
   }, []);
-  
+
   const login = async (email: string, password: string) => {
     try {
       const response = await axios.post(
@@ -56,10 +58,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         isAuthenticated: true,
         token,
       });
-      navigate("/user-dashboard"); // Redirect after successful login
+      navigate("/user-dashboard");
     } catch (error) {
       console.error("Login failed", error);
-      // Handle error appropriately
     }
   };
 
@@ -69,12 +70,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       isAuthenticated: false,
       token: null,
     });
-    navigate("/login"); // Optional: Redirect to login page after logout
+    navigate("/login");
   };
 
   return (
     <AuthContext.Provider value={{ authState, login, logout }}>
-      {children}
+      {!loading && children}
     </AuthContext.Provider>
   );
 };
