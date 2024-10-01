@@ -11,18 +11,21 @@ import {
   IconButton,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import { Delete } from "@mui/icons-material";
 import CharacterData from "../Interfaces/CharacterData";
 
 interface CharacterListProps {
   characters: CharacterData[];
   onEdit: (character: CharacterData) => void;
   onCreate: () => void;
+  onDelete: (character: CharacterData) => void;
 }
 
 export default function CharacterList({
   characters,
   onEdit,
   onCreate,
+  onDelete
 }: CharacterListProps) {
   return (
     <>
@@ -44,8 +47,11 @@ export default function CharacterList({
               <TableCell>
                 <h4>Class</h4>
               </TableCell>
-              <TableCell align="right">
-                <h4>Actions</h4>
+              <TableCell align="center">
+                <h4>Edit</h4>
+              </TableCell>
+              <TableCell align="center">
+                <h4>Delete</h4>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -59,9 +65,14 @@ export default function CharacterList({
                     ? `/${character.secondaryClass}`
                     : ""}
                 </TableCell>
-                <TableCell align="right">
+                <TableCell align="center">
                   <IconButton onClick={() => onEdit(character)}>
                     <EditIcon />
+                  </IconButton>
+                </TableCell>
+                <TableCell align="center">
+                  <IconButton onClick={() => onDelete(character)}>
+                    <Delete></Delete>
                   </IconButton>
                 </TableCell>
               </TableRow>

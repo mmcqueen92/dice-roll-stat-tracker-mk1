@@ -6,10 +6,6 @@
   background-color: #333333;
 }
 
-/* .table-container {
-  width: 98%;
-} */
-
 .button-container {
   display: flex;
   flex-direction: column;
@@ -21,7 +17,6 @@
 
 .button-container a {
   margin-top: 5px;
-  margin-bottom: 5px;
 }
 
 @media screen and (min-width: 1024px) {

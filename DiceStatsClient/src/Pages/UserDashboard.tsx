@@ -25,19 +25,11 @@ import { useRedirectIfUnauthenticated } from "../Hooks/useRedirectIfUnauthentica
 export default function UserDashboard() {
   useRedirectIfUnauthenticated();
   const [characters, setCharacters] = useState<CharacterData[]>([]);
-  const [activeCharacterId, setActiveCharacterId] = useState<number | null>(
-    null
-  );
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    const savedActiveCharacterId = localStorage.getItem("activeCharacterId");
-    if (savedActiveCharacterId) {
-      setActiveCharacterId(parseInt(savedActiveCharacterId, 10));
-    }
-
     const fetchCharacters = async () => {
       setLoading(true);
       try {
@@ -62,16 +54,6 @@ export default function UserDashboard() {
 
     fetchCharacters();
   }, []);
-
-  useEffect(() => {
-    if (activeCharacterId !== null) {
-      localStorage.setItem("activeCharacterId", activeCharacterId.toString());
-    }
-  }, [activeCharacterId]);
-
-  const handleSetActiveCharacter = (characterId: number) => {
-    setActiveCharacterId(characterId);
-  };
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -108,16 +90,13 @@ export default function UserDashboard() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>
+                <TableCell align="center">
                   <h4>Character Name</h4>
                 </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   <h4>Class</h4>
                 </TableCell>
-                <TableCell>
-                  <h4>Active</h4>
-                </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   <h4>Actions</h4>
                 </TableCell>
               </TableRow>
@@ -125,35 +104,22 @@ export default function UserDashboard() {
             <TableBody>
               {characters.map((character) => (
                 <TableRow key={character.characterId}>
-                  <TableCell>{character.name}</TableCell>
-                  <TableCell>
+                  <TableCell align="center">{character.name}</TableCell>
+                  <TableCell align="center">
                     {character.class}
                     {character.secondaryClass
                       ? `/${character.secondaryClass}`
                       : ""}
                   </TableCell>
-                  <TableCell>
-                    {character.characterId === activeCharacterId ? (
-                      <h4>Active</h4>
-                    ) : (
-                      <Button
-                        variant="outlined"
-                        onClick={() =>
-                          handleSetActiveCharacter(character.characterId)
-                        }
-                      >
-                        Set Active
-                      </Button>
-                    )}
-                  </TableCell>
-                  <TableCell>
+                  <TableCell align="center">
                     <Button
                       variant="contained"
                       component={Link}
-                      to={`/character-rolls/${character.characterId}`}
+                      to={`/active-dashboard/${character.characterId}`}
                     >
-                      View Rolls
+                      Start Rolling
                     </Button>
+
                   </TableCell>
                 </TableRow>
               ))}
@@ -164,13 +130,6 @@ export default function UserDashboard() {
       <div className="button-container">
         <Button variant="contained" onClick={handleCreate}>
           Create New Character
-        </Button>
-        <Button
-          variant="contained"
-          component={Link}
-          to={`/active-dashboard/${activeCharacterId}`}
-        >
-          Start Rolling
         </Button>
         <Button variant="contained" component={Link} to="/character-management">
           Manage Characters

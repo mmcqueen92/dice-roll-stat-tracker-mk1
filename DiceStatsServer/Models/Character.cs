@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace DiceStatsServer.Models
 {
@@ -24,6 +25,9 @@ namespace DiceStatsServer.Models
 
         [MaxLength(50)]
         public string? SecondaryClass { get; set; }
+
+        [JsonIgnore]
+        public ICollection<DiceRoll> DiceRolls { get; set; }
 
         // Parameterless constructor for EF Core
         public Character()

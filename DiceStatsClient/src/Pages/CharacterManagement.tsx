@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Dialog, DialogTitle, IconButton } from "@mui/material";
+import { Button, Dialog, DialogTitle, IconButton, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CharacterList from "../Components/CharacterList";
 import CharacterForm from "../Components/CharacterForm";
@@ -13,12 +13,16 @@ import { useRedirectIfUnauthenticated } from "../Hooks/useRedirectIfUnauthentica
 
 export default function CharacterManagement() {
   useRedirectIfUnauthenticated();
-  
+
   const [characters, setCharacters] = useState<CharacterData[]>([]);
   const [selectedCharacter, setSelectedCharacter] =
     useState<CharacterData | null>(null);
   const [editChar, setEditChar] = useState(false);
   const [newChar, setNewChar] = useState(false);
+  const [characterToDelete, setCharacterToDelete] = useState<null | number>(
+    null
+  );
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   useEffect(() => {
     const fetchCharacters = async () => {
@@ -71,6 +75,41 @@ export default function CharacterManagement() {
     setNewChar(false);
   };
 
+  const handleClickDelete = (character: CharacterData) => {
+    setCharacterToDelete(character.characterId);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteDialogOpen(false);
+    setCharacterToDelete(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    console.log("OK DELETING")
+
+    try {
+      if (characterToDelete) {
+        const response = await api.delete(`/character/${characterToDelete}`);
+        console.log("RESPONSE: ", response)
+        if (response.status === 204) {
+          setCharacters((prevCharacters) =>
+            prevCharacters.filter(
+              (character) => character.characterId !== characterToDelete
+            )
+          );
+        }
+      } else {
+        console.error("Error identifying character selected to delete")
+      }
+    } catch (e) {
+      console.error("Error deleting character", e)
+    }
+
+    setCharacterToDelete(null);
+    setDeleteDialogOpen(false);
+  };
+
   return (
     <PageContent>
       <BackButtonContainer route="/user-dashboard"></BackButtonContainer>
@@ -79,6 +118,7 @@ export default function CharacterManagement() {
         characters={characters}
         onEdit={handleEdit}
         onCreate={handleCreate}
+        onDelete={handleClickDelete}
       />
       <Dialog open={newChar} onClose={handleCancelCreate}>
         <DialogTitle>
@@ -135,6 +175,22 @@ export default function CharacterManagement() {
           onSave={handleSave}
           onCancel={handleCancelEdit}
         />
+      </Dialog>
+      <Dialog open={deleteDialogOpen} onClose={handleCancelDelete}>
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this character?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelDelete} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleConfirmDelete} color="secondary">
+            Delete
+          </Button>
+        </DialogActions>
       </Dialog>
     </PageContent>
   );

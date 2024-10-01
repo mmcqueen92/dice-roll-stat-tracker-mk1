@@ -46,6 +46,7 @@ export default function StatsPage() {
 
     api.get("/diceroll").then((response) => {
       setDiceRollData(response.data);
+      console.log("DATA: ", response.data)
     });
   }, []);
 

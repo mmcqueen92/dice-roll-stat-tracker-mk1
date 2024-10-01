@@ -8,8 +8,6 @@ import {
   Box,
   Grid2,
   Typography,
-  useMediaQuery,
-  useTheme,
   Card,
 } from "@mui/material";
 

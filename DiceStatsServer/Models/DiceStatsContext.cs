@@ -15,6 +15,12 @@ namespace DiceStatsServer.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Character>()
+            .HasMany(c => c.DiceRolls)  // One character has many dice rolls
+            .WithOne(d => d.Character)   // Each dice roll is associated with one character
+            .HasForeignKey(d => d.CharacterId) // Foreign key
+            .OnDelete(DeleteBehavior.Cascade); // Cascade delete configuration
+            
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<User>().HasData(
