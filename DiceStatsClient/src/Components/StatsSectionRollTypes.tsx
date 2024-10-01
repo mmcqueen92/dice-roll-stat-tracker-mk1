@@ -349,6 +349,7 @@ export default function StatsSectionRollTypes({
               sm: "0 5px 5px 5px",
               md: "5px", 
             },
+            padding: "5px"
           }}
         >
           <Typography variant="subtitle1">D20 Roll Type Rates</Typography>
