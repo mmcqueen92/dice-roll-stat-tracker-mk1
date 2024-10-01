@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import DiceRollData from "../Interfaces/DiceRollData";
 import StatsSectionProps from "../Interfaces/StatsSectionProps";
-import { Box, Card, Typography } from "@mui/material";
+import { Card, Typography } from "@mui/material";
 import IDiceRollsVsAverage from "../Interfaces/IDiceRollsVsAverage";
 import { ReactComponent as D4Icon } from "../Assets/d4icon.svg";
 import { ReactComponent as D6Icon } from "../Assets/d6icon.svg";
@@ -65,6 +65,14 @@ export default function StatsSectionOverview({ diceRolls }: StatsSectionProps) {
 
       setDiceRollsVsAverage(calculateDiceRollsVsAverage(diceRolls));
     } else {
+      setDiceRollsVsAverage({
+        20: { above: 0, below: 0 },
+        12: { above: 0, below: 0 },
+        10: { above: 0, below: 0 },
+        8: { above: 0, below: 0 },
+        6: { above: 0, below: 0 },
+        4: { above: 0, below: 0 },
+      });
       setAverageRollsByDiceSize({});
       setTotalRollsByDiceSize({});
       setStreakRecords({ successStreak: 0, failStreak: 0 });

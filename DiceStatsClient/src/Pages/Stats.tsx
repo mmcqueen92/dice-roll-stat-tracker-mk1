@@ -18,10 +18,14 @@ import StatsSectionRollDistribution from "../Components/StatsSectionRollDistribu
 import StatsSectionRollTypes from "../Components/StatsSectionRollTypes";
 import StatsSectionOverview from "../Components/StatsSectionOverview";
 import { useRedirectIfUnauthenticated } from "../Hooks/useRedirectIfUnauthenticated";
+import { DatePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 import "../Styles/Stats.css";
 import PageContent from "../Components/PageContent";
 import BackButtonContainer from "../Components/BackButtonContainer";
+import dayjs, { Dayjs } from "dayjs";
 
 type TabValue = "overview" | "trends" | "roll distribution" | "roll types";
 
@@ -38,6 +42,8 @@ export default function StatsPage() {
   const [activeDiceRollData, setActiveDiceRollData] = useState<DiceRollData[]>(
     []
   );
+  const [startDate, setStartDate] = useState<null | Dayjs>(null);
+  const [endDate, setEndDate] = useState<null | Dayjs>(null);
 
   useEffect(() => {
     api.get(`/character`).then((response) => {
@@ -46,20 +52,44 @@ export default function StatsPage() {
 
     api.get("/diceroll").then((response) => {
       setDiceRollData(response.data);
-      console.log("DATA: ", response.data)
+      console.log("DATA: ", response.data);
     });
   }, []);
 
   useEffect(() => {
+    let filteredData = diceRollData;
+
     if (selectedCharacter) {
-      const filteredData = diceRollData.filter(
+      filteredData = filteredData.filter(
         (roll) => roll.characterId === selectedCharacter.characterId
       );
-      setActiveDiceRollData(filteredData);
-    } else {
-      setActiveDiceRollData(diceRollData);
     }
-  }, [selectedCharacter, diceRollData]);
+
+    // Filter by date range if both startDate and endDate are set
+    if (startDate && endDate) {
+      filteredData = filteredData.filter((roll) => {
+        const rollDate = dayjs(roll.timestamp);
+
+        return (
+          rollDate.isAfter(startDate, "day") &&
+          rollDate.isBefore(endDate, "day")
+        );
+      });
+    } else if (startDate) {
+      filteredData = filteredData.filter((roll) => {
+        const rollDate = dayjs(roll.timestamp);
+
+        return rollDate.isAfter(startDate, "day");
+      });
+    } else if (endDate) {
+      filteredData = filteredData.filter((roll) => {
+        const rollDate = dayjs(roll.timestamp);
+
+        return rollDate.isBefore(endDate, "day");
+      });
+    }
+    setActiveDiceRollData(filteredData);
+  }, [selectedCharacter, diceRollData, startDate, endDate]);
 
   const handleTabChange = (event: SyntheticEvent, newValue: TabValue) => {
     setCurrentTab(newValue);
@@ -122,6 +152,43 @@ export default function StatsPage() {
           ))}
         </Select>
       </Box>
+      <Box>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            label="Date Range Start"
+            sx={{
+              ".MuiInputBase-root": {
+                backgroundColor: "#e0e0e0",
+                width: "200px",
+                margin: {
+                  xs: "5px 0 0 0",
+                  md: "10px",
+                },
+              },
+            }}
+            value={startDate}
+            onChange={(newDate) => setStartDate(newDate)}
+          />
+        </LocalizationProvider>
+
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            label="Date Range End"
+            sx={{
+              ".MuiInputBase-root": {
+                backgroundColor: "#e0e0e0",
+                width: "200px",
+                margin: {
+                  xs: "5px 0",
+                  md: "10px",
+                },
+              },
+            }}
+            value={endDate}
+            onChange={(newDate) => setEndDate(newDate)}
+          />
+        </LocalizationProvider>
+      </Box>
 
       <Box>
         {!isMobile ? (
@@ -134,8 +201,8 @@ export default function StatsPage() {
               variant="scrollable"
               scrollButtons="auto"
               sx={{
-                ".MuiTab-root": { color: "#e0e0e0" }, // Off-white text color for unselected tabs
-                ".Mui-selected": { color: "#ffffff" }, // Brighter white for the selected tab
+                ".MuiTab-root": { color: "#e0e0e0" },
+                ".Mui-selected": { color: "#ffffff" },
               }}
             >
               <Tab label="Overview" value="overview" />
@@ -149,6 +216,13 @@ export default function StatsPage() {
             value={currentTab}
             onChange={handleDropdownChange}
             className="mobile-section-dropdown"
+            MenuProps={{
+              PaperProps: {
+                sx: {
+                  backgroundColor: "#e0e0e0",
+                },
+              },
+            }}
           >
             <MenuItem value="overview">Overview</MenuItem>
             <MenuItem value="trends">Roll Trends</MenuItem>
