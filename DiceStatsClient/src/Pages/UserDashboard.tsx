@@ -86,7 +86,7 @@ export default function UserDashboard() {
         <p>No characters found.</p>
       )}
       {characters.length > 0 && (
-        <TableContainer component={Paper} className="table-container">
+        <TableContainer component={Paper} className="table-container" sx={{backgroundColor: "#e0e0e0"}}>
           <Table>
             <TableHead>
               <TableRow>

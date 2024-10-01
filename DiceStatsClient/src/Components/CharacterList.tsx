@@ -37,7 +37,7 @@ export default function CharacterList({
       >
         Create New Character
       </Button>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ backgroundColor: "#e0e0e0" }}>
         <Table>
           <TableHead>
             <TableRow>

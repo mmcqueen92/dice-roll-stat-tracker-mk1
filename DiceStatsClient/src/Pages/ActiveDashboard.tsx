@@ -220,7 +220,7 @@ export default function ActiveDashboard() {
       <BackButtonContainer route="/user-dashboard"></BackButtonContainer>
 
       <h3>{character.name}</h3>
-      <Paper className="form-container">
+      <Paper className="form-container" sx={{ backgroundColor: "#e0e0e0" }}>
         <h4>Create New Roll</h4>
         <form onSubmit={handleSubmit} className="new-diceroll-form">
           <FormControl
@@ -379,7 +379,7 @@ export default function ActiveDashboard() {
         </form>
       </Paper>
       <h3>Recent Rolls</h3>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ backgroundColor: "#e0e0e0" }}>
         <Table>
           <TableHead>
             <TableRow>
