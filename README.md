@@ -91,6 +91,8 @@ Register a new account, create a character, and start logging your dice rolls!
 
 Screenshots:
 
+Note: Some of the screenshots were captured using the Snipping Tool and may include slight white lines or borders from the browser window. This is due to the capture process and not an issue with the site's layout or styling.
+
 !["screenshot of the home page - large screen"](https://github.com/mmcqueen92/dice-roll-stat-tracker-mk1/blob/main/docs/home-lg.PNG?raw=true)
 
 !["screenshot of the register page - large screen"](https://github.com/mmcqueen92/dice-roll-stat-tracker-mk1/blob/main/docs/register-lg.PNG?raw=true)
