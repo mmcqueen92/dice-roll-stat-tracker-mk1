@@ -54,27 +54,23 @@ Backend Setup (ASP.NET Core):
 
 Clone the repository:
 
-bash
 Copy code
 git clone
 cd DiceStatsTracker
 
 Install the necessary dependencies:
 
-bash
 Copy code
 dotnet restore
 Set up the SQL Server database. You can modify the connection string in appsettings.json to point to your own SQL Server instance.
 
 Apply migrations to create the database:
 
-bash
 Copy code
 dotnet ef database update
 
 Run the back-end server:
 
-bash
 Copy code
 dotnet run
 
@@ -82,19 +78,16 @@ Front-End Setup (React):
 
 Navigate to the client directory:
 
-bash
 Copy code
 cd client
 
 Install dependencies:
 
-bash
 Copy code
 npm install
 
 Start the development server:
 
-bash
 Copy code
 npm start
 
