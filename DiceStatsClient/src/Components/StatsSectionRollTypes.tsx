@@ -341,15 +341,19 @@ export default function StatsSectionRollTypes({
         </Box>
       </Box>
 
-      <Box className="pie-chart-container">
+      <Box
+        className="pie-chart-container"
+        // sx={{
+        //   margin: {
+        //     sm: "0 5px 5px 5px",
+        //     md: "5px",
+        //   },
+        // }}
+      >
         <Card
           sx={{
             backgroundColor: "#e0e0e0",
-            margin: {
-              sm: "0 5px 5px 5px",
-              md: "5px", 
-            },
-            padding: "5px"
+            padding: "5px",
           }}
         >
           <Typography variant="subtitle1">D20 Roll Type Rates</Typography>

@@ -59,6 +59,10 @@
   margin: 0 5px 5px 5px; /* top, right, bottom, left */
 }
 
+.pie-chart-container {
+  margin: 0px 5px 5px 5px;
+}
+
 @media screen and (min-width: 1024px) {
   .page-content {
     margin-top: 5px;
@@ -102,6 +106,9 @@
     justify-content: space-between;
   }
   .stat-display {
+    margin: 5px;
+  }
+  .pie-chart-container {
     margin: 5px;
   }
 }
