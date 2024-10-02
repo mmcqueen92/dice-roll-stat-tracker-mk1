@@ -22,13 +22,17 @@ ChartJS.register(
   Legend
 );
 
-export default function RollTrendsLineChart({ data, title, diceSize }: RollTrendsLineChartProps) {
+export default function RollTrendsLineChart({
+  data,
+  title,
+  diceSize,
+}: RollTrendsLineChartProps) {
   if (!data) {
     return null;
   }
-  // Extracting keys and values from the data object
-  const labels = Object.keys(data).map((key) => parseInt(key)); // x-axis (1, 2, 3, ...)
-  const values = Object.values(data); // y-axis (18, 16.5, 12.66, ...)
+
+  const labels = Object.keys(data).map((key) => parseInt(key));
+  const values = Object.values(data);
 
   // Set up chart data
   const chartData = {
@@ -39,13 +43,11 @@ export default function RollTrendsLineChart({ data, title, diceSize }: RollTrend
         data: values,
         borderColor: "rgba(75,192,192,1)",
         backgroundColor: "rgba(75,192,192,0.2)",
-        // fill: true,
-        tension: 0.3, // For smooth curves, adjust this value as needed
+        tension: 0.3,
       },
     ],
   };
 
-  // Set up chart options
   const chartOptions = {
     scales: {
       y: {

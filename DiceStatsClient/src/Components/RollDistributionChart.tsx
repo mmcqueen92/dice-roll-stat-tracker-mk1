@@ -31,12 +31,11 @@ export default function RollDistributionChart({
   const labels = Object.keys(data).map((key) => parseInt(key));
   const values = Object.values(data);
 
-  // Set up chart data
   const chartData = {
     labels: labels,
     datasets: [
       {
-        label: title, // Title for the chart
+        label: title,
         data: values,
         backgroundColor: "rgba(75,192,192,0.4)",
         borderColor: "rgba(75,192,192,1)",
@@ -45,7 +44,6 @@ export default function RollDistributionChart({
     ],
   };
 
-  // Set up chart options
   const chartOptions = {
     scales: {
       y: {

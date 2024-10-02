@@ -20,6 +20,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import CharacterForm from "../Components/CharacterForm";
 import PageContent from "../Components/PageContent";
+import LogoutButtonContainer from "../Components/LogoutButtonContainer";
 import { useRedirectIfUnauthenticated } from "../Hooks/useRedirectIfUnauthenticated";
 
 export default function UserDashboard() {
@@ -79,6 +80,7 @@ export default function UserDashboard() {
 
   return (
     <PageContent>
+      <LogoutButtonContainer/>
       <h2>User Dashboard</h2>
       {loading && <p>Loading characters...</p>}
       {error && <p>{error}</p>}
