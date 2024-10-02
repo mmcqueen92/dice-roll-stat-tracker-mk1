@@ -27,7 +27,7 @@ namespace DiceStatsServer.Models
         public string? SecondaryClass { get; set; }
 
         [JsonIgnore]
-        public ICollection<DiceRoll> DiceRolls { get; set; }
+        public ICollection<DiceRoll>? DiceRolls { get; set; }
 
         // Parameterless constructor for EF Core
         public Character()

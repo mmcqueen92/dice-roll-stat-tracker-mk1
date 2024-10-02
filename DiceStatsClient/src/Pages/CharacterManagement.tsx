@@ -47,12 +47,14 @@ export default function CharacterManagement() {
   };
 
   const handleSave = async (character: CharacterData) => {
+    console.log("CHARACTER DATA OG: ", character)
     try {
       if (character.characterId === 0) {
         const { characterId, ...characterData } = character;
         const response = await api.post("/character", characterData);
         setCharacters((prevCharacters) => [...prevCharacters, response.data]);
       } else {
+        console.log("Character data being saved:", character);
         await api.put(`/character/${character.characterId}`, character);
         setCharacters((prevCharacters) =>
           prevCharacters.map((char) =>
@@ -147,6 +149,7 @@ export default function CharacterManagement() {
           onCancel={handleCancelCreate}
         />
       </Dialog>
+
       <Dialog open={editChar} onClose={handleCancelEdit}>
         <DialogTitle>
           <span>Edit Character</span>
@@ -176,6 +179,7 @@ export default function CharacterManagement() {
           onCancel={handleCancelEdit}
         />
       </Dialog>
+
       <Dialog open={deleteDialogOpen} onClose={handleCancelDelete}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
@@ -192,6 +196,7 @@ export default function CharacterManagement() {
           </Button>
         </DialogActions>
       </Dialog>
+
     </PageContent>
   );
 }
