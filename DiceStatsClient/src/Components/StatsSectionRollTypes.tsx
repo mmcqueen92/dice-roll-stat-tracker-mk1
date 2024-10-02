@@ -343,12 +343,6 @@ export default function StatsSectionRollTypes({
 
       <Box
         className="pie-chart-container"
-        // sx={{
-        //   margin: {
-        //     sm: "0 5px 5px 5px",
-        //     md: "5px",
-        //   },
-        // }}
       >
         <Card
           sx={{
