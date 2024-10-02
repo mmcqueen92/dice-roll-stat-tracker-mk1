@@ -302,6 +302,7 @@ export default function StatsSectionRollTrends({
           <RollTrendsLineChart
             data={rollTrendsByDiceSize[selectedChart]}
             title={`D-${selectedChart} Roll Trends`}
+            diceSize={selectedChart}
           />
         )}
       </Box>

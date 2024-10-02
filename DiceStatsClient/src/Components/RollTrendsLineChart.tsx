@@ -22,7 +22,7 @@ ChartJS.register(
   Legend
 );
 
-export default function RollTrendsLineChart({ data, title }: RollTrendsLineChartProps) {
+export default function RollTrendsLineChart({ data, title, diceSize }: RollTrendsLineChartProps) {
   if (!data) {
     return null;
   }
@@ -50,8 +50,8 @@ export default function RollTrendsLineChart({ data, title }: RollTrendsLineChart
     scales: {
       y: {
         beginAtZero: true,
-        min: 1, // Setting y-axis minimum to 1
-        max: 20, // Setting y-axis maximum to 20
+        min: 1,
+        max: diceSize,
       },
       x: {
         beginAtZero: true,
