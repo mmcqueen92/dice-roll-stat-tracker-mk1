@@ -18,18 +18,24 @@ Built With:
 
 Front-End:
 React: A dynamic user interface built with React, including reusable components and hooks for state management.
+
 Material UI: Provides a responsive and consistent design with pre-built components, customized for this project.
+
 Axios: For handling HTTP requests between the front-end and back-end.
 
 Back-End:
 ASP.NET Core 8.0: RESTful API built with ASP.NET Core, utilizing the latest version to handle routing, controllers, and business logic.
+
 Entity Framework Core: For interacting with a SQL Server database, handling data persistence and relationships between users, characters, and dice rolls.
+
 JWT Authentication: Secure user authentication and authorization using Microsoft.AspNetCore.Authentication.JwtBearer.
 
 Database:
+
 SQL Server: The back-end database used to store users, characters, and dice roll data. Queries are efficiently managed via Entity Framework Core.
 
 Learning Goals and Challenges:
+
 This project was my first experience using ASP.NET Core. One of my primary goals was to build a full-stack web application with a .NET back-end and React front-end, which allowed me to learn C# and ASP.NET Core.
 
 Although I had worked with React before, this project allowed me to practice and improve my skills. I also integrated Material UI for the front-end design, which was new for me in a React context. Learning to customize these components for this project was a valuable experience.
@@ -39,45 +45,61 @@ Another important aspect of this project was ensuring responsive design. Since m
 Installation and Usage:
 
 Prerequisites:
+
 .NET 8.0 SDK
 Node.js (v14 or higher)
 SQL Server (local or cloud instance)
 
 Backend Setup (ASP.NET Core):
+
 Clone the repository:
+
 bash
 Copy code
 git clone
 cd DiceStatsTracker
+
 Install the necessary dependencies:
+
 bash
 Copy code
 dotnet restore
 Set up the SQL Server database. You can modify the connection string in appsettings.json to point to your own SQL Server instance.
+
 Apply migrations to create the database:
+
 bash
 Copy code
 dotnet ef database update
+
 Run the back-end server:
+
 bash
 Copy code
 dotnet run
 
 Front-End Setup (React):
+
 Navigate to the client directory:
+
 bash
 Copy code
 cd client
+
 Install dependencies:
+
 bash
 Copy code
 npm install
+
 Start the development server:
+
 bash
 Copy code
 npm start
 
 Usage:
+
 Open the browser and navigate to http://localhost:3000 for the front-end.
 Register a new account, create a character, and start logging your dice rolls!
 
