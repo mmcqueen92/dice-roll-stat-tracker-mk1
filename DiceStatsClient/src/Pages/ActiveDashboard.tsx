@@ -19,13 +19,17 @@ import {
   TableRow,
   Paper,
   TablePagination,
+  IconButton,
+  Dialog
 } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 
 import "../Styles/ActiveDashboard.css";
 
 import DiceRollData from "../Interfaces/DiceRollData";
 import PageContent from "../Components/PageContent";
 import BackButtonContainer from "../Components/BackButtonContainer";
+import EditDiceRollForm from "../Components/EditDiceRollForm";
 import { useRedirectIfUnauthenticated } from "../Hooks/useRedirectIfUnauthenticated";
 
 const skills = [
@@ -90,6 +94,7 @@ export default function ActiveDashboard() {
   const [totalRecords, setTotalRecords] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(5);
+  const [editRoll, setEditRoll] = useState<DiceRollData | null>(null);
 
   useEffect(() => {
     if (!activeCharacterId) return;
@@ -213,6 +218,28 @@ export default function ActiveDashboard() {
   ) => {
     setPageSize(parseInt(event.target.value, 10));
     setPage(1);
+  };
+
+  const handleEditClick = (roll: DiceRollData) => {
+    setEditRoll(roll);
+  };
+
+  const handleCancelEdit = () => {
+    setEditRoll(null);
+  };
+
+  const handleSaveEdit = async (updatedRoll: DiceRollData) => {
+    try {
+      await api.put(`/diceroll/${updatedRoll.diceRollId}`, updatedRoll);
+      setDiceRolls((prevRolls) =>
+        prevRolls.map((roll) =>
+          roll.diceRollId === updatedRoll.diceRollId ? updatedRoll : roll
+        )
+      );
+      setEditRoll(null);
+    } catch (error) {
+      console.error("Error updating roll", error);
+    }
   };
 
   return (
@@ -399,6 +426,9 @@ export default function ActiveDashboard() {
               <TableCell>
                 <h4>Success</h4>
               </TableCell>
+              <TableCell>
+                <h4>Edit</h4>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -419,6 +449,11 @@ export default function ActiveDashboard() {
                     ? "Fail"
                     : "N/A"}
                 </TableCell>
+                <TableCell>
+                  <IconButton onClick={() => handleEditClick(roll)}>
+                    <EditIcon />
+                  </IconButton>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -434,6 +469,16 @@ export default function ActiveDashboard() {
           rowsPerPageOptions={[5, 10, 25, 50]}
         />
       </TableContainer>
+
+      {editRoll && (
+        <Dialog open={Boolean(editRoll)} onClose={handleCancelEdit}>
+          <EditDiceRollForm
+            roll={editRoll}
+            onSave={handleSaveEdit}
+            onCancel={handleCancelEdit}
+          />
+        </Dialog>
+      )}
     </PageContent>
   );
 }
