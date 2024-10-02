@@ -157,10 +157,3 @@ Note: Some of the screenshots were captured using the Snipping Tool and may incl
 
 !["screenshot of the stats page - types - small screen"](https://github.com/mmcqueen92/dice-roll-stat-tracker-mk1/blob/main/docs/stats-types-sm.PNG?raw=true)
 
-
-
-
-
-
-License
-This project is licensed under the MIT License - see the LICENSE file for details.
