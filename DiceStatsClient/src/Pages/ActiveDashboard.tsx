@@ -246,85 +246,86 @@ export default function ActiveDashboard() {
             </Select>
           </FormControl>
 
-          <FormControl
-            style={{ width: "300px" }}
-            margin="normal"
-            className="new-diceroll-form-control"
-          >
-            <InputLabel id="roll-type-label">Roll Type</InputLabel>
-            <Select
-              labelId="roll-type-label"
-              name="rollType"
-              value={formData.rollType}
-              onChange={handleChange}
-              className="new-diceroll-form-select"
-              label="Roll Type"
-              required
-            >
-              <MenuItem value="">Select Roll Type</MenuItem>
-              <MenuItem value="Attack">Attack</MenuItem>
-              <MenuItem value="Ability/Skill Check">
-                Ability/Skill Check
-              </MenuItem>
-              <MenuItem value="Saving Throw">Saving Throw</MenuItem>
-              <MenuItem value="Attack/Spell Damage">
-                Attack/Spell Damage
-              </MenuItem>
-            </Select>
-          </FormControl>
-
-          {formData.rollType === "Ability/Skill Check" && (
+          <div className="roll-type-container">
             <FormControl
               style={{ width: "300px" }}
               margin="normal"
               className="new-diceroll-form-control"
             >
-              <InputLabel id="skill-type-label">Skill Type</InputLabel>
+              <InputLabel id="roll-type-label">Roll Type</InputLabel>
               <Select
-                labelId="skill-type-label"
-                label="Skill Type"
-                name="skillType"
-                value={formData.skillType}
+                labelId="roll-type-label"
+                name="rollType"
+                value={formData.rollType}
                 onChange={handleChange}
                 className="new-diceroll-form-select"
+                label="Roll Type"
+                required
               >
-                <MenuItem value="">Select Skill Type</MenuItem>
-                {skillsAndAbilities.map((skill) => (
-                  <MenuItem key={skill} value={skill}>
-                    {skill}
-                  </MenuItem>
-                ))}
+                <MenuItem value="">Select Roll Type</MenuItem>
+                <MenuItem value="Attack">Attack</MenuItem>
+                <MenuItem value="Ability/Skill Check">
+                  Ability/Skill Check
+                </MenuItem>
+                <MenuItem value="Saving Throw">Saving Throw</MenuItem>
+                <MenuItem value="Attack/Spell Damage">
+                  Attack/Spell Damage
+                </MenuItem>
               </Select>
             </FormControl>
-          )}
 
-          {formData.rollType === "Saving Throw" && (
-            <FormControl
-              style={{ width: "300px" }}
-              margin="normal"
-              className="new-diceroll-form-control"
-            >
-              <InputLabel id="saving-attribute-label">
-                Saving Attribute
-              </InputLabel>
-              <Select
-                labelId="saving-attribute-label"
-                label="Saving Attribute"
-                name="skillType"
-                value={formData.skillType}
-                onChange={handleChange}
-                className="new-diceroll-form-select"
+            {formData.rollType === "Ability/Skill Check" && (
+              <FormControl
+                style={{ width: "300px" }}
+                margin="normal"
+                className="new-diceroll-form-control"
               >
-                <MenuItem value="">Select Saving Attribute</MenuItem>
-                {abilities.map((throwType) => (
-                  <MenuItem key={throwType} value={throwType}>
-                    {throwType}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          )}
+                <InputLabel id="skill-type-label">Skill Type</InputLabel>
+                <Select
+                  labelId="skill-type-label"
+                  label="Skill Type"
+                  name="skillType"
+                  value={formData.skillType}
+                  onChange={handleChange}
+                  className="new-diceroll-form-select"
+                >
+                  <MenuItem value="">Select Skill Type</MenuItem>
+                  {skillsAndAbilities.map((skill) => (
+                    <MenuItem key={skill} value={skill}>
+                      {skill}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
 
+            {formData.rollType === "Saving Throw" && (
+              <FormControl
+                style={{ width: "300px" }}
+                margin="normal"
+                className="new-diceroll-form-control"
+              >
+                <InputLabel id="saving-attribute-label">
+                  Saving Attribute
+                </InputLabel>
+                <Select
+                  labelId="saving-attribute-label"
+                  label="Saving Attribute"
+                  name="skillType"
+                  value={formData.skillType}
+                  onChange={handleChange}
+                  className="new-diceroll-form-select"
+                >
+                  <MenuItem value="">Select Saving Attribute</MenuItem>
+                  {abilities.map((throwType) => (
+                    <MenuItem key={throwType} value={throwType}>
+                      {throwType}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
+          </div>
           <FormControl
             style={{ width: "300px" }}
             margin="normal"

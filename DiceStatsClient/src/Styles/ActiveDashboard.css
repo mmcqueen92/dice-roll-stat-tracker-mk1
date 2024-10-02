@@ -29,4 +29,8 @@
   .new-diceroll-form div {
     margin-right: 5px;
   }
+
+  .roll-type-container {
+    width: 300px;
+  }
 }

@@ -96,7 +96,7 @@ export default function NewDiceRollForm({ characterId }: NewDiceRollFormProps) {
         />
       </div>
 
-      <div>
+      <div style={{display: "flex", flexDirection: "column"}}>
         <label>Roll Type:</label>
         <select
           name="rollType"
@@ -109,26 +109,25 @@ export default function NewDiceRollForm({ characterId }: NewDiceRollFormProps) {
           <option value="Saving Throw">Saving Throw</option>
           <option value="Attack/Spell Damage">Attack/Spell Damage</option>
         </select>
+
+        {formData.rollType === "Skill Check" && (
+          <div>
+            <label>Skill Type:</label>
+            <select
+              name="skillType"
+              value={formData.skillType}
+              onChange={handleChange}
+            >
+              <option value="">Select Skill Type</option>
+              {skillChecks.map((skill) => (
+                <option key={skill} value={skill}>
+                  {skill}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
-
-      {formData.rollType === "Skill Check" && (
-        <div>
-          <label>Skill Type:</label>
-          <select
-            name="skillType"
-            value={formData.skillType}
-            onChange={handleChange}
-          >
-            <option value="">Select Skill Type</option>
-            {skillChecks.map((skill) => (
-              <option key={skill} value={skill}>
-                {skill}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-
       {formData.rollType === "Saving Throw" && (
         <div>
           <label>Saving Attribute:</label>
