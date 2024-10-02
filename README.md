@@ -5,9 +5,13 @@ Dice Stats Tracker is a web application designed for Dungeons & Dragons (D&D) pl
 Key Features:
 
 User Authentication: Secure login and account creation using JWT (JSON Web Tokens) and password hashing with BCrypt.
+
 Character Management: Users can create and manage multiple characters, each with their own profile and set of dice rolls.
+
 Dice Roll Tracking: Log details about dice rolls, including dice type (e.g., d20, d12), roll type (attack, skill check, saving throw), and the result of the roll.
+
 Statistics Dashboard: View summaries and statistics of past dice rolls, including success rates, roll averages, and more.
+
 Mobile-Friendly Design: Conditional CSS ensures a smooth experience on both desktop and mobile devices.
 
 Built With:
